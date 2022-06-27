@@ -9,15 +9,8 @@ async function recruitPosts(req, res) {
       const { title, content, imageUrl, date, time, place } = req.body;
       let status = false;
 
-      // postId 자동으로 생성되게 설정
-      const maxpostId = await recruitPost.findOne().sort('-postId');
-      let postId = 1;
-      if (maxpostId) {
-        postId = maxpostId.postId + 1;
-      }
       // 게시글 작성
       const createdPosts = await recruitPost.create({
-          postId,
           // nickname,
           title,
           content,

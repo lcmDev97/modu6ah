@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-// const AutoIncrement = require("mongoose-sequence")(mongoose);
+const AutoIncrement = require("mongoose-sequence")(mongoose);
 const { Schema } = mongoose;
 
 const recruitPostSchema = new Schema({
@@ -17,6 +17,6 @@ const recruitPostSchema = new Schema({
      { timestamps: true }
 );
 
-// recruitPostSchema.plugin(AutoIncrement, { inc_field: "postId" })
+recruitPostSchema.plugin(AutoIncrement, { inc_field: "postId" })
 
 module.exports = mongoose.model("RecruitPost", recruitPostSchema);
