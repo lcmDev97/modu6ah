@@ -8,6 +8,7 @@ const UserSchema = new Schema({
     myComment: {type: String, },
     profileUrl: {type: String, },
     refreshToken: {type: String, },
+    bookmarkList: { type: Array, default: []}
 });
 
 
