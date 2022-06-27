@@ -11,7 +11,6 @@ connect();
 const recruitPostsRouter = require("./routes/recruitPosts");
 const recruitCommentsRouter = require("./routes/recruitComments");
 const usersRouter = require("./routes/users");
-const commentsRouter = require("./routes/comments");
 
 //미들웨어
 app.use(express.json());
@@ -23,7 +22,6 @@ app.use(
   "/api",
   express.urlencoded({ extended: false }),
   [recruitPostsRouter],
-  [commentsRouter],
   [recruitCommentsRouter]
 );
 

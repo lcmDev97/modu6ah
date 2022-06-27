@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const recruitPostSchema = new Schema({
           postId: { type: Number, unique: true },
-          // nickname: { type: String },
+          nickname: { type: String },
           title: { type: String },
           content: { type: String },
           imageUrl: { type: String },

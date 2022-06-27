@@ -1,18 +1,18 @@
 const recruitPost = require("../schemas/recruitPost");
 const recruitComment = require("../schemas/recruitComment");
-// const User = require("../schemas/user");
+const User = require("../schemas/user");
 
 // 모집 게시글 작성
 async function recruitPosts(req, res) {
   try {
       // 불러올 정보 및 받아올 정보
-      // const { nickname } = res.locals.user;
+      const { nickname } = res.locals.user;
       const { title, content, imageUrl, date, time, place } = req.body;
       let status = false;
 
       // 게시글 작성
       const createdPosts = await recruitPost.create({
-          // nickname,
+          nickname,
           title,
           content,
           imageUrl,
@@ -48,13 +48,12 @@ async function recruitAllGet(req, res) {
     }
 };
 
-// 모집 게시글 상세조회 (로그인 완료되면 recruitComments 불러올 때 nickname 추가)
+// 모집 게시글 상세조회
 async function recruitGet(req, res) {
     try {
         const { postId } = req.params;
-        // const { nickname } = res.locals.user;
-        const [recruitDetails] = await recruitPost.find({ postId: Number(postId) }, { postId: 1, title: 1, content: 1, imageUrl: 1, createdAt: 1, _id: 0 });
-        const recruitComments = await recruitComment.find({ postId: Number(postId) }, { postId: 1, commentId: 1, comment: 1, createdAt: 1, updatedAt: 1, _id: 0 }).sort({ commentId: -1 });
+        const [recruitDetails] = await recruitPost.find({ postId: Number(postId) }, { postId: 1, nickname: 1, title: 1, content: 1, imageUrl: 1, createdAt: 1, _id: 0 });
+        const recruitComments = await recruitComment.find({ postId: Number(postId) }, { postId: 1, commentId: 1, nickname: 1, comment: 1, createdAt: 1, updatedAt: 1, _id: 0 }).sort({ commentId: -1 });
         if (!recruitDetails) {
             return res.status(400).send({ result: "false", message: "게시글이 없습니다."});
         } else {
@@ -73,8 +72,8 @@ async function recruitUpdate(req, res) {
     try {
         const { postId } = req.params;
         const { title, content, date, time, place, status } = req.body;
-        // const { nickname } = res.locals.user;
-        const [ recruitPosts ] = await recruitPost.findOne({ postId: Number(postId) })
+        const { nickname } = res.locals.user;
+        const recruitPosts = await recruitPost.findOne({ postId: Number(postId) });
 
         if (nickname === recruitPosts.nickname) {
             await recruitPost.updateOne({ postId }, { $set: { title, content, date, time, place, status }});
@@ -100,8 +99,8 @@ async function recruitUpdate(req, res) {
 async function recruitDelete(req, res) {
     try {
         const { postId } = req.params;
-        // const { nickname } = res.locals.user;
-        const [ recruitPosts ] = await recruitPost.findOne({ postId: Number(postId) })
+        const { nickname } = res.locals.user;
+        const recruitPosts = await recruitPost.findOne({ postId: Number(postId) })
 
         if (nickname === recruitPosts.nickname) {
             await recruitPost.deleteOne({ postId });
