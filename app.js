@@ -9,6 +9,7 @@ const helmet = require('helmet');
 connect();
 //라우터
 const recruitPostsRouter = require("./routes/recruitPosts");
+const recruitCommentsRouter = require("./routes/recruitComments");
 const usersRouter = require("./routes/users");
 const commentsRouter = require("./routes/comments");
 
@@ -23,6 +24,7 @@ app.use(
   express.urlencoded({ extended: false }),
   [recruitPostsRouter],
   [commentsRouter],
+  [recruitCommentsRouter]
 );
 
 app.use(

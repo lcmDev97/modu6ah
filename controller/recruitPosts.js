@@ -1,4 +1,5 @@
 const recruitPost = require("../schemas/recruitPost");
+const recruitComment = require("../schemas/recruitComment");
 // const User = require("../schemas/user");
 
 // 모집 게시글 작성
@@ -47,13 +48,18 @@ async function recruitAllGet(req, res) {
     }
 };
 
-// 모집 게시글 상세조회 (recruitComment 만들어지면 추가로 send)
+// 모집 게시글 상세조회 (로그인 완료되면 recruitComments 불러올 때 nickname 추가)
 async function recruitGet(req, res) {
     try {
         const { postId } = req.params;
         // const { nickname } = res.locals.user;
         const [recruitDetails] = await recruitPost.find({ postId: Number(postId) }, { postId: 1, title: 1, content: 1, imageUrl: 1, createdAt: 1, _id: 0 });
-        res.status(200).send( recruitDetails );
+        const recruitComments = await recruitComment.find({ postId: Number(postId) }, { postId: 1, commentId: 1, comment: 1, createdAt: 1, updatedAt: 1, _id: 0 }).sort({ commentId: -1 });
+        if (!recruitDetails) {
+            return res.status(400).send({ result: "false", message: "게시글이 없습니다."});
+        } else {
+            return res.status(200).send({ recruitDetails, recruitComments });
+        }
     } catch (err) {
         res.status(400).send({
             result: "false",
