@@ -4,7 +4,7 @@ const router = express.Router();
 const userController = require("../controller/users")
 
 // 회원가입
-// router.post("/signup", userController.signup) 예시코드입니다.
+router.post("/signup", userController.signup) 
 
-
+router.post("/signin", userController.signin) 
 module.exports = router;

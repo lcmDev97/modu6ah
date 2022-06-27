@@ -18,6 +18,6 @@ const User = require("../schemas/user");
 
 
 module.exports = {
-  mainPost,
+  // mainPost,
 
 };
