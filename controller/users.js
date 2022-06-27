@@ -7,7 +7,7 @@ const User = require("../schemas/user");
 // };
 
 
-module.exports = {
-  signup,
+// module.exports = {
+//   signup,
 
-}
+// }

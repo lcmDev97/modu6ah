@@ -26,7 +26,7 @@ const Comment = require("../schemas/comment");
 
 
 
-module.exports = {
-    commentPost,
+// module.exports = {
+//     commentPost,
 
-}
+// }

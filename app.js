@@ -8,7 +8,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 connect();
 //라우터
-const postsRouter = require("./routes/posts");
+const recruitPostsRouter = require("./routes/recruitPosts");
 const usersRouter = require("./routes/users");
 const commentsRouter = require("./routes/comments");
 
@@ -21,7 +21,7 @@ app.use(morgan('tiny'))
 app.use(
   "/api",
   express.urlencoded({ extended: false }),
-  [postsRouter],
+  [recruitPostsRouter],
   [commentsRouter],
 );
 
