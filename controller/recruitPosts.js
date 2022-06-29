@@ -7,7 +7,7 @@ async function recruitPosts(req, res) {
   try {
       // 불러올 정보 및 받아올 정보
       const { nickname } = res.locals.user;
-      const { title, content, imageUrl, date, time, place } = req.body;
+      const { title, content, age, date, time, place } = req.body;
       let status = false;
 
       // 게시글 작성
@@ -15,7 +15,7 @@ async function recruitPosts(req, res) {
           nickname,
           title,
           content,
-          imageUrl,
+          age,
           date,
           time,
           place,
@@ -38,7 +38,7 @@ async function recruitPosts(req, res) {
 // 모집 게시글 전체조회
 async function recruitAllGet(req, res) {
     try {
-        const recruitPosts = await recruitPost.find({}, { postId: 1, title: 1, content: 1, imageUrl: 1, createdAt: 1, _id: 0 });
+        const recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0 });
         res.status(200).send({recruitPosts: recruitPosts});
     } catch (err) {
         res.status(400).send({
@@ -52,8 +52,8 @@ async function recruitAllGet(req, res) {
 async function recruitGet(req, res) {
     try {
         const { postId } = req.params;
-        const [recruitDetails] = await recruitPost.find({ postId: Number(postId) }, { postId: 1, nickname: 1, title: 1, content: 1, imageUrl: 1, createdAt: 1, _id: 0 });
-        const recruitComments = await recruitComment.find({ postId: Number(postId) }, { postId: 1, commentId: 1, nickname: 1, comment: 1, createdAt: 1, updatedAt: 1, _id: 0 }).sort({ commentId: -1 });
+        const [recruitDetails] = await recruitPost.find({ postId: Number(postId) }, { _id: 0 });
+        const recruitComments = await recruitComment.find({ postId: Number(postId) }, { _id: 0 }).sort({ commentId: -1 });
         if (!recruitDetails) {
             return res.status(400).send({ result: "false", message: "게시글이 없습니다."});
         } else {

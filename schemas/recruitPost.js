@@ -7,7 +7,7 @@ const recruitPostSchema = new Schema({
           nickname: { type: String },
           title: { type: String },
           content: { type: String },
-          imageUrl: { type: String },
+          age: { type: String },
           date: { type: String },
           time: { type: String },
           place: { type: String },
