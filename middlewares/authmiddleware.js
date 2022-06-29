@@ -34,11 +34,12 @@ module.exports = (req, res, next) => {
       let refreshtoken;
 
       User.findOne({ nickname }).then((user) => {
-        
-        console.log(refreshtoken);
+        console.log('user정보입니다.',user)
+        // 기존 코드 undefined뜸 console.log('refreshtoken정보입니다.',refreshtoken);
+        console.log('찾은 유저의 refreshtoken정보입니다.',user.refreshToken);
         
         const myRefreshToken = verifyrefeshToken(refreshtoken);
-        console.log("myRefreshToken", myRefreshToken);
+        console.log("RefreshToken 유효성 검사 정보입니다.", myRefreshToken);
         if (myRefreshToken == "jwt expired") {
           res.send({ errorMessage: "로그인이 필요합니다." });
         } else {

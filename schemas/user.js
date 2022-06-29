@@ -8,7 +8,9 @@ const UserSchema = new Schema({
     myComment: {type: String, },
     profileUrl: {type: String, },
     refreshToken: {type: String, },
-    bookmarkList: { type: Array, default: []}
+    bookmarkList: { type: Array, default: []},
+    snsId : {type: String, },
+    provider: {type: String, },
 });
 
 

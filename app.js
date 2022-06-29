@@ -6,17 +6,35 @@ const cors = require('cors');
 const connect = require("./database/database.js");
 const morgan = require('morgan');
 const helmet = require('helmet');
+const passport = require('passport')
+const session = require('express-session');
+const passportConfig = require('./passport');
+const cookieParser = require('cookie-parser');
 connect();
+
 //라우터
 const recruitPostsRouter = require("./routes/recruitPosts");
 const recruitCommentsRouter = require("./routes/recruitComments");
 const usersRouter = require("./routes/users");
-
+passportConfig()
 //미들웨어
 app.use(express.json());
 app.use(cors());
 app.use(helmet())
 app.use(morgan('tiny'))
+app.use(cookieParser());
+
+app.use(session({
+  resave: false,
+  saveUninitialized: false,
+  secret: "nodebirdsecret",
+  cookie: {
+    httpOnly: true,
+    secure: false,
+  },
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(
   "/api",
@@ -31,7 +49,9 @@ app.use(
   [usersRouter]
 );
 
-
+app.get('/',(req,res)=>{
+  res.send('redirect 테스트하기위한 루트 페이지입니다.')
+})
 
 // 없는 url로 요청한 경우
 app.use((req, res, next) => {
