@@ -6,10 +6,6 @@ const { Schema } = mongoose;
      commentId: {
         type: Number
     },
-        // // 닉네임 
-        // nickname: {
-        //     type: String
-        // },
     // 게시글 
      postId : {
         type: String
@@ -18,10 +14,11 @@ const { Schema } = mongoose;
      comment : {
         type: String
     }, 
-    // 닉네임 
-    //  nickname : {
-    //     type: String
-    // }, 
+    //닉네임 
+      nickname : {
+         type: String,
+         require : true
+     }, 
     // 등록 / 수정 날짜 자동 생성 
     },
     { 
