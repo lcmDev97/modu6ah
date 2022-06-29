@@ -1,6 +1,6 @@
 const recruitPost = require("../schemas/recruitPost");  // 모집 게시판 
 const recruitComment = require("../schemas/recruitComment");// 모집 댓글 
-
+const User = require("../schemas/user");
 
 /*
     댓글 등록 
@@ -8,6 +8,7 @@ const recruitComment = require("../schemas/recruitComment");// 모집 댓글
 */ 
 async function recruitComments(req, res) {
     try {
+        const { nickname } = res.locals.user;
         const { postId } = req.params;
         const { comment } = req.body;
         let status = false;
@@ -19,6 +20,7 @@ async function recruitComments(req, res) {
         console.log(findPost.postId) ;
         // 게시글 작성
         const recruitComments = await recruitComment.create({
+            nickname : nickname ,
             postId : findPost.postId, 
             comment : comment,
             
@@ -70,9 +72,11 @@ async function recruitCommentsAllGet(req, res) {
 async function recruitCommentsDelete(req, res) {
     try {
         const { postid,commentid } = req.params;
+        const { nickname } = res.locals.user;
         
         await recruitComment.deleteOne({ postid:Number(postid),
-                                            commentId:Number(commentid) });
+                                         commentId:Number(commentid),
+                                         });
         
         return res.json({ success: true })
     } 
