@@ -11,7 +11,7 @@ module.exports = () => {
                 callbackURL: process.env.KAKAO_CALLBACK_URL,
             },
             async (accessToken, refreshToken, profile, done) => {
-                console.log("로그인 성공시 카카오프로필정보", profile);
+                console.log("로그인 성공시 유저의 카카오 프로필 정보", profile);
                 try {
                     const exUser = await User.findOne({
                         $and: [{ snsId: profile.id }, { provider: "kakao" }], // where: { snsId: profile.id, provider: 'kakao' },
@@ -21,13 +21,13 @@ module.exports = () => {
                         done(null, exUser);
                     } else {
                         const newUser = await User.create({
-                            email: process.env.KAKAO_BASIC_EMAIL, //기존코드 email: profile._json && profile._json.kakao_account_email,
+                            email: profile._json.kakao_account.email, //기존코드 email: profile._json && profile._json.kakao_account_email,
                             nickname:
                                 profile.displayName +
                                 Math.floor(Math.random() * 100000000),
                             password: process.env.KAKAO_BASIC_PASSWORD,
                             myComment: "",
-                            profileUrl: "",
+                            profileUrl: profile._json.properties.profile_image,
                             refreshToken: "",
                             snsId: profile.id,
                             provider: "kakao",
