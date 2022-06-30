@@ -39,20 +39,22 @@ module.exports = (req, res, next) => {
         const refreshTokenCheck = verifyrefeshToken(targetRefreshToken);
         console.log("RefreshToken 유효성 검사 정보입니다.", refreshTokenCheck);
         if (refreshTokenCheck == "jwt expired") {
+          console.log('두 토큰 모두 만료된 상태')
           return res.status(401).send({ message : "로그인이 필요합니다." });
         } else {
           console.log('accessToken만 만료된 상태')
           const myNewToken = jwt.sign(
             { nickname: user.nickname },
-            REFRESH_SECRET_KEY,
+            SECRET_KEY,
             { expiresIn: "1h" }
           );
           let newToken = {
             nickname,
             myNewToken
           }
-          res.cookie('accessToken', myNewToken);
-          res.locals.user = newToken; //로컬스토리지에 저장되는지 프론트분께 물어보기
+          console.log('accessToken만 만료니까, 쿠키에다가 accesstoken넣어줄게')
+          res.cookie('accessToken', myNewToken);//쿠키에 access토큰 저장되는지 확인
+          res.locals.user = newToken; //로컬스토리지에 저장되는지 프론트분께 물어보기, 둘중에 하나 지워야할듯
           next();
         }
       });

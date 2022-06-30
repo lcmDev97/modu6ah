@@ -96,10 +96,10 @@ async function signin(req, res, next) {
             });
         }
         const accessToken = jwt.sign({ nickname: user.nickname }, SECRET_KEY, {
-            expiresIn: "1m",
+            expiresIn: "2m",
         });
         const refreshToken = jwt.sign({}, REFRESH_SECRET_KEY, {
-            expiresIn: "2m",
+            expiresIn: "4m",
         });
         console.log("accessToken이 생성되었습니다.", accessToken);
         console.log("refreshToken이 생성되었습니다.", refreshToken);
