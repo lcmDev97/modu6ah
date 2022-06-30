@@ -15,6 +15,7 @@ connect();
 //라우터
 const recruitPostsRouter = require("./routes/recruitPosts");
 const recruitCommentsRouter = require("./routes/recruitComments");
+const chatRoomsRouter = require("./routes/chatRooms");
 const usersRouter = require("./routes/users");
 passportConfig();
 //미들웨어
@@ -42,7 +43,8 @@ app.use(
     "/api",
     express.urlencoded({ extended: false }),
     [recruitPostsRouter],
-    [recruitCommentsRouter]
+    [recruitCommentsRouter],
+    [chatRoomsRouter]
 );
 
 app.use("/api/users", express.urlencoded({ extended: false }), [usersRouter]);
