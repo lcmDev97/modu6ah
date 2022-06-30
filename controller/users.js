@@ -93,7 +93,7 @@ async function signin (req, res, next) {
     expiresIn: "14d",
   });
   console.log("accessToken이 생성되었습니다.", accessToken)
-  console.log("refreshToken이 생성되었습니다.", accessToken)
+  console.log("refreshToken이 생성되었습니다.", refreshToken)
   await User.updateOne( { nickname: user.nickname },{ refreshToken : refreshToken } ); //기존코드에서 user,update, 조건위치 바꿈
   return res.json({
     result : true, 
@@ -125,7 +125,7 @@ async function signin (req, res, next) {
 async function logout (req, res, next) {
   req.logout((err) => {
 		req.session.destroy();
-		if (error) {
+		if (err) {
 			return res.status(400).json({
         result : false,
         message : "로그아웃중 에러가 발생하였습니다.",

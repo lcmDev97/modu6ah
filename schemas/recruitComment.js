@@ -7,9 +7,9 @@ const { Schema } = mongoose;
         type: Number
     },
         // // 닉네임 
-        // nickname: {
-        //     type: String
-        // },
+        nickname: {
+            type: String
+        },
     // 게시글 
      postId : {
         type: String
