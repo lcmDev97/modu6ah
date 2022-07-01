@@ -64,7 +64,12 @@ async function chatRooms(req, res) {
 async function chatRoomsAllGet(req, res) {
     try{
         const { nickname } = res.locals.user; // 로그인한 사용자 닉네임
-        const chatRoomList = await chatRoom.find({nickname: nickname});
+        const chatRoomList = await chatRoom.find({
+            $or: [
+            {nickname: nickname},
+            {postNickname: nickname}
+            ]}
+        );
         // console.log(chatRoomList);
         
         return res.status(200).send({chatRoomList: chatRoomList});
