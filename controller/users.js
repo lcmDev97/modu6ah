@@ -84,7 +84,7 @@ async function signin(req, res, next) {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
-
+        const nickname = user.nickname;
         let bcpassword = "";
         if (user) {
             bcpassword = await Bcrypt.compare(password, user.password);
@@ -110,6 +110,7 @@ async function signin(req, res, next) {
         return res.json({
             result: true,
             accessToken,
+            nickname
         });
     } catch (err) {
         return res.status(400).json({
