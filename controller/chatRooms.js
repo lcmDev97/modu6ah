@@ -44,6 +44,7 @@ async function chatRooms(req, res) {
                 postId,
                 nickname,
                 postNickname: existPostId.nickname,
+                postTitle: existPostId.title
         });
             console.log(createdChats);
             
@@ -59,6 +60,25 @@ async function chatRooms(req, res) {
         };
     };
 
+// 유저의 채팅방 전체조회
+async function chatRoomsAllGet(req, res) {
+    try{
+        const { nickname } = res.locals.user; // 로그인한 사용자 닉네임
+        const chatRoomList = await chatRoom.find({nickname: nickname});
+        // console.log(chatRoomList);
+        
+        return res.status(200).send({chatRoomList: chatRoomList});
+
+    } catch (err) {
+        return res.status(400).send({
+            result: "false",
+            message: "채팅방 전체조회 실패"
+        });
+    };
+};
+
+
 module.exports = {
-    chatRooms
+    chatRooms,
+    chatRoomsAllGet
 };
