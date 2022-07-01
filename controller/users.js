@@ -96,7 +96,7 @@ async function signin(req, res, next) {
             });
         }
         const accessToken = jwt.sign({ nickname: user.nickname }, SECRET_KEY, {
-            expiresIn: "10s",
+            expiresIn: "3h",
         });
         const refreshToken = jwt.sign({}, REFRESH_SECRET_KEY, {
             expiresIn: "14d",

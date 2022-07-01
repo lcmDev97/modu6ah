@@ -11,9 +11,10 @@ async function chatRooms(req, res) {
         const existPost = await recruitPost.findOne({postId: Number(postId), nickname: nickname}); // 게시글-닉네임 존재 여부 확인위함
         const existPostId = await recruitPost.findOne({postId: Number(postId)}); // 게시글 번호 존재여부 확인 위함
         const existRoom = await chatRoom.findOne({postId: Number(postId), nickname: nickname}); // 방 존재 여부 확인위함
-        // console.log(postId);
-        // console.log(existPost);
-        // console.log(existRoom);
+        console.log(postId);
+        console.log(existPost);
+        console.log(existPostId);
+        console.log(existRoom);
 
         // 이미 채팅방 만들어져있는 경우
         if ( existRoom ) {
@@ -42,9 +43,9 @@ async function chatRooms(req, res) {
         const createdChats = await chatRoom.create({
                 postId,
                 nickname,
-                postNickname: [existPost].nickname
+                postNickname: existPostId.nickname,
         });
-            // console.log(createdChats);
+            console.log(createdChats);
             
         return res.status(200).send({
                 result: "true",
