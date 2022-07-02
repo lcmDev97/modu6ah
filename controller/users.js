@@ -84,19 +84,22 @@ async function signin(req, res, next) {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
-
-        let bcpassword = "";
-        if (user) {
-            bcpassword = await Bcrypt.compare(password, user.password);
+        if (!user) {
+            return res.status(400).json({
+                result: false,
+                message: "이메일 또는 패스워드가 틀렸습니다.",
+            });
         }
+        const nickname = user.nickname;
+        const bcpassword = await Bcrypt.compare(password, user.password);
         if (!bcpassword) {
             return res.status(400).json({
-                errorMessage: "이메일 또는 패스워드가 틀렸습니다.",
+                message: "이메일 또는 패스워드가 틀렸습니다.",
                 result: false,
             });
         }
         const accessToken = jwt.sign({ nickname: user.nickname }, SECRET_KEY, {
-            expiresIn: "10s",
+            expiresIn: "4h",
         });
         const refreshToken = jwt.sign({}, REFRESH_SECRET_KEY, {
             expiresIn: "14d",
@@ -106,14 +109,15 @@ async function signin(req, res, next) {
         await User.updateOne(
             { nickname: user.nickname },
             { refreshToken: refreshToken }
-        ); //기존코드에서 user,update, 조건위치 바꿈
+        );
         return res.json({
             result: true,
             accessToken,
+            nickname,
         });
     } catch (err) {
         return res.status(400).json({
-            message: err.details[0].context.label,
+            message: err,
             result: false,
         });
     }
@@ -139,31 +143,7 @@ async function signin(req, res, next) {
 // })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 // }
 
-async function logout(req, res, next) {
-    req.logout((err) => {
-        req.session.destroy();
-        if (error) {
-            return res.status(400).json({
-                result: false,
-                message: "로그아웃중 에러가 발생하였습니다.",
-                err,
-            });
-        } else {
-            return res.status(200).json({
-                result: true,
-                message: "로그아웃 하였습니다.",
-            });
-        }
-    });
-}
-
-async function test(req, res, next) {
-    res.send("토큰유효기간 테스트 확인 페이지");
-}
-
 module.exports = {
     signup,
     signin,
-    logout,
-    test,
 };
