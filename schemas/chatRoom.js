@@ -8,7 +8,8 @@ const chatRoomSchema = new Schema(
         postId: { type: Number },
         nickname: { type: String },
         postNickname: { type: String },
-        postTitle: { type: String }
+        postTitle: { type: String },
+        lastChat: { type: String }
     },
     { timestamps: true }
 );

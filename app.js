@@ -15,7 +15,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const server = http.createServer(app);
 // DB
-const chatRoom = require("./schemas/chatRoom");
+const chatMessage = require("./schemas/chatMessage");
 connect();
 
 //라우터
@@ -76,23 +76,46 @@ const io = new Server(server, {
     }
 });
 
+// 채팅 가져오기
+const getChatMessages = async (roomId) => {
+    const messages = await chatMessage.find({roomId: roomId});
+    // console.log(messages);
+    return messages.map((message) => ({
+        senderNick: message.senderNick,
+        message: message.message,
+        createdAt: message.createdAt
+    }));
+};
+console.log(getChatMessages);
+
+const createChatMessages = async (roomId, senderNick, message) => {
+    return await chatMessage.create({
+        roomId: roomId,
+        senderNick: senderNick,
+        message: message
+    });
+};
+
 // 소켓 연결
 io.on("connection", (socket) => {
     console.log(`User Connected: ${socket.id}`);
 
     socket.on("join_room", (data) => {
         // data에는 클라이언트에서 전송한 매개변수가 들어옴(이러한 매개변수에는 제한x)
-        socket.join(data); // 해당 채팅방 입장
-        console.log(`User with ID: ${socket.id} joined room: ${data}`);
+        getChatMessages(roomId).then((data) => {
+            socket.join(roomId); // 해당 채팅방 입장
+            console.log(`User with ID: ${socket.id} joined room: ${roomId} chat Info: ${data}`);
+        });
       });
 
       // send_message 이벤트 수신(접속한 클라이언트의 정보가 수신되면)
-    socket.on("send_message", (data) => {
-        // db
-      // 룸으로 receive_message 이벤트 송신(방에 접속한 클라이언트에게 메시지 전송)
-      io.to(data.roomId).emit("receive_message", data); 
-      console.log('data: ', data);
-      console.log('data.room: ', data.room);
+    socket.on("send_message", ({roomId, senderNick, message}) => {
+        createChatMessages(roomId, senderNick, message).then((data) => {
+            // 룸으로 receive_message 이벤트 송신(방에 접속한 클라이언트에게 메시지 전송)
+            io.to(data.roomId).emit("receive_message", data);
+            console.log('data: ', data);
+            console.log('data.room: ', data.roomId);
+        })
     });
 
     
