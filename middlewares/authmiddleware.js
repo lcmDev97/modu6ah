@@ -31,9 +31,8 @@ module.exports = (req, res, next) => {
       const decodedToken = jwt.decode(authToken, SECRET_KEY);
       console.log("decodedToken정보입니다.", decodedToken);
       const nickname = decodedToken.nickname;
-
+      console.log(nickname)
       User.findOne({ nickname }).then((user) => {
-
         const targetRefreshToken = user.refreshToken
         console.log('찾은 유저의 refreshtoken정보입니다.',targetRefreshToken);
         const refreshTokenCheck = verifyrefeshToken(targetRefreshToken);
@@ -46,13 +45,13 @@ module.exports = (req, res, next) => {
           const myNewToken = jwt.sign(
             { nickname: user.nickname },
             SECRET_KEY,
-            { expiresIn: "1h" }
+            { expiresIn: "4h" }
           );
           let newToken = {
             nickname,
             myNewToken
           }
-          console.log('accessToken만 만료니까, 쿠키에다가 accesstoken넣어줄게')
+          console.log('accessToken만 만료니까, 쿠키에다가 accesstoken넣어줄게요')
           res.cookie('accessToken', myNewToken);//쿠키에 access토큰 저장되는지 확인
           res.locals.user = newToken; //로컬스토리지에 저장되는지 프론트분께 물어보기, 둘중에 하나 지워야할듯
           next();
