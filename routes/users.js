@@ -21,10 +21,4 @@ router.get('/kakao/callback', passport.authenticate('kakao', {
   });
 });
 
-router.get("/logout", userController.logout)//auth미들웨어 붙이기
-
-router.get("/test", authmiddleware, userController.test)//refresh token 테스트용 추후에 지우기
-
-router.post("/signin", userController.signin)
-
 module.exports = router;

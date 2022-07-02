@@ -9,7 +9,7 @@ async function recruitPosts(req, res) {
       const { nickname } = res.locals.user;
       const { title, content, age, date, time, place } = req.body;
       let status = false;
-
+console.log('쿠키에서 닉네임 잘가져오나?',nickname)
       // 게시글 작성
       const createdPosts = await recruitPost.create({
           nickname,

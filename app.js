@@ -35,7 +35,7 @@ app.use(
     session({
         resave: false,
         saveUninitialized: false,
-        secret: "nodebirdsecret",
+        secret: process.env.SESSION_SECRET,
         cookie: {
             httpOnly: true,
             secure: false,
