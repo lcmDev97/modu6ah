@@ -9,7 +9,7 @@ const chatRoomSchema = new Schema(
         nickname: { type: String },
         postNickname: { type: String },
         postTitle: { type: String },
-        lastChat: { type: String }
+        // lastChat: { type: String }
     },
     { timestamps: true }
 );
