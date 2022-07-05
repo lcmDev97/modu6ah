@@ -18,12 +18,12 @@ async function chatRooms(req, res) {
         console.log(existRoom);
 
         // 이미 채팅방 만들어져있는 경우
-        // if ( existRoom ) {
-        //    return res.status(400).send({
-        //         result: "false",
-        //         message: "이미 만들어진 채팅방이 존재합니다."
-        //     });
-        // }
+        if ( existRoom ) {
+           return res.status(400).send({
+                result: "false",
+                message: "이미 만들어진 채팅방이 존재합니다."
+            });
+        }
 
         // 본인이 본인 채팅방 들어가는 경우
         if ( existPost ) {

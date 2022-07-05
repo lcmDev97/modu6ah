@@ -7,7 +7,7 @@ async function chatMessagesGet(req, res) {
     try{
         const { roomId } = req.params;
         const chatMessageList = await chatMessage.find({ roomId: Number(roomId) });
-        // console.log(chatMessageList);
+        console.log(chatMessageList);
         
         if (!chatMessageList[0]) {
             return res.status(400).send({ result: "false", message: "해당 채팅방이 존재하지 않습니다."});
