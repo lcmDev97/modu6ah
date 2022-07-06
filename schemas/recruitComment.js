@@ -3,32 +3,14 @@ const autoIncrement = require("mongoose-sequence")(mongoose);
 const { Schema } = mongoose;
 const recruitCommentSchema = new Schema(
     {
-        // 코멘트 ID
-        commentId: {
-            type: Number,
-        },
-        // 게시글
-        postId: {
-            type: String,
-        },
-        // 코멘트
-        comment: {
-            type: String,
-        },
-        //닉네임
-        nickname: {
-            type: String,
-            require: true,
-        },
-        // 등록 / 수정 날짜 자동 생성
+        recruitCommentId: { type: Number }, // 댓글 번호
+        recruitPostId: { type: Number }, // 댓글 단 게시글 번호
+        nickname: { type: String }, // 댓글 작성자
+        comment: { type: String, required: true }, // 댓글 내용
     },
-    {
-        timestamps: true,
-    }
+    { timestamps: true } // 댓글 생성 및 수정날짜
 );
 
-recruitCommentSchema.plugin(autoIncrement, {
-    inc_field: "commentId",
-});
+recruitCommentSchema.plugin(autoIncrement, { inc_field: "recruitCommentId" });
 
 module.exports = mongoose.model("RecruitComment", recruitCommentSchema);

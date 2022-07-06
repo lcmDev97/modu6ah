@@ -1,25 +1,22 @@
-const recruitPost = require("../schemas/recruitPost");
-const recruitComment = require("../schemas/recruitComment");
+const reviewPost = require("../schemas/reviewPost");
+const reviewComment = require("../schemas/reviewComment");
 const User = require("../schemas/user");
 
-// 모집 게시글 작성
-async function recruitPosts(req, res) {
+// 육아용품 리뷰 게시글 작성
+async function reviewPosts(req, res) {
   try {
       // 불러올 정보 및 받아올 정보
       const { nickname } = res.locals.user;
-      const { title, content, age, date, time, place } = req.body;
-      let status = false;
+      const { title, content, imageUrl, url, productType } = req.body;
 
       // 게시글 작성
-      const createdPosts = await recruitPost.create({
+      const createdPosts = await reviewPost.create({
           nickname,
           title,
           content,
-          age,
-          date,
-          time,
-          place,
-          status
+          imageUrl,
+          url,
+          productType
       });
       console.log(createdPosts)
 
@@ -35,11 +32,11 @@ async function recruitPosts(req, res) {
   }
 };
 
-// 모집 게시글 전체조회
-async function recruitAllGet(req, res) {
+// 육아용품 리뷰 게시글 전체조회
+async function reviewAllGet(req, res) {
     try {
-        const recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0 });
-        res.status(200).send({recruitPosts: recruitPosts});
+        const reviewPosts = await reviewPost.find({}, { updatedAt: 0, _id: 0 });
+        res.status(200).send({reviewPosts: reviewPosts});
     } catch (err) {
         res.status(400).send({
             result: "false",
@@ -48,16 +45,16 @@ async function recruitAllGet(req, res) {
     }
 };
 
-// 모집 게시글 상세조회
-async function recruitGet(req, res) {
+// 육아용품 리뷰 게시글 상세조회
+async function reviewGet(req, res) {
     try {
-        const { recruitPostId } = req.params;
-        const [recruitDetails] = await recruitPost.find({ recruitPostId: Number(recruitPostId) }, { _id: 0 });
-        const recruitComments = await recruitComment.find({ recruitPostId: Number(recruitPostId) }, { _id: 0 }).sort({ recruitCommentId: -1 });
-        if (!recruitDetails) {
+        const { reviewPostId } = req.params;
+        const [reviewDetails] = await reviewPost.find({ reviewPostId: Number(reviewPostId) }, { _id: 0 });
+        const reviewComments = await reviewComment.find({ reviewPostId: Number(reviewPostId) }, { _id: 0 }).sort({ reviewCommentId: -1 });
+        if (!reviewDetails) {
             return res.status(400).send({ result: "false", message: "게시글이 없습니다."});
         } else {
-            return res.status(200).send({ recruitDetails, recruitComments });
+            return res.status(200).send({ reviewDetails, reviewComments });
         }
     } catch (err) {
         res.status(400).send({
@@ -67,16 +64,16 @@ async function recruitGet(req, res) {
     }
 };
 
-// 모집 게시글 수정
-async function recruitUpdate(req, res) {
+// 육아용품 리뷰 게시글 수정
+async function reviewUpdate(req, res) {
     try {
-        const { recruitPostId } = req.params;
-        const { title, content, date, time, place, status } = req.body;
+        const { reviewPostId } = req.params;
+        const { title, content, imageUrl, url, productType } = req.body;
         const { nickname } = res.locals.user;
-        const recruitPosts = await recruitPost.findOne({ recruitPostId: Number(recruitPostId) });
+        const reviewPosts = await reviewPost.findOne({ reviewPostId: Number(reviewPostId) });
 
-        if (nickname === recruitPosts.nickname) {
-            await recruitPost.updateOne({ recruitPostId }, { $set: { title, content, date, time, place, status }});
+        if (nickname === reviewPosts.nickname) {
+            await reviewPost.updateOne({ reviewPostId }, { $set: { title, content, imageUrl, url, productType }});
             res.status(200).send({
                 result: "true",
                 message: "게시글이 성공적으로 수정되었습니다."
@@ -95,16 +92,16 @@ async function recruitUpdate(req, res) {
     }
 };
 
-// 모집 게시글 삭제(모집 댓글도 같이 삭제)
-async function recruitDelete(req, res) {
+// 육아용품 리뷰 게시글 삭제(육아용품 리뷰 댓글도 같이 삭제)
+async function reviewDelete(req, res) {
     try {
-        const { recruitPostId } = req.params;
+        const { reviewPostId } = req.params;
         const { nickname } = res.locals.user;
-        const recruitPosts = await recruitPost.findOne({ recruitPostId: Number(recruitPostId) })
+        const reviewPosts = await reviewPost.findOne({ reviewPostId: Number(reviewPostId) })
 
-        if (nickname === recruitPosts.nickname) {
-            await recruitPost.deleteOne({ recruitPostId });
-            await recruitComment.deleteMany({ recruitPostId });
+        if (nickname === reviewPosts.nickname) {
+            await reviewPost.deleteOne({ reviewPostId });
+            await reviewComment.deleteMany({ reviewPostId });
 
             res.status(200).send({
                 result: "true",
@@ -124,24 +121,24 @@ async function recruitDelete(req, res) {
     }
 };
 
-// 모집 게시글 북마크 표시/해제
-async function recruitBookmark(req, res) {
+// 육아용품 리뷰 게시글 북마크 표시/해제
+async function reviewBookmark(req, res) {
     try {
-        const { recruitPostId } = req.params;
+        const { reviewPostId } = req.params;
         const { nickname } = res.locals.user;
-        const bookmarkPost = await recruitPost.findOne({ recruitPostId: Number(recruitPostId) });
+        const bookmarkPost = await reviewPost.findOne({ reviewPostId: Number(reviewPostId) });
         const user = await User.findOne({ nickname });
         console.log(bookmarkPost)
         if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
-            await user.updateOne({ $push: { bookmarkList: recruitPostId }})
+            await user.updateOne({ $push: { bookmarkList: reviewPostId }})
             res.status(200).send({
                 result: "true",
                 message: "북마크가 표시되었습니다."
             });
         } else {
             await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
-            await user.updateOne({ $pull: { bookmarkList: recruitPostId }})
+            await user.updateOne({ $pull: { bookmarkList: reviewPostId }})
             res.status(200).send({
                 result: "true",
                 message: "북마크가 해제되었습니다."
@@ -156,10 +153,10 @@ async function recruitBookmark(req, res) {
 }
 
 module.exports = {
-    recruitPosts,
-    recruitAllGet,
-    recruitGet,
-    recruitUpdate,
-    recruitDelete,
-    recruitBookmark,
+    reviewPosts,
+    reviewAllGet,
+    reviewGet,
+    reviewUpdate,
+    reviewDelete,
+    reviewBookmark,
   };

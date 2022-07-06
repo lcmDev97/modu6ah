@@ -10,15 +10,15 @@ router.post("/recruits", authMiddleware, recruitPostsController.recruitPosts);
 router.get("/recruits", recruitPostsController.recruitAllGet);
 
 // 모집 게시글 상세조회
-router.get("/recruits/:postId", recruitPostsController.recruitGet);
+router.get("/recruits/:recruitPostId", recruitPostsController.recruitGet);
 
 // 모집 게시글 수정
-router.put("/recruits/:postId", authMiddleware, recruitPostsController.recruitUpdate);
+router.put("/recruits/:recruitPostId", authMiddleware, recruitPostsController.recruitUpdate);
 
 // 모집 게시글 삭제
-router.delete("/recruits/:postId", authMiddleware, recruitPostsController.recruitDelete);
+router.delete("/recruits/:recruitPostId", authMiddleware, recruitPostsController.recruitDelete);
 
 // 모집 게시글 북마크 표시/해제
-router.put("/recruits/bookmark/:postId", authMiddleware, recruitPostsController.recruitBookmark);
+router.put("/recruits/bookmark/:recruitPostId", authMiddleware, recruitPostsController.recruitBookmark);
 
 module.exports = router;

@@ -1,27 +1,25 @@
-const recruitPost = require("../schemas/recruitPost");  // 모집 게시판 
-const recruitComment = require("../schemas/recruitComment");// 모집 댓글 
+const recruitPost = require("../schemas/recruitPost"); 
+const recruitComment = require("../schemas/recruitComment");
 const User = require("../schemas/user");
 
-/*
-    댓글 등록 
-    router.post("/recruits/:postId/comments", recruitCommentsController.recruitComments);
-*/ 
+// 모집 댓글 등록
+
 async function recruitComments(req, res) {
     try {
         const { nickname } = res.locals.user;
-        const { postId } = req.params;
+        const { recruitPostId } = req.params;
         const { comment } = req.body;
         let status = false;
   
        
         
         // 게시글 찾기 
-        const [findPost] = await recruitPost.find({ postId : postId });
-        console.log(findPost.postId) ;
+        const [findPost] = await recruitPost.find({ recruitPostId : recruitPostId });
+        console.log(findPost.recruitPostId) ;
         // 게시글 작성
         const recruitComments = await recruitComment.create({
             nickname : nickname ,
-            postId : findPost.postId, 
+            recruitPostId : findPost.recruitPostId, 
             comment : comment,
             
         });
@@ -35,7 +33,7 @@ async function recruitComments(req, res) {
         if(!findPost.postId){
             res.status(400).send({
                 result: "false",
-                message: "게시글번호가 없습니다 "
+                message: "게시글 번호가 없습니다 "
             });
         }
     } 
@@ -47,35 +45,14 @@ async function recruitComments(req, res) {
     }
  };
 
-/*
-    댓글 보기 
-    /recruits/:postid/comments
-*/ 
-async function recruitCommentsAllGet(req, res) {
-    try {
-        const { postid } = req.params;
-        const seeComment = await recruitComment.find({ postid });
-        res.status(200).json({ success: true, seeComment});
-    } 
-    catch (err) {
-        res.status(400).send({
-            result: "false",
-            message: "알수 없는 에러가 발생하였습니다"
-        });
-}};
-
-
-/*   
-    댓글 삭제 
-    "/recruits/:postid/comments/:commentId
-*/ 
+// 모집 댓글 삭제 
 async function recruitCommentsDelete(req, res) {
     try {
-        const { postid,commentid } = req.params;
+        const { recruitPostId, recruitCommentId } = req.params;
         const { nickname } = res.locals.user;
         
-        await recruitComment.deleteOne({ postid:Number(postid),
-                                         commentId:Number(commentid),
+        await recruitComment.deleteOne({ recruitPostId: Number(recruitPostId),
+                                         recruitCommentId: Number(recruitCommentId),
                                          });
         
         return res.json({ success: true })
@@ -83,13 +60,11 @@ async function recruitCommentsDelete(req, res) {
     catch (err) {
         res.status(400).send({
             result: "false",
-            message: "알수 없는 에러가 발생하였습니다"
+            message: "알 수 없는 에러가 발생하였습니다"
         });
 }};
 
-
- module.exports = {
+module.exports = {
     recruitComments,
-    recruitCommentsAllGet,
     recruitCommentsDelete,
-  };
+};
