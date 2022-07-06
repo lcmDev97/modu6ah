@@ -51,9 +51,29 @@ async function recruitCommentsDelete(req, res) {
         const { recruitPostId, recruitCommentId } = req.params;
         const { nickname } = res.locals.user;
         
-        await recruitComment.deleteOne({ recruitPostId: Number(recruitPostId),
-                                         recruitCommentId: Number(recruitCommentId),
-                                         });
+        const recruitComments = await recruitComment.findOne({ 
+            recruitPostId: Number(recruitPostId),
+            recruitCommentId: Number(recruitCommentId),
+        });
+
+        if(!recruitComments.recruitPostId){
+            return res.status(200).send({  
+            result: "false",
+            message: "이미 지워진 댓글입니다."
+            });
+        };
+        
+        if (!(recruitComments.nickname==nickname)) {
+            return res.status(200).send({  
+                result: "false",
+                message: "닉네임이 일치하지 않습니다"
+            });
+        }  
+        
+        await recruitComment.deleteOne({ 
+            recruitPostId: Number(recruitPostId),
+            recruitCommentId: Number(recruitCommentId),
+        });
         
         return res.json({ success: true })
     } 
