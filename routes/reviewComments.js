@@ -3,11 +3,11 @@ const router = express.Router();
 const reviewCommentsController = require("../controller/reviewComments.js");
 const authMiddleware = require("../middlewares/authmiddleware");
 
-// 리뷰  댓글
+// 육아용품 리뷰 댓글 등록
 router.post("/reviews/:reviewPostId/comments"
              ,authMiddleware, reviewCommentsController.reviewComments);
 
- // 모집 댓글 삭제
+// 육아용품 리뷰 댓글 삭제
 router.delete("/reviews/:reviewPostId/comments/:reviewCommentId"
               ,authMiddleware, reviewCommentsController.reviewCommentsDelete);
 

@@ -25,9 +25,9 @@ connect();
 const recruitPostsRouter = require("./routes/recruitPosts");
 const recruitCommentsRouter = require("./routes/recruitComments");
 const placePostsRouter = require("./routes/placePosts");
-// const placeCommentsRouter = require("./routes/placeComments");
+const placeCommentsRouter = require("./routes/placeComments");
 const reviewPostsRouter = require("./routes/reviewPosts");
-// const reviewCommentsRouter = require("./routes/reviewComments");
+const reviewCommentsRouter = require("./routes/reviewComments");
 const mypageRouter = require("./routes/mypage");
 const chatRoomsRouter = require("./routes/chatRooms");
 const chatMessagesRouter = require("./routes/chatMessages");
@@ -61,9 +61,9 @@ app.use(
     [recruitPostsRouter],
     [recruitCommentsRouter],
     [placePostsRouter],
-    // [placeCommentsRouter],
+    [placeCommentsRouter],
     [reviewPostsRouter],
-    // [reviewCommentsRouter],
+    [reviewCommentsRouter],
     [chatRoomsRouter],
     [chatMessagesRouter],
     [mypageRouter]

@@ -2,8 +2,7 @@ const reviewPost = require("../schemas/reviewPost");
 const reviewComment = require("../schemas/reviewComment");
 const User = require("../schemas/user");
 
-// 모집 댓글 등록
-
+// 육아용품 리뷰 댓글 등록
 async function reviewComments(req, res) {
     try {
         const { nickname } = res.locals.user;
@@ -11,8 +10,6 @@ async function reviewComments(req, res) {
         const { comment } = req.body;
         let status = false;
   
-       
-        
         // 게시글 찾기 
         const findPost = await reviewPost.findOne({ reviewPostId : Number(reviewPostId) });
         console.log(findPost)
@@ -33,15 +30,12 @@ async function reviewComments(req, res) {
             
         });
         console.log(reviewComments);
-  
-        
 
         res.status(200).send({
             result: "true",
             message: "댓글이 성공적으로 등록되었습니다."
         });
 
-       
     } 
     catch (err) {
         res.status(400).send({
@@ -50,9 +44,8 @@ async function reviewComments(req, res) {
         });
     }
 };
- 
 
-// 모집 댓글 삭제 
+// 육아용품 리뷰 댓글 삭제 
 async function reviewCommentsDelete(req, res) {
     try {
         const { reviewPostId, reviewCommentId } = req.params;
@@ -81,10 +74,6 @@ async function reviewCommentsDelete(req, res) {
                 reviewPostId: reviewPostId,
                 reviewCommentId: reviewCommentId,
             });
-       
-        
-        
-        
 
         return res.status(200).send({
             result: "true",
@@ -100,8 +89,6 @@ async function reviewCommentsDelete(req, res) {
 }};
 
 module.exports = {
-
     reviewComments,
     reviewCommentsDelete
-
 };

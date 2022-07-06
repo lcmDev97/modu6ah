@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const mypageController = require("../controller/mypage");
+const mypageController = require("../controller/mypages");
 const authMiddleware = require("../middlewares/authmiddleware");
 
 // 프로필 조회
