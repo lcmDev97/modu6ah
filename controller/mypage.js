@@ -7,7 +7,7 @@ const User = require("../schemas/user");
 async function profileGet(req, res) {
     try {
         const { nickname } = res.locals.user;
-        const mypageGet = await User.find({ nickname }, { _id: 0, email: 1, nickname: 1, profileUrl: 1, myComment: 1 });
+        const mypageGet = await User.findOne({ nickname }, { _id: 0, email: 1, nickname: 1, profileUrl: 1, myComment: 1 });
         res.status(200).send({ mypageGet });
     } catch (err) {
         res.status(400).send({
