@@ -5,7 +5,7 @@ const { Schema } = mongoose;
 const chatRoomSchema = new Schema(
     {
         roomId: { type: Number, unique: true},
-        postId: { type: Number },
+        recruitPostId: { type: Number },
         nickname: { type: String },
         postNickname: { type: String },
         postTitle: { type: String },

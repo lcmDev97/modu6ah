@@ -7,12 +7,12 @@ async function chatRooms(req, res) {
     try {
         // 불러올 정보 및 받아올 정보
         const { nickname } = res.locals.user; // 로그인한 사용자 닉네임
-        const { postId } = req.params; // 게시글 번호
-        const existPost = await recruitPost.findOne({postId: Number(postId), nickname: nickname}); // 게시글-닉네임 존재 여부 확인위함
-        const existPostId = await recruitPost.findOne({postId: Number(postId)}); // 게시글 번호 존재여부 확인 위함
-        const existRoom = await chatRoom.findOne({postId: Number(postId), nickname: nickname}); // 방 존재 여부 확인위함
+        const { recruitPostId } = req.params; // 게시글 번호
+        const existPost = await recruitPost.findOne({recruitPostId: Number(recruitPostId), nickname: nickname}); // 게시글-닉네임 존재 여부 확인위함
+        const existPostId = await recruitPost.findOne({recruitPostId: Number(recruitPostId)}); // 게시글 번호 존재여부 확인 위함
+        const existRoom = await chatRoom.findOne({recruitPostId: Number(recruitPostId), nickname: nickname}); // 방 존재 여부 확인위함
 
-        console.log(postId);
+        console.log(recruitPostId);
         console.log(existPost);
         console.log(existPostId);
         console.log(existRoom);
@@ -42,7 +42,7 @@ async function chatRooms(req, res) {
 
         // 채팅방 생성
         const createdChats = await chatRoom.create({
-                postId,
+                recruitPostId,
                 nickname,
                 postNickname: existPostId.nickname,
                 postTitle: existPostId.title

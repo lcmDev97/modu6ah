@@ -10,10 +10,12 @@ const passport = require("passport");
 const session = require("express-session");
 const passportConfig = require("./passport");
 const cookieParser = require("cookie-parser");
+
 // 초기 세팅
 const http = require('http');
 const { Server } = require('socket.io');
 const server = http.createServer(app);
+
 // DB
 const chatMessage = require("./schemas/chatMessage");
 const chatRoom = require("./schemas/chatRoom");
@@ -22,10 +24,15 @@ connect();
 //라우터
 const recruitPostsRouter = require("./routes/recruitPosts");
 const recruitCommentsRouter = require("./routes/recruitComments");
+const placePostsRouter = require("./routes/placePosts");
+const placeCommentsRouter = require("./routes/placeComments");
+const reviewPostsRouter = require("./routes/reviewPosts");
+const reviewCommentsRouter = require("./routes/reviewComments");
 const chatRoomsRouter = require("./routes/chatRooms");
 const chatMessagesRouter = require("./routes/chatMessages");
 const usersRouter = require("./routes/users");
 passportConfig();
+
 //미들웨어
 app.use(express.json());
 app.use(cors());
@@ -52,6 +59,10 @@ app.use(
     express.urlencoded({ extended: false }),
     [recruitPostsRouter],
     [recruitCommentsRouter],
+    [placePostsRouter],
+    [placeCommentsRouter],
+    [reviewPostsRouter],
+    [reviewCommentsRouter],
     [chatRoomsRouter],
     [chatMessagesRouter]
 );
