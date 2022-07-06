@@ -19,6 +19,6 @@ router.put("/places/:placePostId", authMiddleware, placePostsController.placeUpd
 router.delete("/places/:placePostId", authMiddleware, placePostsController.placeDelete);
 
 // 장소추천 게시글 북마크 표시/해제
-// router.put("/places/bookmark/:placePostId", authMiddleware, placePostsController.placeBookmark);
+router.put("/places/bookmark/:placePostId", authMiddleware, placePostsController.placeBookmark);
 
 module.exports = router;

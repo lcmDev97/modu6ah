@@ -19,6 +19,6 @@ router.put("/recruits/:recruitPostId", authMiddleware, recruitPostsController.re
 router.delete("/recruits/:recruitPostId", authMiddleware, recruitPostsController.recruitDelete);
 
 // 모집 게시글 북마크 표시/해제
-// router.put("/recruits/bookmark/:recruitPostId", authMiddleware, recruitPostsController.recruitBookmark);
+router.put("/recruits/bookmark/:recruitPostId", authMiddleware, recruitPostsController.recruitBookmark);
 
 module.exports = router;

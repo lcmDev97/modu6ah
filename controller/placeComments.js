@@ -98,6 +98,9 @@ async function placeCommentsDelete(req, res) {
 }};
 
 module.exports = {
+
     placeComments,
     placeCommentsDelete 
+
+ 
 };

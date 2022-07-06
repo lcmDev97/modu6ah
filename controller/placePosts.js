@@ -123,35 +123,35 @@ async function placeDelete(req, res) {
 };
 
 // 장소추천 게시글 북마크 표시/해제
-// async function placeBookmark(req, res) {
-//     try {
-//         const { placePostId } = req.params;
-//         const { nickname } = res.locals.user;
-//         const bookmarkPost = await placePost.findOne({ placePostId: Number(placePostId) });
-//         const user = await User.findOne({ nickname });
-//         console.log(bookmarkPost)
-//         if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
-//             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
-//             await user.updateOne({ $push: { bookmarkList: postId }})
-//             res.status(200).send({
-//                 result: "true",
-//                 message: "북마크가 표시되었습니다."
-//             });
-//         } else {
-//             await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
-//             await user.updateOne({ $pull: { bookmarkList: placePostId }})
-//             res.status(200).send({
-//                 result: "true",
-//                 message: "북마크가 해제되었습니다."
-//             });
-//         }
-//     } catch (err) {
-//         res.status(400).send({
-//             result: "false",
-//             message: "게시글 북마크 표시/해제 실패"
-//         });
-//     }
-// }
+async function placeBookmark(req, res) {
+    try {
+        const { placePostId } = req.params;
+        const { nickname } = res.locals.user;
+        const bookmarkPost = await placePost.findOne({ placePostId: Number(placePostId) });
+        const user = await User.findOne({ nickname });
+        console.log(bookmarkPost)
+        if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
+            await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
+            await user.updateOne({ $push: { bookmarkList: placePostId }})
+            res.status(200).send({
+                result: "true",
+                message: "북마크가 표시되었습니다."
+            });
+        } else {
+            await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
+            await user.updateOne({ $pull: { bookmarkList: placePostId }})
+            res.status(200).send({
+                result: "true",
+                message: "북마크가 해제되었습니다."
+            });
+        }
+    } catch (err) {
+        res.status(400).send({
+            result: "false",
+            message: "게시글 북마크 표시/해제 실패"
+        });
+    }
+}
 
 module.exports = {
     placePosts,
@@ -159,5 +159,5 @@ module.exports = {
     placeGet,
     placeUpdate,
     placeDelete,
-    // placeBookmark,
+    placeBookmark,
   };

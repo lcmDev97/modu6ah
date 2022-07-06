@@ -100,6 +100,8 @@ async function reviewCommentsDelete(req, res) {
 }};
 
 module.exports = {
+
     reviewComments,
     reviewCommentsDelete
+
 };
