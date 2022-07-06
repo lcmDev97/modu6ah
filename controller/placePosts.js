@@ -132,7 +132,7 @@ async function placeBookmark(req, res) {
         console.log(bookmarkPost)
         if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
-            await user.updateOne({ $push: { bookmarkList: postId }})
+            await user.updateOne({ $push: { bookmarkList: placePostId }})
             res.status(200).send({
                 result: "true",
                 message: "북마크가 표시되었습니다."
