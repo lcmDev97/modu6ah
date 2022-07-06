@@ -18,13 +18,18 @@ async function mainPostGet(req, res) {
     }
     
     //장소추천게시글
-    const placeMain = await placePost.find({}).sort({ star: -1,  createdAt: -1 }.limit(2));
-
+    const placePosts = await placePost.find({}).sort({ star: -1,  createdAt: -1 }).limit(2);
+    
+    // 리뷰 조회
+    const reviewPosts = await reviewPost.find().sort({createdAt:-1}.limit(2));
+    res.status(200).send({reviewPosts: reviewPosts});    
+    console.log(findPost)
 
     res.json({
         result:true,
         recruitPosts,
-        placePosts: placeMain
+        placePosts, 
+        reviewPosts
     })
 };
 

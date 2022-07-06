@@ -69,7 +69,7 @@ async function recruitGet(req, res) {
 
 // 모집 게시글 수정
 async function recruitUpdate(req, res) {
-    try {
+    // try {
         const { recruitPostId } = req.params;
         const { title, content, date, time, place, status } = req.body;
         const { nickname } = res.locals.user;
@@ -87,12 +87,12 @@ async function recruitUpdate(req, res) {
                 message: "게시글 수정 권한 없음"
             });
         }
-    } catch (err) {
-        res.status(400).send({
-            result: "false",
-            message: "게시글 수정 실패"
-        });
-    }
+    // } catch (err) {
+    //     res.status(400).send({
+    //         result: "false",
+    //         message: "게시글 수정 실패"
+    //     });
+    // }
 };
 
 // 모집 게시글 삭제(모집 댓글도 같이 삭제)
