@@ -31,7 +31,8 @@ const reviewCommentsRouter = require("./routes/reviewComments");
 const mypagesRouter = require("./routes/mypages");
 const chatRoomsRouter = require("./routes/chatRooms");
 const chatMessagesRouter = require("./routes/chatMessages");
-const usersRouter = require("./routes/users"); 
+const usersRouter = require("./routes/users");
+const mainRouter = require("./routes/mains")
 passportConfig();
 
 //미들웨어
@@ -66,7 +67,8 @@ app.use(
     [reviewCommentsRouter],
     [chatRoomsRouter],
     [chatMessagesRouter],
-    [mypagesRouter]
+    [mypagesRouter],
+    [mainRouter]
 );
 
 app.use("/api/users", express.urlencoded({ extended: false }), [usersRouter]);

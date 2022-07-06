@@ -27,7 +27,7 @@ module.exports = () => {
                                 Math.floor(Math.random() * 100000000),
                             password: process.env.KAKAO_BASIC_PASSWORD,
                             myComment: "",
-                            profileUrl: profile._json.properties.profile_image,
+                            profileUrl: "https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png",
                             refreshToken: "",
                             snsId: profile.id,
                             provider: "kakao",

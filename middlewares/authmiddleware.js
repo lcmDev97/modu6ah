@@ -59,14 +59,16 @@ module.exports = (req, res, next) => {
       });
     } else {
       const { nickname } = jwt.verify(authToken, SECRET_KEY);
-      console.log('이 닉네임뭐지',nickname)
       User.findOne({ nickname }).then((user) => {
         res.locals.user = user;
         next();
       });
     }
   } catch (err) {
-    res.status(401).send({ errorMessage: err + " : 로그인이 필요합니다." });
+    res.status(401).send({
+      result : true,
+      message : "로그인후 사용해 주세요",
+    });
   }
 };
 //  유저정보에 토큰도 같이
