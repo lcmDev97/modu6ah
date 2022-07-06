@@ -3,15 +3,12 @@ const recruitComment = require("../schemas/recruitComment");
 const User = require("../schemas/user");
 
 // 모집 댓글 등록
-
 async function recruitComments(req, res) {
     try {
         const { nickname } = res.locals.user;
         const { recruitPostId } = req.params;
         const { comment } = req.body;
         let status = false;
-  
-       
         
         // 게시글 찾기 
         const [findPost] = await recruitPost.find({ recruitPostId : recruitPostId });

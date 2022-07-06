@@ -2,17 +2,14 @@ const placePost = require("../schemas/placePost");
 const placeComment = require("../schemas/placeComment");
 const User = require("../schemas/user");
 
-// 모집 댓글 등록
-
+// 장소추천 댓글 등록
 async function placeComments(req, res) {
     try {
         const { nickname } = res.locals.user;
         const { placePostId } = req.params;
         const { comment } = req.body;
         let status = false;
-  
-       
-        
+
         // 게시글 찾기 
         const findPost = await placePost.findOne({ placePostId : Number(placePostId) });
         console.log(findPost)
@@ -24,7 +21,8 @@ async function placeComments(req, res) {
             });
         }
          
-        console.log("나와라요"+findPost.placePostId)
+        // console.log("나와라요"+findPost.placePostId)
+
         // 게시글 작성
         const placeComments = await placeComment.create({
             nickname : nickname ,
@@ -32,16 +30,13 @@ async function placeComments(req, res) {
             comment : comment,
             
         });
-        console.log(placeComments)
+        // console.log(placeComments)
   
-        
-
         res.status(200).send({
             result: "true",
             message: "댓글이 성공적으로 등록되었습니다."
         });
 
-       
     } 
     catch (err) {
         res.status(400).send({
@@ -52,7 +47,7 @@ async function placeComments(req, res) {
 };
  
 
-// 모집 댓글 삭제 
+// 장소추천 댓글 삭제 
 async function placeCommentsDelete(req, res) {
     try {
         const { placePostId, placeCommentId } = req.params;
@@ -77,13 +72,11 @@ async function placeCommentsDelete(req, res) {
             });
         }  
 
-        
             await placeComment.deleteOne({ 
                 placePostId: placePostId,
                 placeCommentId: placeCommentId,
             });
        
-
         return res.status(200).send({
             result: "true",
             message: "댓글이 성공적으로 삭제되었습니다."
@@ -98,9 +91,6 @@ async function placeCommentsDelete(req, res) {
 }};
 
 module.exports = {
-
     placeComments,
-    placeCommentsDelete 
-
- 
+    placeCommentsDelete
 };
