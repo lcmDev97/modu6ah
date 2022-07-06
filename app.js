@@ -28,7 +28,7 @@ const placePostsRouter = require("./routes/placePosts");
 const placeCommentsRouter = require("./routes/placeComments");
 const reviewPostsRouter = require("./routes/reviewPosts");
 const reviewCommentsRouter = require("./routes/reviewComments");
-const mypageRouter = require("./routes/mypage");
+const mypagesRouter = require("./routes/mypages");
 const chatRoomsRouter = require("./routes/chatRooms");
 const chatMessagesRouter = require("./routes/chatMessages");
 const usersRouter = require("./routes/users");
@@ -67,7 +67,7 @@ app.use(
     [reviewCommentsRouter],
     [chatRoomsRouter],
     [chatMessagesRouter],
-    [mypageRouter],
+    [mypagesRouter],
     [mainRouter]
 );
 
