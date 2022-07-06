@@ -61,7 +61,7 @@ async function signup(req, res, next) {
             nickname,
             password: hashPassword,
             myComment: "",
-            profileUrl: "",
+            profileUrl: "https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png",
             refreshToken: "",
             snsId: "",
             provider: "",
