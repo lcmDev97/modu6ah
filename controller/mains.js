@@ -16,16 +16,15 @@ async function mainPostGet(req, res) {
     for(let i = 0 ; i < remainNum ; i++){
         recruitPosts.push(truePosts[i])
     }
-    
+
     //장소추천게시글
     const placePosts = await placePost.find({}).sort({ star: -1,  createdAt: -1 }).limit(2);
     
     // 리뷰 조회
-    const reviewPosts = await reviewPost.find().sort({createdAt:-1}.limit(2));
-    res.status(200).send({reviewPosts: reviewPosts});    
-    console.log(findPost)
+    const reviewPosts = await reviewPost.find().sort({createdAt:-1}).limit(2);
+    
 
-    res.json({
+    return res.json({
         result:true,
         recruitPosts,
         placePosts, 
