@@ -100,7 +100,8 @@ io.on("connection", (socket) => {
 
     socket.on("join_room", (data) => {
         // data에는 클라이언트에서 전송한 매개변수가 들어옴(이러한 매개변수에는 제한x)
-        socket.join(data); // 해당 채팅방 입장
+        roomId = socket.roomId = data;
+        socket.join(roomId); // 해당 채팅방 입장
         console.log(`User with ID: ${socket.id} joined room: ${data}`);
         // const chats = await chatMessage.find({ data: Number(data) });
         // io.to(data.roomId).emit("load", chats);
@@ -112,7 +113,7 @@ io.on("connection", (socket) => {
         message.save().then(() => {
         // 룸으로 receive_message 이벤트 송신(방에 접속한 클라이언트에게 메시지 전송)
             // const chatRoomId = await chatRoom.findOne({ roomId: data.roomId });
-            io.emit("receive_message", data); 
+            io.to(data.roomId).emit("receive_message", data);
             console.log('data: ', data);
             console.log('data.room: ', data.roomId);
         });
@@ -127,3 +128,5 @@ io.on("connection", (socket) => {
 server.listen(PORT, () => {
     console.log(`${PORT}번 포트로 서버가 열렸습니다.`);
 });
+
+module.exports = app;
