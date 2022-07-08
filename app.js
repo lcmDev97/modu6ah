@@ -10,8 +10,8 @@ const passport = require("passport");
 const session = require("express-session");
 const passportConfig = require("./passport");
 const cookieParser = require("cookie-parser");
-const swaggerUi = require("swagger-ui-express");
-const swaggerFile = require("./swagger-output");
+// const swaggerUi = require("swagger-ui-express");
+// const swaggerFile = require("./swagger-output");
 
 // 초기 세팅
 const http = require('http');
@@ -75,7 +75,7 @@ app.use(
 
 app.use("/api/users", express.urlencoded({ extended: false }), [usersRouter]);
 
-app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile));
+// app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.get("/", (req, res) => {
     res.send("redirect 테스트하기위한 루트 페이지입니다.");
