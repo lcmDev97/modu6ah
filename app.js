@@ -100,8 +100,7 @@ io.on("connection", (socket) => {
 
     socket.on("join_room", (data) => {
         // data에는 클라이언트에서 전송한 매개변수가 들어옴(이러한 매개변수에는 제한x)
-        roomId = socket.roomId = data;
-        socket.join(roomId); // 해당 채팅방 입장
+        socket.join(data); // 해당 채팅방 입장
         console.log(`User with ID: ${socket.id} joined room: ${data}`);
         // const chats = await chatMessage.find({ data: Number(data) });
         // io.to(data.roomId).emit("load", chats);
