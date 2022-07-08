@@ -127,7 +127,7 @@ io.on("connection", (socket) => {
             socket.emit("receiveRoom", data)
         });
     });
-    console.log(`User with ID: ${socket.id} joined room: ${data}`);
+    console.log(`User with ID: ${socket.id} joined room: ${roomId}`);
 
     socket.on("send_message", ({recruitsPostId: roomId, nickname, message}) => {
         createMessage(roomId, nickname, message).then((data) => {
