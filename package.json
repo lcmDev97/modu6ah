@@ -9,7 +9,7 @@
     "helmet": "^5.1.0",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
-    "moment": "^2.29.3",
+    "moment": "^2.29.4",
     "mongoose": "^6.4.0",
     "mongoose-sequence": "^5.3.1",
     "morgan": "^1.10.0",
@@ -17,7 +17,9 @@
     "passport": "^0.6.0",
     "passport-kakao": "^1.0.1",
     "passport-local": "^1.0.0",
-    "socket.io": "^4.5.1"
+    "socket.io": "^4.5.1",
+    "swagger-autogen": "^2.21.5",
+    "swagger-ui-express": "^4.4.0"
   },
   "devDependencies": {
     "jest": "^28.1.2",

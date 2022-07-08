@@ -10,6 +10,8 @@ const passport = require("passport");
 const session = require("express-session");
 const passportConfig = require("./passport");
 const cookieParser = require("cookie-parser");
+const swaggerUi = require("swagger-ui-express");
+const swaggerFile = require("./swagger-output");
 
 // 초기 세팅
 const http = require('http');
@@ -73,6 +75,8 @@ app.use(
 
 app.use("/api/users", express.urlencoded({ extended: false }), [usersRouter]);
 
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
 app.get("/", (req, res) => {
     res.send("redirect 테스트하기위한 루트 페이지입니다.");
 });
@@ -112,7 +116,7 @@ io.on("connection", (socket) => {
         message.save().then(() => {
         // 룸으로 receive_message 이벤트 송신(방에 접속한 클라이언트에게 메시지 전송)
             // const chatRoomId = await chatRoom.findOne({ roomId: data.roomId });
-            io.emit("receive_message", data);
+            socket.broadcast.to(data.roomId).emit("receive_message", data);
             console.log('data: ', data);
             console.log('data.room: ', data.roomId);
         });
