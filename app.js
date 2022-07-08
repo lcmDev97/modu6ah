@@ -98,17 +98,60 @@ const io = new Server(server, {
     }
 });
 
+const createRoom = async (recruitsPostId, nickname) => {
+    return room = await chatRoom.create({
+        recruitsPostId: recruitsPostId,
+        nickname: nickname
+    })
+}
+
+const createMessage = async (roomId, senderNick, message) => {
+    return await chatMessage.create({
+        roomId: roomId,
+        senderNick: nickname,
+        message: message
+    });
+};
+
+// 조건문(chatRoom db에 nickname이랑 postNickname이 있을 경우 새로운 방 생성이 아닌 기존 방 입장)
+
+
+
 // 소켓 연결
 io.on("connection", (socket) => {
     console.log(`User Connected: ${socket.id}`);
 
-    socket.on("join_room", (data) => {
+    socket.on("join_room", ({recruitsPostId: roomId, nickname}) => {
+        createRoom(recruitsPostId, nickname).then((data) => {
+            socket.join(roomId);
+            socket.emit("receiveRoom", data)
+        });
+    });
+    console.log(`User with ID: ${socket.id} joined room: ${data}`);
+
+    socket.on("send_message", ({recruitsPostId: roomId, nickname, message}) => {
+        createMessage(roomId, nickname, message).then((data) => {
+            socket.broadcast.to(roomId).emit('message', {
+                recruitsPostId: data.recruitsPostId,
+                nickname: data.nickname,
+                message: data.message,
+                createdAt: data.createdAt
+            });
+        });
+    });
+
+    socket.on("disconnect", () => {
+        console.log("User Disconnected", socket.id);
+      });
+});
+
+
         // data에는 클라이언트에서 전송한 매개변수가 들어옴(이러한 매개변수에는 제한x)
-        socket.join(data); // 해당 채팅방 입장
-        console.log(`User with ID: ${socket.id} joined room: ${data}`);
+        // socket.join(data); // 해당 채팅방 입장
+
         // const chats = await chatMessage.find({ data: Number(data) });
         // io.to(data.roomId).emit("load", chats);
-      });
+        //   });
 
       // send_message 이벤트 수신(접속한 클라이언트의 정보가 수신되면)
     //   socket.on("send_message", (data) => {
@@ -122,10 +165,6 @@ io.on("connection", (socket) => {
     //     });
     // });
 
-    socket.on("disconnect", () => {
-        console.log("User Disconnected", socket.id);
-      });
-});
 
 server.listen(PORT, () => {
     console.log(`${PORT}번 포트로 서버가 열렸습니다.`);
