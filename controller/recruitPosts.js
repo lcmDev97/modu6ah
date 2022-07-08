@@ -39,7 +39,7 @@ async function recruitPosts(req, res) {
 async function recruitAllGet(req, res) {
     try {
         const recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0 });
-        res.status(200).send({recruitPosts: recruitPosts});
+        res.status(200).send({recruitPosts: recruitPosts });
     } catch (err) {
         res.status(400).send({
             result: "false",
