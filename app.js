@@ -121,18 +121,18 @@ const createMessage = async (roomId, senderNick, message) => {
 io.on("connection", (socket) => {
     console.log(`User Connected: ${socket.id}`);
 
-    socket.on("join_room", ({recruitsPostId: roomId, nickname}) => {
-        createRoom(recruitsPostId, nickname).then((data) => {
+    socket.on("join_room", ({recruitPostId: roomId, nickname}) => {
+        createRoom(recruitPostId, nickname).then((data) => {
             socket.join(roomId);
             socket.emit("receiveRoom", data)
             console.log(`User with ID: ${socket.id} joined room: ${roomId}`)
         });
     });
 
-    socket.on("send_message", ({recruitsPostId: roomId, nickname, message}) => {
+    socket.on("send_message", ({recruitPostId: roomId, nickname, message}) => {
         createMessage(roomId, nickname, message).then((data) => {
             socket.broadcast.to(roomId).emit('message', {
-                recruitsPostId: data.recruitsPostId,
+                recruitPostId: data.recruitPostId,
                 nickname: data.nickname,
                 message: data.message,
                 createdAt: data.createdAt
