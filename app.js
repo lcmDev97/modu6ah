@@ -98,20 +98,20 @@ const io = new Server(server, {
     }
 });
 
-const createRoom = async (recruitPostId, nickname) => {
-    return room = await chatRoom.create({
-        recruitPostId: recruitPostId,
-        nickname: nickname
-    })
-}
+// const createRoom = async (recruitPostId, nickname) => {
+//     return room = await chatRoom.create({
+//         recruitPostId: recruitPostId,
+//         nickname: nickname
+//     })
+// }
 
-const createMessage = async (roomId, senderNick, message) => {
-    return await chatMessage.create({
-        roomId: roomId,
-        senderNick: nickname,
-        message: message
-    });
-};
+// const createMessage = async (roomId, senderNick, message) => {
+//     return await chatMessage.create({
+//         roomId: roomId,
+//         senderNick: nickname,
+//         message: message
+//     });
+// };
 
 // 조건문(chatRoom db에 nickname이랑 postNickname이 있을 경우 새로운 방 생성이 아닌 기존 방 입장)
 
@@ -121,24 +121,22 @@ const createMessage = async (roomId, senderNick, message) => {
 io.on("connection", (socket) => {
     console.log(`User Connected: ${socket.id}`);
 
-    socket.on("join_room", ({recruitPostId: roomId, nickname}) => {
-        createRoom(recruitPostId, nickname).then((data) => {
-            socket.join(roomId);
-            socket.emit("receiveRoom", data)
-            console.log(`User with ID: ${socket.id} joined room: ${roomId}`)
+    socket.on("join_room", (data) => {
+            socket.join(data);
+            console.log(`User with ID: ${socket.id} joined room: ${data}`)
         });
-    });
 
-    socket.on("send_message", ({recruitPostId: roomId, nickname, message}) => {
-        createMessage(roomId, nickname, message).then((data) => {
-            socket.broadcast.to(roomId).emit('message', {
-                recruitPostId: data.recruitPostId,
-                nickname: data.nickname,
-                message: data.message,
-                createdAt: data.createdAt
-            });
-        });
-    });
+
+    // socket.on("send_message", ({recruitPostId: roomId, nickname, message}) => {
+    //     createMessage(roomId, nickname, message).then((data) => {
+    //         socket.broadcast.to(roomId).emit('message', {
+    //             recruitPostId: data.recruitPostId,
+    //             nickname: data.nickname,
+    //             message: data.message,
+    //             createdAt: data.createdAt
+    //         });
+    //     });
+    // });
 
     socket.on("disconnect", () => {
         console.log("User Disconnected", socket.id);
