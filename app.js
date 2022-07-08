@@ -112,7 +112,7 @@ io.on("connection", (socket) => {
         message.save().then(() => {
         // 룸으로 receive_message 이벤트 송신(방에 접속한 클라이언트에게 메시지 전송)
             // const chatRoomId = await chatRoom.findOne({ roomId: data.roomId });
-            io.to(data.roomId).emit("receive_message", data);
+            io.emit("receive_message", data);
             console.log('data: ', data);
             console.log('data.room: ', data.roomId);
         });
