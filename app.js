@@ -115,15 +115,16 @@ const io = new Server(server, {
 
 // 조건문(chatRoom db에 nickname이랑 postNickname이 있을 경우 새로운 방 생성이 아닌 기존 방 입장)
 
-
+// recruitPostId, nickname이 둘 다 있다면
 
 // 소켓 연결
 io.on("connection", (socket) => {
     console.log(`User Connected: ${socket.id}`);
 
     socket.on("join_room", (data) => {
-            socket.join(data);
-            console.log(`User with ID: ${socket.id} joined room: ${[data]}`)
+            let roomId = data.nickname + data.postId;
+            socket.join(roomId);
+            console.log(`User with ID: ${socket.id} joined room: ${roomId}`)
             console.log(data)
         });
 
