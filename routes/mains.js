@@ -5,7 +5,4 @@ const mainsController = require("../controller/mains");
 // 메인 페이지 조회
 router.get("/main", mainsController.mainPostGet);
 
-// 프로필 조회
-router.get("/main", mainsController.mainPostGet);
-
 module.exports = router;
