@@ -8,10 +8,9 @@ async function mainPostGet(req, res) {
     //모집게시글
     const recruitPosts = await recruitPost.find({ status: false }).limit(8).sort({ createdAt: -1 })
     let remainNum;
-    if( recruitPosts.length !==8 ){
+    if( recruitPosts.length < 8 ){
         remainNum = 8 - recruitPosts.length
     }
-    console.log(remainNum)
     const truePosts = await recruitPost.find({ status: true }).limit(remainNum).sort({ createdAt: -1 })
     for(let i = 0 ; i < remainNum ; i++){
         recruitPosts.push(truePosts[i])

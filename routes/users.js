@@ -13,12 +13,9 @@ router.post("/signin", userController.signin) //auth미들웨어 붙이기
 router.get('/kakao', passport.authenticate('kakao'));
 
 router.get('/kakao/callback', passport.authenticate('kakao', {
-  failureRedirect: '/', //나중에 메인페이지로 바꿔야할듯?
+  failureRedirect: '/api/main',
 }), (req, res) => {
-  res.json({
-    result : true,
-    message : "카카오 로그인 성공하였습니다."
-  });
+  res.redirect('/api/main');
 });
 
 module.exports = router;

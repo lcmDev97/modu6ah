@@ -11,12 +11,12 @@ module.exports = () => {
                 callbackURL: process.env.KAKAO_CALLBACK_URL,
             },
             async (accessToken, refreshToken, profile, done) => {
-                console.log("로그인 성공시 유저의 카카오 프로필 정보", profile);
+                // console.log("로그인 성공시 유저의 카카오 프로필 정보", profile);
                 try {
                     const exUser = await User.findOne({
                         $and: [{ snsId: profile.id }, { provider: "kakao" }], // where: { snsId: profile.id, provider: 'kakao' },
                     });
-                    console.log("exUser정보입니다.", exUser);
+                    // console.log("exUser정보입니다.", exUser);
                     if (exUser) {
                         done(null, exUser);
                     } else {
@@ -32,7 +32,7 @@ module.exports = () => {
                             snsId: profile.id,
                             provider: "kakao",
                         });
-                        console.log("newUser정보", newUser);
+                        // console.log("newUser정보", newUser);
                         done(null, newUser);
                     }
                 } catch (error) {
