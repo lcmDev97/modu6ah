@@ -1,4 +1,5 @@
 const chatRoom = require("../schemas/chatRoom");
+// const chatMessage = require("../schemas/chatMessage");
 const recruitPost = require("../schemas/recruitPost");
 const User = require("../schemas/user");
 
@@ -12,16 +13,17 @@ async function chatRooms(req, res) {
         const existPostId = await recruitPost.findOne({recruitPostId: Number(recruitPostId)}); // 게시글 번호 존재여부 확인 위함
         const existRoom = await chatRoom.findOne({recruitPostId: Number(recruitPostId), nickname: nickname}); // 방 존재 여부 확인위함
 
-        console.log(recruitPostId);
-        console.log(existPost);
-        console.log(existPostId);
-        console.log(existRoom);
+        // console.log(recruitPostId);
+        // console.log(existPost);
+        // console.log(existPostId);
+        // console.log(existRoom);
 
         // 이미 채팅방 만들어져있는 경우
         if ( existRoom ) {
            return res.status(400).send({
                 result: "false",
-                message: "이미 만들어진 채팅방이 존재합니다."
+                message: "이미 만들어진 채팅방이 존재합니다.",
+                roomId: existRoom.roomId
             });
         }
 
@@ -47,7 +49,7 @@ async function chatRooms(req, res) {
                 postNickname: existPostId.nickname,
                 postTitle: existPostId.title
         })
-            console.log(createdChats);
+            // console.log(createdChats);
             
         return res.status(200).send({
                 result: "true",
@@ -83,7 +85,6 @@ async function chatRoomsAllGet(req, res) {
         });
     };
 };
-
 
 module.exports = {
     chatRooms,

@@ -18,5 +18,12 @@
     "passport-kakao": "^1.0.1",
     "passport-local": "^1.0.0",
     "socket.io": "^4.5.1"
+  },
+  "devDependencies": {
+    "jest": "^28.1.2",
+    "supertest": "^6.2.4"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }
