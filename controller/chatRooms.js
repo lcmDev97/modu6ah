@@ -2,6 +2,7 @@ const chatRoom = require("../schemas/chatRoom");
 // const chatMessage = require("../schemas/chatMessage");
 const recruitPost = require("../schemas/recruitPost");
 const User = require("../schemas/user");
+const moment = require("moment");
 
 // 채팅방 생성
 async function chatRooms(req, res) {
@@ -9,6 +10,7 @@ async function chatRooms(req, res) {
         // 불러올 정보 및 받아올 정보
         const { nickname } = res.locals.user; // 로그인한 사용자 닉네임
         const { recruitPostId } = req.params; // 게시글 번호
+        const createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
         const existPost = await recruitPost.findOne({recruitPostId: Number(recruitPostId), nickname: nickname}); // 게시글-닉네임 존재 여부 확인위함
         const existPostId = await recruitPost.findOne({recruitPostId: Number(recruitPostId)}); // 게시글 번호 존재여부 확인 위함
         const existRoom = await chatRoom.findOne({recruitPostId: Number(recruitPostId), nickname: nickname}); // 방 존재 여부 확인위함
@@ -47,7 +49,8 @@ async function chatRooms(req, res) {
                 recruitPostId,
                 nickname,
                 postNickname: existPostId.nickname,
-                postTitle: existPostId.title
+                postTitle: existPostId.title,
+                createdAt: createdAt
         })
             // console.log(createdChats);
             
@@ -68,6 +71,7 @@ async function chatRooms(req, res) {
 async function chatRoomsAllGet(req, res) {
     try{
         const { nickname } = res.locals.user; // 로그인한 사용자 닉네임
+        // const createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
         const chatRoomList = await chatRoom.find({
             $or: [
             {nickname: nickname},

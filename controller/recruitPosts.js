@@ -76,7 +76,7 @@ async function recruitUpdate(req, res) {
         const recruitPosts = await recruitPost.findOne({ recruitPostId: Number(recruitPostId) });
 
         if (nickname === recruitPosts.nickname) {
-            await recruitPost.updateOne({ recruitPostId }, { $set: { title, content, date, time, place, status }});
+            await recruitPost.updateOne({ recruitPostId }, { $set: { title, content, age, date, time, place, status }});
             res.status(200).send({
                 result: "true",
                 message: "게시글이 성공적으로 수정되었습니다."
