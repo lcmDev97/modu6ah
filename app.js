@@ -107,7 +107,7 @@ io.on("connection", (socket) => {
         // io.to(data.roomId).emit("load", chats);
       });
 
-      // send_message 이벤트 수신(접속한 클라이언ß트의 정보가 수신되면)
+      // send_message 이벤트 수신(접속한 클라이언트의 정보가 수신되면)
       socket.on("send_message", (data) => {
         const message = new chatMessage(data);
         message.save().then(() => {
