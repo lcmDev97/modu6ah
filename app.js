@@ -122,12 +122,23 @@ io.on("connection", (socket) => {
     console.log(`User Connected: ${socket.id}`);
 
     socket.on("join_room", (data) => {
-            let roomId = data.nickname + data.postId;
+            let roomId = data.nickname + data.recruitPostId;
             socket.join(roomId);
+            socket.emit("test", data)
             console.log(`User with ID: ${socket.id} joined room: ${roomId}`)
             console.log(data)
         });
-
+    
+    socket.on("send_message", (data) => {
+            const message = new chatMessage(data);
+            message.save().then(() => {
+            // 룸으로 receive_message 이벤트 송신(방에 접속한 클라이언트에게 메시지 전송)
+            // const chatRoomId = await chatRoom.findOne({ roomId: data.roomId });
+            io.to(data.roomId).emit("receive_message", data);
+            console.log('data: ', data);
+            console.log('data.room: ', data.roomId);
+        });
+    });
 
     // socket.on("send_message", ({recruitPostId: roomId, nickname, message}) => {
     //     createMessage(roomId, nickname, message).then((data) => {
