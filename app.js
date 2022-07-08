@@ -98,9 +98,9 @@ const io = new Server(server, {
     }
 });
 
-const createRoom = async (recruitsPostId, nickname) => {
+const createRoom = async (recruitPostId, nickname) => {
     return room = await chatRoom.create({
-        recruitsPostId: recruitsPostId,
+        recruitPostId: recruitPostId,
         nickname: nickname
     })
 }
