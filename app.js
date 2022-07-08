@@ -124,7 +124,7 @@ io.on("connection", (socket) => {
     socket.on("join_room", (data) => {
             let roomId = data.nickname + data.recruitPostId;
             socket.join(roomId);
-            socket.emit("test", data)
+            socket.emit("test", roomId)
             console.log(`User with ID: ${socket.id} joined room: ${roomId}`)
             console.log(data)
         });
