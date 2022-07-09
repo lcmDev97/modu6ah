@@ -126,8 +126,8 @@ io.on("connection", (socket) => {
     socket.on("join_room", async (data) => {
                 // const chatRoomId = await chatRoom.findOne({ roomId: data.roomId });
                 socket.join(data);
-                const messages = await chatMessage.findOne({ roomId: roomId })
-                console.log(messages)
+                // const messages = await chatMessage.findOne({ roomId: roomId })
+                // console.log(messages)
                 socket.emit("message", messages)
                 console.log(`User with ID: ${socket.id} joined room: ${data}`)
         });
@@ -137,7 +137,7 @@ io.on("connection", (socket) => {
             console.log(message);
             message.save().then(() => {
             // 룸으로 receive_message 이벤트 송신(방에 접속한 클라이언트에게 메시지 전송)
-            io.in(data.roomId).emit("receive_message", data);
+            socket.in(data.roomId).emit("receive_message", data);
             console.log('data: ', data);
             console.log('data.room: ', data.roomId);
         });
