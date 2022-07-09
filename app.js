@@ -124,11 +124,13 @@ io.on("connection", (socket) => {
     console.log(`User Connected: ${socket.id}`);
 
     socket.on("join_room", (data) => {
-            let roomId = data.nickname + data.recruitPostId;
-            socket.join(roomId);
-            socket.emit("test", roomId)
-            console.log(`User with ID: ${socket.id} joined room: ${roomId}`)
-            console.log(data)
+            let roomId = new chatRoom(data.nickname + data.recruitPostId);
+            roomId.save().then(() => {
+                socket.join(roomId);
+                socket.emit("test", roomId)
+                console.log(`User with ID: ${socket.id} joined room: ${roomId}`)
+                console.log(data)
+            })
         });
     
     socket.on("send_message", (data) => {

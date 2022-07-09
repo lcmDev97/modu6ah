@@ -7,8 +7,8 @@ const chatRoomSchema = new Schema(
         roomId: { type: Number, unique: true},
         recruitPostId: { type: Number },
         nickname: { type: String },
-        postNickname: { type: String },
-        postTitle: { type: String },
+        // postNickname: { type: String },
+        // postTitle: { type: String },
         createdAt: { type: String }
         // lastChat: { type: String }
     },
