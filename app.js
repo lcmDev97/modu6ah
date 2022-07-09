@@ -128,7 +128,7 @@ io.on("connection", (socket) => {
                 socket.join(data);
                 // const messages = await chatMessage.findOne({ roomId: roomId })
                 // console.log(messages)
-                // socket.emit("message", messages)
+                socket.emit("test", data)
                 console.log(`User with ID: ${socket.id} joined room: ${data}`)
         });
     
