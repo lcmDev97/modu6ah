@@ -6,6 +6,7 @@ const chatMessageSchema = new Schema(
         roomId: { type: String },
         senderNick: { type: String },
         message: { type: String },
+        time: { type: String }
         // checkChat: { type: Boolean } // 채팅 읽지 않은 개수 표시해주기 위함
     },
     { timestamps: true }

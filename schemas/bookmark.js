@@ -6,7 +6,6 @@ const { Schema } = mongoose;
 const bookmarkSchema = new Schema(
     {
         bookmarkId: { type: Number, unique: true},
-        category: { type: Number },
         recruitPostId: { type: Number },
         placePostId: { type: Number },
         reviewPostId: { type: Number },

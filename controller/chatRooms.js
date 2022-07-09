@@ -10,7 +10,7 @@ async function chatRooms(req, res) {
         // 불러올 정보 및 받아올 정보
         const { nickname } = res.locals.user; // 로그인한 사용자 닉네임
         const { recruitPostId } = req.params; // 게시글 번호
-        const createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
+        const createdAt = moment().format('MM월 DD일 HH시 mm분');
         const existPost = await recruitPost.findOne({recruitPostId: Number(recruitPostId), nickname: nickname}); // 게시글-닉네임 존재 여부 확인위함
         const existPostId = await recruitPost.findOne({recruitPostId: Number(recruitPostId)}); // 게시글 번호 존재여부 확인 위함
         const existRoom = await chatRoom.findOne({recruitPostId: Number(recruitPostId), nickname: nickname}); // 방 존재 여부 확인위함

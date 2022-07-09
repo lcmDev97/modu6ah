@@ -1,6 +1,7 @@
 const chatMessage = require("../schemas/chatMessage");
 const chatRoom = require("../schemas/chatRoom");
 const User = require("../schemas/user");
+const moment = require("moment");
 
 // 해당 채팅방 채팅내용 조회(by roomId)
 async function chatMessagesGet(req, res) {

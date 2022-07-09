@@ -122,35 +122,35 @@ async function reviewDelete(req, res) {
 };
 
 // 육아용품 리뷰 게시글 북마크 표시/해제
-async function reviewBookmark(req, res) {
-    try {
-        const { reviewPostId } = req.params;
-        const { nickname } = res.locals.user;
-        const bookmarkPost = await reviewPost.findOne({ reviewPostId: Number(reviewPostId) });
-        const user = await User.findOne({ nickname });
-        console.log(bookmarkPost)
-        if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
-            await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
-            await user.updateOne({ $push: { bookmarkList: reviewPostId }})
-            res.status(200).send({
-                result: "true",
-                message: "북마크가 표시되었습니다."
-            });
-        } else {
-            await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
-            await user.updateOne({ $pull: { bookmarkList: reviewPostId }})
-            res.status(200).send({
-                result: "true",
-                message: "북마크가 해제되었습니다."
-            });
-        }
-    } catch (err) {
-        res.status(400).send({
-            result: "false",
-            message: "게시글 북마크 표시/해제 실패"
-        });
-    }
-}
+// async function reviewBookmark(req, res) {
+//     try {
+//         const { reviewPostId } = req.params;
+//         const { nickname } = res.locals.user;
+//         const bookmarkPost = await reviewPost.findOne({ reviewPostId: Number(reviewPostId) });
+//         const user = await User.findOne({ nickname });
+//         console.log(bookmarkPost)
+//         if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
+//             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
+//             await user.updateOne({ $push: { bookmarkList: reviewPostId }})
+//             res.status(200).send({
+//                 result: "true",
+//                 message: "북마크가 표시되었습니다."
+//             });
+//         } else {
+//             await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
+//             await user.updateOne({ $pull: { bookmarkList: reviewPostId }})
+//             res.status(200).send({
+//                 result: "true",
+//                 message: "북마크가 해제되었습니다."
+//             });
+//         }
+//     } catch (err) {
+//         res.status(400).send({
+//             result: "false",
+//             message: "게시글 북마크 표시/해제 실패"
+//         });
+//     }
+// }
 
 module.exports = {
     reviewPosts,
@@ -158,5 +158,5 @@ module.exports = {
     reviewGet,
     reviewUpdate,
     reviewDelete,
-    reviewBookmark,
+    // reviewBookmark,
   };
