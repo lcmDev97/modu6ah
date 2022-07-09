@@ -31,7 +31,7 @@ const placeCommentsRouter = require("./routes/placeComments");
 const reviewPostsRouter = require("./routes/reviewPosts");
 const reviewCommentsRouter = require("./routes/reviewComments");
 const mypagesRouter = require("./routes/mypages");
-// const bookmarksRouter = require("./routes/bookmarks");
+const bookmarksRouter = require("./routes/bookmarks");
 const chatRoomsRouter = require("./routes/chatRooms");
 const chatMessagesRouter = require("./routes/chatMessages");
 const usersRouter = require("./routes/users");
@@ -72,7 +72,7 @@ app.use(
     [chatMessagesRouter],
     [mypagesRouter],
     [mainRouter],
-    // [bookmarksRouter]
+    [bookmarksRouter]
 );
 
 app.use("/api/users", express.urlencoded({ extended: false }), [usersRouter]);
@@ -126,7 +126,7 @@ io.on("connection", (socket) => {
     socket.on("join_room", (data) => {
             let roomId = data.nickname + data.recruitPostId;
             socket.join(roomId);
-            socket.emit("test", roomId)
+            socket.emit("test", 1)
             console.log(`User with ID: ${socket.id} joined room: ${roomId}`)
             console.log(data)
         });
