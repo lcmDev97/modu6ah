@@ -8,6 +8,7 @@ async function reviewPosts(req, res) {
       // 불러올 정보 및 받아올 정보
       const { nickname } = res.locals.user;
       const { title, content, imageUrl, url, productType } = req.body;
+      const createdAt = moment().format('YYYY-MM-DD HH:mm');
 
       // 게시글 작성
       const createdPosts = await reviewPost.create({
@@ -16,7 +17,8 @@ async function reviewPosts(req, res) {
           content,
           imageUrl,
           url,
-          productType
+          productType,
+          createdAt: createdAt
       });
       console.log(createdPosts)
 

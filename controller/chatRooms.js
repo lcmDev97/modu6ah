@@ -1,5 +1,5 @@
 const chatRoom = require("../schemas/chatRoom");
-// const chatMessage = require("../schemas/chatMessage");
+const chatMessage = require("../schemas/chatMessage");
 const recruitPost = require("../schemas/recruitPost");
 const User = require("../schemas/user");
 const moment = require("moment");
@@ -71,13 +71,15 @@ async function chatRooms(req, res) {
 async function chatRoomsAllGet(req, res) {
     try{
         const { nickname } = res.locals.user; // 로그인한 사용자 닉네임
+        // const lastChat = await chatMessage.find({ }).sort(createdAt: -1).limit(1)
+
         // const createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
         const chatRoomList = await chatRoom.find({
             $or: [
             {nickname: nickname},
             {postNickname: nickname}
             ]}
-        ).sort({createdAt: -1});
+        );
         // console.log(chatRoomList);
         
         return res.status(200).send({chatRoomList: chatRoomList});

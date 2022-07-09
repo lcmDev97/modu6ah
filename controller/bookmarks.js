@@ -1,7 +1,7 @@
 const recruitPost = require("../schemas/recruitPost");
 const placePost = require("../schemas/placePost");
 const reviewPost = require("../schemas/reviewPost");
-const bookmark = require("../schemas/bookmark");
+const Bookmark = require("../schemas/bookmark");
 const User = require("../schemas/user");
 
 // 모집 게시글 북마크 표시
@@ -9,9 +9,9 @@ async function recruitBookmark(req, res) {
     try {
         const { recruitPostId } = req.params;
         const { nickname } = res.locals.user;
-        const bookmarks = await bookmark.findOne({ recruitPostId: Number(recruitPostId), nickname });
+        const bookmark = await Bookmark.findOne({ recruitPostId: Number(recruitPostId), nickname });
         const existRecruitPost = await recruitPost.findOne({ recruitPostId: Number(recruitPostId) });
-        console.log(bookmarks)
+        console.log(bookmark)
 
         if (!existRecruitPost) {
             return res.status(400).send({
@@ -20,16 +20,16 @@ async function recruitBookmark(req, res) {
             })
         }
 
-        if (!bookmarks) {
-            const bookmarkFirst = await bookmark.create({ recruitPostId: Number(recruitPostId), nickname, bookmarkCheck: true})
+        if (!bookmark) {
+            await Bookmark.create({ recruitPostId: Number(recruitPostId), nickname, bookmarkCheck: true})
             return res.status(200).send({
                 result: "true",
                 message: "북마크가 표시되었습니다."
             })
         }
 
-        if (bookmarks.bookmarkCheck === false) {
-            await bookmarks.updateOne({ $set: { bookmarkCheck: true }});
+        if (bookmark.bookmarkCheck === false) {
+            await Bookmark.updateOne({ recruitPostId, nickname }, { $set: { bookmarkCheck: true }});
             return res.status(200).send({
                     result: "true",
                     message: "북마크가 표시되었습니다."
@@ -53,11 +53,11 @@ async function recruitUnbookmark(req, res) {
     try {
         const { recruitPostId } = req.params;
         const { nickname } = res.locals.user;
-        const bookmarks = await bookmark.findOne({ recruitPostId: Number(recruitPostId), nickname });
+        const bookmarks = await Bookmark.findOne({ recruitPostId: Number(recruitPostId), nickname });
         console.log(bookmarks)
 
         if (bookmarks.bookmarkCheck === true) {
-            await bookmarks.updateOne({ $set: { bookmarkCheck: false }});
+            await Bookmark.updateOne({ recruitPostId, nickname }, { $set: { bookmarkCheck: false }});
             return res.status(200).send({
                     result: "true",
                     message: "북마크가 취소되었습니다."
@@ -81,9 +81,9 @@ async function placeBookmark(req, res) {
     try {
         const { placePostId } = req.params;
         const { nickname } = res.locals.user;
-        const bookmarks = await bookmark.findOne({ placePostId: Number(placePostId), nickname });
+        const bookmark = await Bookmark.findOne({ placePostId: Number(placePostId), nickname });
         const existPlacePost = await placePost.findOne({ placePostId: Number(placePostId) });
-        console.log(bookmarks)
+        console.log(bookmark)
 
         if (!existPlacePost) {
             return res.status(400).send({
@@ -92,16 +92,16 @@ async function placeBookmark(req, res) {
             })
         }
 
-        if (!bookmarks) {
-            const bookmarkFirst = await bookmark.create({ placePostId: Number(placePostId), nickname, bookmarkCheck: true})
+        if (!bookmark) {
+            await Bookmark.create({ placePostId: Number(placePostId), nickname, bookmarkCheck: true})
             return res.status(200).send({
                 result: "true",
                 message: "북마크가 표시되었습니다."
             })
         }
 
-        if (bookmarks.bookmarkCheck === false) {
-            await bookmark.updateOne({ $set: { bookmarkCheck: true }});
+        if (bookmark.bookmarkCheck === false) {
+            await Bookmark.updateOne({ placePostId, nickname }, { $set: { bookmarkCheck: true }});
             return res.status(200).send({
                     result: "true",
                     message: "북마크가 표시되었습니다."
@@ -125,11 +125,11 @@ async function placeUnbookmark(req, res) {
     try {
         const { placePostId } = req.params;
         const { nickname } = res.locals.user;
-        const bookmarks = await bookmark.findOne({ placePostId: Number(placePostId), nickname });
-        console.log(bookmarks)
+        const bookmark = await Bookmark.findOne({ placePostId: Number(placePostId), nickname });
+        console.log(bookmark)
 
-        if (bookmarks.bookmarkCheck === true) {
-            await bookmark.updateOne({ placePostId, nickname }, { $set: { bookmarkCheck: false }});
+        if (bookmark.bookmarkCheck === true) {
+            await Bookmark.updateOne({ placePostId, nickname }, { $set: { bookmarkCheck: false }});
             return res.status(200).send({
                     result: "true",
                     message: "북마크가 취소되었습니다."
@@ -153,9 +153,9 @@ async function reviewBookmark(req, res) {
     try {
         const { reviewPostId } = req.params;
         const { nickname } = res.locals.user;
-        const bookmarks = await bookmark.findOne({ reviewPostId: Number(reviewPostId), nickname });
+        const bookmark = await Bookmark.findOne({ reviewPostId: Number(reviewPostId), nickname });
         const existReviewPost = await reviewPost.findOne({ reviewPostId: Number(reviewPostId) });
-        console.log(bookmarks)
+        console.log(bookmark)
 
         if (!existReviewPost) {
             return res.status(400).send({
@@ -164,16 +164,16 @@ async function reviewBookmark(req, res) {
             })
         }
 
-        if (!bookmarks) {
-            const bookmarkFirst = await bookmark.create({ reviewPostId: Number(reviewPostId), nickname, bookmarkCheck: true})
+        if (!bookmark) {
+            await Bookmark.create({ reviewPostId: Number(reviewPostId), nickname, bookmarkCheck: true})
             return res.status(200).send({
                 result: "true",
                 message: "북마크가 표시되었습니다."
             })
         }
 
-        if (bookmarks.bookmarkCheck === false) {
-            await bookmark.updateOne({ $set: { bookmarkCheck: true }});
+        if (bookmark.bookmarkCheck === false) {
+            await Bookmark.updateOne({ reviewPostId, nickname }, { $set: { bookmarkCheck: true }});
             return res.status(200).send({
                     result: "true",
                     message: "북마크가 표시되었습니다."
@@ -197,11 +197,11 @@ async function reviewUnbookmark(req, res) {
     try {
         const { reviewPostId } = req.params;
         const { nickname } = res.locals.user;
-        const bookmarks = await bookmark.findOne({ reviewPostId: Number(reviewPostId), nickname });
-        console.log(bookmarks)
+        const bookmark = await Bookmark.findOne({ reviewPostId: Number(reviewPostId), nickname });
+        console.log(bookmark)
 
-        if (bookmarks.bookmarkCheck === true) {
-            await bookmark.updateOne({ reviewPostId, nickname }, { $set: { bookmarkCheck: false }});
+        if (bookmark.bookmarkCheck === true) {
+            await Bookmark.updateOne({ reviewPostId, nickname }, { $set: { bookmarkCheck: false }});
             return res.status(200).send({
                     result: "true",
                     message: "북마크가 취소되었습니다."
