@@ -77,7 +77,7 @@ async function chatRoomsAllGet(req, res) {
             {nickname: nickname},
             {postNickname: nickname}
             ]}
-        );
+        ).sort({createdAt: -1});
         // console.log(chatRoomList);
         
         return res.status(200).send({chatRoomList: chatRoomList});
