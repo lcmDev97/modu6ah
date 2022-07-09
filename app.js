@@ -31,6 +31,7 @@ const placeCommentsRouter = require("./routes/placeComments");
 const reviewPostsRouter = require("./routes/reviewPosts");
 const reviewCommentsRouter = require("./routes/reviewComments");
 const mypagesRouter = require("./routes/mypages");
+const bookmarksRouter = require("./routes/bookmarks");
 const chatRoomsRouter = require("./routes/chatRooms");
 const chatMessagesRouter = require("./routes/chatMessages");
 const usersRouter = require("./routes/users");
@@ -70,7 +71,8 @@ app.use(
     [chatRoomsRouter],
     [chatMessagesRouter],
     [mypagesRouter],
-    [mainRouter]
+    [mainRouter],
+    [bookmarksRouter]
 );
 
 app.use("/api/users", express.urlencoded({ extended: false }), [usersRouter]);
