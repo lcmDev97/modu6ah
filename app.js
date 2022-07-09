@@ -31,6 +31,7 @@ const placeCommentsRouter = require("./routes/placeComments");
 const reviewPostsRouter = require("./routes/reviewPosts");
 const reviewCommentsRouter = require("./routes/reviewComments");
 const mypagesRouter = require("./routes/mypages");
+const bookmarksRouter = require("./routes/bookmarks");
 const chatRoomsRouter = require("./routes/chatRooms");
 const chatMessagesRouter = require("./routes/chatMessages");
 const usersRouter = require("./routes/users");
@@ -70,7 +71,8 @@ app.use(
     [chatRoomsRouter],
     [chatMessagesRouter],
     [mypagesRouter],
-    [mainRouter]
+    [mainRouter],
+    [bookmarksRouter]
 );
 
 app.use("/api/users", express.urlencoded({ extended: false }), [usersRouter]);
@@ -98,17 +100,71 @@ const io = new Server(server, {
     }
 });
 
+// const createRoom = async (recruitPostId, nickname) => {
+//     return room = await chatRoom.create({
+//         recruitPostId: recruitPostId,
+//         nickname: nickname
+//     })
+// }
+
+// const createMessage = async (roomId, senderNick, message) => {
+//     return await chatMessage.create({
+//         roomId: roomId,
+//         senderNick: nickname,
+//         message: message
+//     });
+// };
+
+// 조건문(chatRoom db에 nickname이랑 postNickname이 있을 경우 새로운 방 생성이 아닌 기존 방 입장)
+
+// recruitPostId, nickname이 둘 다 있다면
+
 // 소켓 연결
 io.on("connection", (socket) => {
     console.log(`User Connected: ${socket.id}`);
 
     socket.on("join_room", (data) => {
+            let roomId = data.nickname + data.recruitPostId;
+            socket.join(roomId);
+            socket.emit("test", roomId)
+            console.log(`User with ID: ${socket.id} joined room: ${roomId}`)
+            console.log(data)
+        });
+    
+    socket.on("send_message", (data) => {
+            // const message = new chatMessage(data);
+            // message.save().then(() => {
+            // 룸으로 receive_message 이벤트 송신(방에 접속한 클라이언트에게 메시지 전송)
+            // const chatRoomId = await chatRoom.findOne({ roomId: data.roomId });
+            socket.to(data.roomId).emit("receive_message", data);
+            console.log('data: ', data);
+            console.log('data.room: ', data.roomId);
+        // });
+    });
+
+    // socket.on("send_message", ({recruitPostId: roomId, nickname, message}) => {
+    //     createMessage(roomId, nickname, message).then((data) => {
+    //         socket.broadcast.to(roomId).emit('message', {
+    //             recruitPostId: data.recruitPostId,
+    //             nickname: data.nickname,
+    //             message: data.message,
+    //             createdAt: data.createdAt
+    //         });
+    //     });
+    // });
+
+    socket.on("disconnect", () => {
+        console.log("User Disconnected", socket.id);
+      });
+});
+
+
         // data에는 클라이언트에서 전송한 매개변수가 들어옴(이러한 매개변수에는 제한x)
-        socket.join(data); // 해당 채팅방 입장
-        console.log(`User with ID: ${socket.id} joined room: ${data}`);
+        // socket.join(data); // 해당 채팅방 입장
+
         // const chats = await chatMessage.find({ data: Number(data) });
         // io.to(data.roomId).emit("load", chats);
-      });
+        //   });
 
       // send_message 이벤트 수신(접속한 클라이언트의 정보가 수신되면)
     //   socket.on("send_message", (data) => {
@@ -122,10 +178,6 @@ io.on("connection", (socket) => {
     //     });
     // });
 
-    socket.on("disconnect", () => {
-        console.log("User Disconnected", socket.id);
-      });
-});
 
 server.listen(PORT, () => {
     console.log(`${PORT}번 포트로 서버가 열렸습니다.`);

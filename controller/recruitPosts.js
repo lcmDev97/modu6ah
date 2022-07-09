@@ -1,6 +1,7 @@
 const recruitPost = require("../schemas/recruitPost");
 const recruitComment = require("../schemas/recruitComment");
 const User = require("../schemas/user");
+const moment = require("moment");
 
 // 모집 게시글 작성
 async function recruitPosts(req, res) {
@@ -9,6 +10,7 @@ async function recruitPosts(req, res) {
       const { nickname } = res.locals.user;
       const { title, content, age, date, time, place } = req.body;
       let status = false;
+      const createdAt = moment().format('YYYY-MM-DD HH:mm');
 
       // 게시글 작성
       const createdPosts = await recruitPost.create({
@@ -19,7 +21,8 @@ async function recruitPosts(req, res) {
           date,
           time,
           place,
-          status
+          status,
+          createdAt: createdAt
       });
       console.log(createdPosts)
 
@@ -39,7 +42,9 @@ async function recruitPosts(req, res) {
 async function recruitAllGet(req, res) {
     try {
         const recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0 });
-        res.status(200).send({recruitPosts: recruitPosts});
+        const a = recruitPosts.bookmarkUsers;
+        console.log(a)
+        res.status(200).send(recruitPosts);
     } catch (err) {
         res.status(400).send({
             result: "false",
@@ -71,7 +76,7 @@ async function recruitGet(req, res) {
 async function recruitUpdate(req, res) {
     try {
         const { recruitPostId } = req.params;
-        const { title, content, date, time, place, status } = req.body;
+        const { title, content, age, date, time, place, status } = req.body;
         const { nickname } = res.locals.user;
         const recruitPosts = await recruitPost.findOne({ recruitPostId: Number(recruitPostId) });
 
@@ -125,41 +130,41 @@ async function recruitDelete(req, res) {
 };
 
 // 모집 게시글 북마크 표시/해제
-async function recruitBookmark(req, res) {
-    try {
-        const { recruitPostId } = req.params;
-        const { nickname } = res.locals.user;
-        const bookmarkPost = await recruitPost.findOne({ recruitPostId: Number(recruitPostId) });
-        const user = await User.findOne({ nickname });
-        console.log(bookmarkPost)
-        if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
-            await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
-            await user.updateOne({ $push: { bookmarkList: recruitPostId }})
-            res.status(200).send({
-                result: "true",
-                message: "북마크가 표시되었습니다."
-            });
-        } else {
-            await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
-            await user.updateOne({ $pull: { bookmarkList: recruitPostId }})
-            res.status(200).send({
-                result: "true",
-                message: "북마크가 해제되었습니다."
-            });
-        }
-    } catch (err) {
-        res.status(400).send({
-            result: "false",
-            message: "게시글 북마크 표시/해제 실패"
-        });
-    }
-}
+// async function recruitBookmark(req, res) {
+//     try {
+//         const { recruitPostId } = req.params;
+//         const { nickname } = res.locals.user;
+//         const bookmarkPost = await recruitPost.findOne({ recruitPostId: Number(recruitPostId) });
+//         const user = await User.findOne({ nickname });
+//         console.log(bookmarkPost)
+//         if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
+//             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
+//             await user.updateOne({ $push: { bookmarkList: recruitPostId }})
+//             res.status(200).send({
+//                 result: "true",
+//                 message: "북마크가 표시되었습니다."
+//             });
+//         } else {
+//             await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
+//             await user.updateOne({ $pull: { bookmarkList: recruitPostId }})
+//             res.status(200).send({
+//                 result: "true",
+//                 message: "북마크가 해제되었습니다."
+//             });
+//         }
+//     } catch (err) {
+//         res.status(400).send({
+//             result: "false",
+//             message: "게시글 북마크 표시/해제 실패"
+//         });
+//     }
+// }
 
 module.exports = {
     recruitPosts,
     recruitAllGet,
     recruitGet,
     recruitUpdate,
-    recruitDelete,
-    recruitBookmark,
+    recruitDelete
+    // recruitBookmark
   };

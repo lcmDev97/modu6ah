@@ -15,6 +15,7 @@ const recruitPostSchema = new Schema(
         status: { type: Boolean }, // 게시글 모집상태
         bookmarkUsers: { type: Array, default: [] }, // 게시글 북마크한 사용자들
         category: { type: Number, default: 1 }, // 게시글 카테고리
+        createdAt: { type: String }    
     },
     { timestamps: true } // 게시글 생성 및 수정날짜
 );
