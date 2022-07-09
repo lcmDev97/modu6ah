@@ -123,10 +123,12 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
     console.log(`User Connected: ${socket.id}`)
 
-    socket.on("join_room", (data) => {
+    socket.on("join_room", async (data) => {
                 // const chatRoomId = await chatRoom.findOne({ roomId: data.roomId });
                 socket.join(data);
-                socket.emit("test", data)
+                const messages = await chatMessage.findOne({ roomId: roomId })
+                console.log(messages)
+                socket.emit("message", messages)
                 console.log(`User with ID: ${socket.id} joined room: ${data}`)
         });
     
