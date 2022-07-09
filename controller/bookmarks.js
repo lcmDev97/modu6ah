@@ -74,7 +74,7 @@ async function unbookmark(req, res) {
     }
 }
 
-module.exports = {
-    bookmark,
-    unbookmark
-  };
+// module.exports = {
+//     bookmark,
+//     unbookmark
+//   };
