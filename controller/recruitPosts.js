@@ -130,41 +130,41 @@ async function recruitDelete(req, res) {
 };
 
 // 모집 게시글 북마크 표시/해제
-// async function recruitBookmark(req, res) {
-//     try {
-//         const { recruitPostId } = req.params;
-//         const { nickname } = res.locals.user;
-//         const bookmarkPost = await recruitPost.findOne({ recruitPostId: Number(recruitPostId) });
-//         const user = await User.findOne({ nickname });
-//         console.log(bookmarkPost)
-//         if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
-//             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
-//             await user.updateOne({ $push: { bookmarkList: recruitPostId }})
-//             res.status(200).send({
-//                 result: "true",
-//                 message: "북마크가 표시되었습니다."
-//             });
-//         } else {
-//             await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
-//             await user.updateOne({ $pull: { bookmarkList: recruitPostId }})
-//             res.status(200).send({
-//                 result: "true",
-//                 message: "북마크가 해제되었습니다."
-//             });
-//         }
-//     } catch (err) {
-//         res.status(400).send({
-//             result: "false",
-//             message: "게시글 북마크 표시/해제 실패"
-//         });
-//     }
-// }
+async function recruitBookmark(req, res) {
+    try {
+        const { recruitPostId } = req.params;
+        const { nickname } = res.locals.user;
+        const bookmarkPost = await recruitPost.findOne({ recruitPostId: Number(recruitPostId) });
+        const user = await User.findOne({ nickname });
+        console.log(bookmarkPost)
+        if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
+            await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
+            await user.updateOne({ $push: { bookmarkList: recruitPostId }})
+            res.status(200).send({
+                result: "true",
+                message: "북마크가 표시되었습니다."
+            });
+        } else {
+            await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
+            await user.updateOne({ $pull: { bookmarkList: recruitPostId }})
+            res.status(200).send({
+                result: "true",
+                message: "북마크가 해제되었습니다."
+            });
+        }
+    } catch (err) {
+        res.status(400).send({
+            result: "false",
+            message: "게시글 북마크 표시/해제 실패"
+        });
+    }
+}
 
 module.exports = {
     recruitPosts,
     recruitAllGet,
     recruitGet,
     recruitUpdate,
-    recruitDelete
-    // recruitBookmark
+    recruitDelete,
+    recruitBookmark
   };
