@@ -137,7 +137,7 @@ io.on("connection", (socket) => {
             console.log(message);
             message.save().then(() => {
             // 룸으로 receive_message 이벤트 송신(방에 접속한 클라이언트에게 메시지 전송)
-            socket.in(data.roomId).emit("receive_message", data);
+            io.in(data.roomId).emit("receive_message", data);
             console.log('data: ', data);
             console.log('data.room: ', data.roomId);
         });
