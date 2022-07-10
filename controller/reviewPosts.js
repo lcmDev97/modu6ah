@@ -1,3 +1,6 @@
+require("dotenv").config();
+const SECRET_KEY = process.env.SECRET_KEY;
+const jwt = require("jsonwebtoken");
 const reviewPost = require("../schemas/reviewPost");
 const reviewComment = require("../schemas/reviewComment");
 const User = require("../schemas/user");
@@ -35,8 +38,28 @@ async function reviewPosts(req, res) {
 // 육아용품 리뷰 게시글 전체조회
 async function reviewAllGet(req, res) {
     try {
-        const reviewPosts = await reviewPost.find({}, { updatedAt: 0, _id: 0 });
-        res.status(200).send({reviewPosts: reviewPosts});
+        const { authorization } = req.headers;
+         //case1) 로그인 되어있을떄(포함되어있을경우 bookmarkStatus값만 true로 바꾸고, bookmarkUsers는 배열아닌 null로 바꿔 프론트에 전달 )
+         if(authorization){
+            const [authType, authToken] = authorization.split(" ");
+            const decodedToken = jwt.decode(authToken, SECRET_KEY);
+            const userNickname = decodedToken.nickname
+
+            let reviewPosts = await reviewPost.find({}, { updatedAt: 0, _id: 0 });  // bookmarkUsers = [test1,test2]
+            for(let i = 0; i <reviewPosts.length ; i++ ){         //forEach문? 다른거?로 바꾸면 더 효율 좋나?
+            if( reviewPosts[i].bookmarkUsers.includes(userNickname) ){
+                reviewPosts[i].bookmarkStatus = true
+            }
+            reviewPosts[i].bookmarkUsers = null
+        }
+        return res.status(200).send({
+            reviewPosts
+         });
+    }
+
+        //case2) 비로그인 일떄 (bookmarkUsers 제외하고 보내기)
+        const reviewPosts = await reviewPost.find({}, { updatedAt: 0, _id: 0,bookmarkUsers:0 });
+        return res.status(200).send({reviewPosts});
     } catch (err) {
         res.status(400).send({
             result: "false",

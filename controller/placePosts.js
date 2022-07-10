@@ -1,3 +1,6 @@
+require("dotenv").config();
+const SECRET_KEY = process.env.SECRET_KEY;
+const jwt = require("jsonwebtoken");
 const placePost = require("../schemas/placePost");
 const placeComment = require("../schemas/placeComment");
 const User = require("../schemas/user");
@@ -35,7 +38,25 @@ async function placePosts(req, res) {
 // 장소추천 게시글 전체조회
 async function placeAllGet(req, res) {
     try {
-        const placePosts = await placePost.find({}, { updatedAt: 0, _id: 0 });
+        const { authorization } = req.headers;
+        if(authorization){
+            const [authType, authToken] = authorization.split(" ");
+            const decodedToken = jwt.decode(authToken, SECRET_KEY);
+            const userNickname = decodedToken.nickname
+
+            let placePosts = await placePost.find({}, { updatedAt: 0, _id: 0 });
+            for(let i = 0; i <placePosts.length ; i++ ){
+                if( placePosts[i].bookmarkUsers.includes(userNickname) ){
+                    placePosts[i].bookmarkStatus = true
+                }
+                placePosts[i].bookmarkUsers = null
+            }
+            return res.send({
+                placePosts
+            })
+        }
+
+        const placePosts = await placePost.find({}, { updatedAt: 0, _id: 0, bookmarkUsers:0 });
         res.status(200).send({placePosts: placePosts});
     } catch (err) {
         res.status(400).send({
