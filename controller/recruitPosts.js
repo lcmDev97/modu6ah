@@ -82,14 +82,33 @@ async function recruitAllGet(req, res) {
 // 모집 게시글 상세조회
 async function recruitGet(req, res) {
     try {
+        const { authorization } = req.headers;
+        //case1) 로그인 되어있을떄
+        if(authorization){
+            const [authType, authToken] = authorization.split(" ");
+            const decodedToken = jwt.decode(authToken, SECRET_KEY);
+            const userNickname = decodedToken.nickname
+
+            const { recruitPostId } = req.params;
+            const [recruitDetails] = await recruitPost.find({ recruitPostId: Number(recruitPostId) }, { _id: 0 });
+            const recruitComments = await recruitComment.find({ recruitPostId: Number(recruitPostId) }, { _id: 0 }).sort({ recruitCommentId: -1 });
+            if (!recruitDetails) {
+                return res.status(400).send({ result: "false", message: "게시글이 없습니다."});
+            }
+            if( recruitDetails.bookmarkUsers.includes(userNickname)){
+                recruitDetails.bookmarkStatus = true
+            }
+            return res.status(200).send({ recruitDetails, recruitComments });
+        }
+        
+        //case2) 비로그인 일떄
         const { recruitPostId } = req.params;
         const [recruitDetails] = await recruitPost.find({ recruitPostId: Number(recruitPostId) }, { _id: 0 });
         const recruitComments = await recruitComment.find({ recruitPostId: Number(recruitPostId) }, { _id: 0 }).sort({ recruitCommentId: -1 });
         if (!recruitDetails) {
             return res.status(400).send({ result: "false", message: "게시글이 없습니다."});
-        } else {
-            return res.status(200).send({ recruitDetails, recruitComments });
         }
+        return res.status(200).send({ recruitDetails, recruitComments });
     } catch (err) {
         res.status(400).send({
             result: "false",
