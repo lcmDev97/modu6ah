@@ -72,33 +72,23 @@ async function reviewAllGet(req, res) {
 async function reviewGet(req, res) {
     try {
         const { authorization } = req.headers;
-        //case1) 로그인 되어있을떄
-        if(authorization){
-            const [authType, authToken] = authorization.split(" ");
-            const decodedToken = jwt.decode(authToken, SECRET_KEY);
-            const userNickname = decodedToken.nickname
-
-            const { reviewPostId } = req.params;
-            const [reviewDetails] = await reviewPost.find({ reviewPostId: Number(reviewPostId) }, { _id: 0 });
-            const reviewComments = await reviewComment.find({ reviewPostId: Number(reviewPostId) }, { _id: 0 }).sort({ reviewCommentId: -1 });
-            if (!reviewDetails) {
-                return res.status(400).send({ result: "false", message: "게시글이 없습니다."});
-            }
-            if( reviewDetails.bookmarkUsers.includes(userNickname)){
-                reviewDetails.bookmarkStatus = true
-            }
-        }
-
-
-
-
-        //case2) 비로그인 일떄
         const { reviewPostId } = req.params;
         const [reviewDetails] = await reviewPost.find({ reviewPostId: Number(reviewPostId) }, { _id: 0 });
         const reviewComments = await reviewComment.find({ reviewPostId: Number(reviewPostId) }, { _id: 0 }).sort({ reviewCommentId: -1 });
         if (!reviewDetails) {
             return res.status(400).send({ result: "false", message: "게시글이 없습니다."});
         }
+        //case1) 로그인 되어있을떄
+        if(authorization){
+            const [authType, authToken] = authorization.split(" ");
+            const decodedToken = jwt.decode(authToken, SECRET_KEY);
+            const userNickname = decodedToken.nickname
+            if( reviewDetails.bookmarkUsers.includes(userNickname)){
+                reviewDetails.bookmarkStatus = true
+            }
+        }
+
+        //case2) 비로그인 일떄
         return res.status(200).send({ reviewDetails, reviewComments });
 
     } catch (err) {
