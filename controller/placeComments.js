@@ -5,7 +5,7 @@ const User = require("../schemas/user");
 // 장소추천 댓글 등록
 async function placeComments(req, res) {
     try {
-        const { nickname } = res.locals.user;
+        const { nickname, profileUrl } = res.locals.user;
         const { placePostId } = req.params;
         const { comment } = req.body;
         let status = false;

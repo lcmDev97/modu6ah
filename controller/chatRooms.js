@@ -53,6 +53,9 @@ async function chatRooms(req, res) {
                 createdAt: createdAt
         })
             // console.log(createdChats);
+
+            const roomId = createdChats.roomId;
+            await chatMessage.create({ roomId : roomId });
             
         return res.status(200).send({
                 result: "true",

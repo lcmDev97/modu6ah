@@ -5,7 +5,7 @@ const User = require("../schemas/user");
 // 모집 댓글 등록
 async function recruitComments(req, res) {
     try {
-        const { nickname } = res.locals.user;
+        const { nickname, profileUrl } = res.locals.user;
         const { recruitPostId } = req.params;
         const { comment } = req.body;
         let status = false;
