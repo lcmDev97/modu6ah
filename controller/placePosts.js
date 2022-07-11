@@ -37,7 +37,25 @@ async function placePosts(req, res) {
 // 장소추천 게시글 전체조회
 async function placeAllGet(req, res) {
     try {
-        const placePosts = await placePost.find({}, { updatedAt: 0, _id: 0 });
+        const { authorization } = req.headers;
+        if(authorization){
+            const [authType, authToken] = authorization.split(" ");
+            const decodedToken = jwt.decode(authToken, SECRET_KEY);
+            const userNickname = decodedToken.nickname
+
+            let placePosts = await placePost.find({}, { updatedAt: 0, _id: 0 });
+            for(let i = 0; i <placePosts.length ; i++ ){
+                if( placePosts[i].bookmarkUsers.includes(userNickname) ){
+                    placePosts[i].bookmarkStatus = true
+                }
+                placePosts[i].bookmarkUsers = null
+            }
+            return res.send({
+                placePosts
+            })
+        }
+
+        const placePosts = await placePost.find({}, { updatedAt: 0, _id: 0, bookmarkUsers:0 });
         res.status(200).send({placePosts: placePosts});
     } catch (err) {
         res.status(400).send({
@@ -50,14 +68,27 @@ async function placeAllGet(req, res) {
 // 장소추천 게시글 상세조회
 async function placeGet(req, res) {
     try {
+        const { authorization } = req.headers;
         const { placePostId } = req.params;
         const [placeDetails] = await placePost.find({ placePostId: Number(placePostId) }, { _id: 0 });
         const placeComments = await placeComment.find({ placePostId: Number(placePostId) }, { _id: 0 }).sort({ placeCommentId: -1 });
         if (!placeDetails) {
             return res.status(400).send({ result: "false", message: "게시글이 없습니다."});
-        } else {
+        }
+        //case1) 로그인 되어있을떄
+        if(authorization){
+            const [authType, authToken] = authorization.split(" ");
+            const decodedToken = jwt.decode(authToken, SECRET_KEY);
+            const userNickname = decodedToken.nickname
+
+            if( placeDetails.bookmarkUsers.includes(userNickname)){
+                placeDetails.bookmarkStatus = true
+            }
             return res.status(200).send({ placeDetails, placeComments });
         }
+        //case2) 비로그인 일떄
+        return res.status(200).send({ placeDetails, placeComments });
+        
     } catch (err) {
         res.status(400).send({
             result: "false",
@@ -125,35 +156,35 @@ async function placeDelete(req, res) {
 };
 
 // 장소추천 게시글 북마크 표시/해제
-// async function placeBookmark(req, res) {
-//     try {
-//         const { placePostId } = req.params;
-//         const { nickname } = res.locals.user;
-//         const bookmarkPost = await placePost.findOne({ placePostId: Number(placePostId) });
-//         const user = await User.findOne({ nickname });
-//         console.log(bookmarkPost)
-//         if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
-//             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
-//             await user.updateOne({ $push: { bookmarkList: placePostId }})
-//             res.status(200).send({
-//                 result: "true",
-//                 message: "북마크가 표시되었습니다."
-//             });
-//         } else {
-//             await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
-//             await user.updateOne({ $pull: { bookmarkList: placePostId }})
-//             res.status(200).send({
-//                 result: "true",
-//                 message: "북마크가 해제되었습니다."
-//             });
-//         }
-//     } catch (err) {
-//         res.status(400).send({
-//             result: "false",
-//             message: "게시글 북마크 표시/해제 실패"
-//         });
-//     }
-// }
+async function placeBookmark(req, res) {
+    try {
+        const { placePostId } = req.params;
+        const { nickname } = res.locals.user;
+        const bookmarkPost = await placePost.findOne({ placePostId: Number(placePostId) });
+        const user = await User.findOne({ nickname });
+        console.log(bookmarkPost)
+        if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
+            await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
+            await user.updateOne({ $push: { bookmarkList: placePostId }})
+            res.status(200).send({
+                result: "true",
+                message: "북마크가 표시되었습니다."
+            });
+        } else {
+            await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
+            await user.updateOne({ $pull: { bookmarkList: placePostId }})
+            res.status(200).send({
+                result: "true",
+                message: "북마크가 해제되었습니다."
+            });
+        }
+    } catch (err) {
+        res.status(400).send({
+            result: "false",
+            message: "게시글 북마크 표시/해제 실패"
+        });
+    }
+}
 
 module.exports = {
     placePosts,
@@ -161,5 +192,5 @@ module.exports = {
     placeGet,
     placeUpdate,
     placeDelete,
-    // placeBookmark,
+    placeBookmark
   };

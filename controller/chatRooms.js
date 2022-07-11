@@ -10,12 +10,12 @@ async function chatRooms(req, res) {
         // 불러올 정보 및 받아올 정보
         const { nickname } = res.locals.user; // 로그인한 사용자 닉네임
         const { recruitPostId } = req.params; // 게시글 번호
-        const createdAt = moment().format('MM월 DD일 HH시 mm분');
+        const createdAt = moment().format('YYYY-MM-DD HH:mm');
         const existPost = await recruitPost.findOne({recruitPostId: Number(recruitPostId), nickname: nickname}); // 게시글-닉네임 존재 여부 확인위함
         const existPostId = await recruitPost.findOne({recruitPostId: Number(recruitPostId)}); // 게시글 번호 존재여부 확인 위함
         const existRoom = await chatRoom.findOne({recruitPostId: Number(recruitPostId), nickname: nickname}); // 방 존재 여부 확인위함
 
-        // console.log(recruitPostId);
+        // console.log(recr]uitPostId);
         // console.log(existPost);
         // console.log(existPostId);
         // console.log(existRoom);
@@ -71,9 +71,6 @@ async function chatRooms(req, res) {
 async function chatRoomsAllGet(req, res) {
     try{
         const { nickname } = res.locals.user; // 로그인한 사용자 닉네임
-        // const lastChat = await chatMessage.find({ }).sort(createdAt: -1).limit(1)
-
-        // const createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
         const chatRoomList = await chatRoom.find({
             $or: [
             {nickname: nickname},
@@ -82,7 +79,19 @@ async function chatRoomsAllGet(req, res) {
         );
         // console.log(chatRoomList);
         
-        return res.status(200).send({chatRoomList: chatRoomList});
+        // 채팅의 마지막 내용 불러오기(lastChat)
+        let chatRoomId = [];
+        let lastChats = [];
+        for(let i = 0; i < chatRoomList.length; i++) {
+            chatRoomId.push(chatRoomList[i].roomId)
+        }
+        for (let i = 0; i < chatRoomId.length; i++) {
+            let lastChat = '';
+            lastChat = await chatMessage.findOne({ roomId: chatRoomId[i] }).sort({ createdAt: -1 })
+            lastChats.push(lastChat);
+        }
+
+        return res.status(200).send({ chatRoomList, lastChats });
 
     } catch (err) {
         return res.status(400).send({

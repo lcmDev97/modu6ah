@@ -1,32 +1,51 @@
-// // 초기 세팅
-// const http = require('http');
-// const socketIo = require('socket.io');
-// const app = require('app');
-// const server = http.createServer(app);
+// 초기 세팅
+const socketIO = require('socket.io');
 
-// // DB
-// // const chatRoom = require("../schemas/chatRoom");
+// DB
+const chatRoom = require("./schemas/chatRoom");
+const chatMessage = require("./schemas/chatMessage");
 
-// const io = socketIo(server, {
-//     cors: {
-//         origin: '*',
-//         methods: ["GET", "POST"],
-//     }
-// });
+// 소켓
+module.exports = (server) => {
+    const io = socketIO(server, {
+        path: '/socket.io',
+        cors: {
+            origin: '*',
+            methods: ["GET", "POST"],
+        }
+    });
 
-// // 소켓 연결
-// io.on("connection", (socket) => {
-//     console.log(`User Connected: ${socket.id}`);
+    // 연결 시작
+    io.on("connection", (socket) => {
+        console.log(`User Connected: ${socket.id}`);
 
-//     // socket.on("join_room", (data) => {
-//     //     // data에는 클라이언트에서 전송한 매개변수가 들어옴(이러한 매개변수에는 제한x)
-//     //     socket.join(data); // 해당 채팅방 입장
-//     //     console.log(`User with ID: ${socket.id} joined room: ${data}`);
-//     //   });
+        // join_room 이벤트 수신(roomId 받음)
+        socket.on("join_room", (data) => {
+            socket.join(data); // 해당 roomId 입장
+            console.log(`User with ID: ${socket.id} joined room: ${data}`);
+      });
 
-//     socket.on("disconnect", () => {
-//         console.log("User Disconnected", socket.id);
-//       });
-// });
+        // send_message 이벤트 수신(roomId, senderNick, message 받음)
+        socket.on("send_message", async (data) => {
+            const message = new chatMessage(data); // 받은 메시지 DB 저장
+            console.log(message);
+            message.save().then(() => {
+            // 해당 roomId로 receive_message 이벤트 송신(해당 roomId에 접속한 클라이언트에게 메시지 전송)
+            io.in(data.roomId).emit("receive_message", {...data, id: message._id});
+            console.log('data: ', data);
+            console.log('data.roomId: ', data.roomId);
+            });
+        });
 
-// // module.exports = { server };
+        // back 이벤트 수신(채팅방 뒤로가기 클릭시, roomId 받음)
+        socket.on("back", (data) => {
+            socket.leave(data); // 해당 roomId에서 임시로 나감(완전 나가는 것x)
+            console.log(`User with ID: ${socket.id} left room: ${data}`);
+        });
+
+        // 연결 중지
+        socket.on("disconnect", () => {
+            console.log("User Disconnected", socket.id);
+        });
+    });
+};
