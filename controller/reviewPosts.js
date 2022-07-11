@@ -1,3 +1,6 @@
+require("dotenv").config();
+const SECRET_KEY = process.env.SECRET_KEY;
+const jwt = require("jsonwebtoken");
 const reviewPost = require("../schemas/reviewPost");
 const reviewComment = require("../schemas/reviewComment");
 const User = require("../schemas/user");
