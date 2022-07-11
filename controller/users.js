@@ -91,6 +91,7 @@ async function signin(req, res, next) {
             });
         }
         const nickname = user.nickname;
+        const profileUrl = user.profileUrl;
         const bcpassword = await Bcrypt.compare(password, user.password);
         if (!bcpassword) {
             return res.status(400).json({
@@ -114,6 +115,7 @@ async function signin(req, res, next) {
             result: true,
             accessToken,
             nickname,
+            profileUrl
         });
     } catch (err) {
         return res.status(400).json({
