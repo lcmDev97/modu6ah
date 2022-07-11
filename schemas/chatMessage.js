@@ -5,7 +5,6 @@ const chatMessageSchema = new Schema(
     {
         roomId: { type: Number },
         profileUrl: { type: String },
-        nickname: { type: String },
         senderNick: { type: String },
         message: { type: String },
         time: { type: String }
