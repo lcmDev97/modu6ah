@@ -7,7 +7,7 @@ const authMiddleware = require("../middlewares/authmiddleware");
 router.get("/mypage", authMiddleware, mypagesController.profileGet);
 
 // 북마크 게시글 조회
-router.get("/mypage/bookmark", authMiddleware, mypagesController.bookmark);
+router.get("/mypage/bookmark", authMiddleware, mypagesController.myBookmark);
 
 // 프로필 수정
 router.put("/mypage/update", authMiddleware, mypagesController.profileUpdate);

@@ -9,8 +9,9 @@ const User = require("../schemas/user");
 async function placePosts(req, res) {
   try {
       // 불러올 정보 및 받아올 정보
-      const { nickname } = res.locals.user;
+      const { nickname, profileUrl } = res.locals.user;
       const { title, content, region, imageUrl, star } = req.body;
+      const createdAt = moment().format('YYYY-MM-DD HH:mm');
 
       // 게시글 작성
       const createdPosts = await placePost.create({
@@ -19,7 +20,8 @@ async function placePosts(req, res) {
           content,
           region,
           imageUrl,
-          star
+          star,
+          createdAt: createdAt
       });
       console.log(createdPosts)
 
@@ -193,5 +195,5 @@ module.exports = {
     placeGet,
     placeUpdate,
     placeDelete,
-    placeBookmark,
+    placeBookmark
   };

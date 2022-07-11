@@ -10,7 +10,7 @@ const moment = require("moment");
 async function recruitPosts(req, res) {
   try {
       // 불러올 정보 및 받아올 정보
-      const { nickname } = res.locals.user;
+      const { nickname, profileUrl } = res.locals.user;
       const { title, content, age, date, time, place } = req.body;
       let status = false;
       const createdAt = moment().format('YYYY-MM-DD HH:mm');
@@ -18,6 +18,7 @@ async function recruitPosts(req, res) {
       // 게시글 작성
       const createdPosts = await recruitPost.create({
           nickname,
+          profileUrl,
           title,
           content,
           age,
@@ -122,13 +123,13 @@ async function recruitUpdate(req, res) {
         if (nickname === recruitPosts.nickname) {
             await recruitPost.updateOne({ recruitPostId }, { $set: { title, content, age, date, time, place, status }});
             res.status(200).send({
-                result: "true",
-                message: "게시글이 성공적으로 수정되었습니다."
+                   result: "true",
+                   message: "게시글이 성공적으로 수정되었습니다."
             });
         } else {
             res.status(400).send({
-                result: "false",
-                message: "게시글 수정 권한 없음"
+                   result: "false",
+                   message: "게시글 수정 권한 없음"
             });
         }
     } catch (err) {
@@ -151,13 +152,13 @@ async function recruitDelete(req, res) {
             await recruitComment.deleteMany({ recruitPostId });
 
             res.status(200).send({
-                result: "true",
-                message: "게시글이 성공적으로 삭제되었습니다."
+                   result: "true",
+                   message: "게시글이 성공적으로 삭제되었습니다."
             });
         } else {
             res.status(400).send({
-                result: "false",
-                message: "게시글 삭제 권한 없음"
+                   result: "false",
+                   message: "게시글 삭제 권한 없음"
             });
         }
     } catch (err) {
@@ -180,15 +181,15 @@ async function recruitBookmark(req, res) {
             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
             await user.updateOne({ $push: { bookmarkList: recruitPostId }})
             res.status(200).send({
-                result: "true",
-                message: "북마크가 표시되었습니다."
+                   result: "true",
+                   message: "북마크가 표시되었습니다."
             });
         } else {
             await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
             await user.updateOne({ $pull: { bookmarkList: recruitPostId }})
             res.status(200).send({
-                result: "true",
-                message: "북마크가 해제되었습니다."
+                   result: "true",
+                   message: "북마크가 해제되었습니다."
             });
         }
     } catch (err) {

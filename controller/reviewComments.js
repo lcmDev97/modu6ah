@@ -5,7 +5,7 @@ const User = require("../schemas/user");
 // 육아용품 리뷰 댓글 등록
 async function reviewComments(req, res) {
     try {
-        const { nickname } = res.locals.user;
+        const { nickname, profileUrl } = res.locals.user;
         const { reviewPostId } = req.params;
         const { comment } = req.body;
         let status = false;

@@ -18,7 +18,7 @@ async function profileGet(req, res) {
 };
 
 // 북마크 게시글 조회
-async function bookmark(req, res) {
+async function myBookmark(req, res) {
     try {
         const { nickname } = res.locals.user;
         const bookmarkList1 = await recruitPost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 모집 게시글
@@ -26,7 +26,7 @@ async function bookmark(req, res) {
         const bookmarkList3 = await reviewPost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 육아용품 리뷰
         // console.log(bookmarkList1, bookmarkList2, bookmarkList3);
 
-        return res.send({ bookmarkList1, bookmarkList2, bookmarkList3 });
+        return res.send({ bookmarkList });
 
     } catch (err) {
         res.status(400).send({
@@ -54,6 +54,6 @@ async function profileUpdate(req, res) {
 
 module.exports = {
     profileGet,
-    bookmark,
+    myBookmark,
     profileUpdate
   };
