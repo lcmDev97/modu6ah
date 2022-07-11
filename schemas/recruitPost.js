@@ -6,6 +6,7 @@ const recruitPostSchema = new Schema(
     {
         recruitPostId: { type: Number, unique: true }, // 게시글 번호
         nickname: { type: String }, // 게시글 작성자
+        profileUrl: { type: String }, // 게시글 작성자 프로필 이미지
         title: { type: String, required: true }, // 게시글 제목
         content: { type: String, required: true }, // 게시글 내용
         age: { type: String, required: true }, // 게시글 참여연령

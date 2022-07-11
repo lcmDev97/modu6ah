@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const chatMessageSchema = new Schema(
     {
-        roomId: { type: String },
+        roomId: { type: Number },
         profileUrl: { type: String },
         senderNick: { type: String },
         message: { type: String },

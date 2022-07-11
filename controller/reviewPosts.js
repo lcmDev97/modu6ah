@@ -6,7 +6,7 @@ const User = require("../schemas/user");
 async function reviewPosts(req, res) {
   try {
       // 불러올 정보 및 받아올 정보
-      const { nickname } = res.locals.user;
+      const { nickname, profileUrl } = res.locals.user;
       const { title, content, imageUrl, url, productType } = req.body;
       const createdAt = moment().format('YYYY-MM-DD HH:mm');
 

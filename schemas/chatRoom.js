@@ -9,7 +9,9 @@ const chatRoomSchema = new Schema(
         nickname: { type: String },
         postNickname: { type: String },
         postTitle: { type: String },
-        createdAt: { type: String },
+        profileUrl1: { type: String },
+        profileUrl2: { type: String },
+        createdAt: { type: String }
     },
     // { timestamps: true }
 );

@@ -10,7 +10,7 @@ const moment = require("moment");
 async function recruitPosts(req, res) {
   try {
       // 불러올 정보 및 받아올 정보
-      const { nickname } = res.locals.user;
+      const { nickname, profileUrl } = res.locals.user;
       const { title, content, age, date, time, place } = req.body;
       let status = false;
       const createdAt = moment().format('YYYY-MM-DD HH:mm');
@@ -18,6 +18,7 @@ async function recruitPosts(req, res) {
       // 게시글 작성
       const createdPosts = await recruitPost.create({
           nickname,
+          profileUrl,
           title,
           content,
           age,

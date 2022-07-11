@@ -15,7 +15,7 @@ async function chatRooms(req, res) {
         const existPostId = await recruitPost.findOne({recruitPostId: Number(recruitPostId)}); // 게시글 번호 존재여부 확인 위함
         const existRoom = await chatRoom.findOne({recruitPostId: Number(recruitPostId), nickname: nickname}); // 방 존재 여부 확인위함
 
-        // console.log(recr]uitPostId);
+        // console.log(recruitPostId);
         // console.log(existPost);
         // console.log(existPostId);
         // console.log(existRoom);
@@ -90,8 +90,14 @@ async function chatRoomsAllGet(req, res) {
             lastChat = await chatMessage.findOne({ roomId: chatRoomId[i] }).sort({ createdAt: -1 })
             lastChats.push(lastChat);
         }
+        
+        // console.log(chatRoomList)
+        // console.log(lastChats)
+        
+        // map 함수 이용해 lastChat만 추출
+        let eachLastChat = lastChats.map(row => row.message);
 
-        return res.status(200).send({ chatRoomList, lastChats });
+        return res.status(200).send({ chatRoomList, eachLastChat });
 
     } catch (err) {
         return res.status(400).send({
