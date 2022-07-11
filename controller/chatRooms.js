@@ -98,9 +98,9 @@ async function chatRoomsAllGet(req, res) {
         // console.log(lastChats)
         
         // map 함수 이용해 lastChat만 추출
-        let eachLastChat = lastChats.map(row => row.message);
+        // let eachLastChat = lastChats.map(row => row.message);
 
-        return res.status(200).send({ chatRoomList, eachLastChat });
+        return res.status(200).send({ chatRoomList, lastChats });
 
     } catch (err) {
         return res.status(400).send({
