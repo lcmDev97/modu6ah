@@ -3,7 +3,7 @@ const placePost = require("../schemas/placePost");
 const reviewPost = require("../schemas/reviewPost");
 const User = require("../schemas/user");
 
-// 프로필 조회
+// 프로필 조회 - 로그인한 사람/안한 사람
 async function profileGet(req, res) {
     try {
         const { nickname } = res.locals.user;

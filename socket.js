@@ -32,7 +32,7 @@ module.exports = (server) => {
             console.log(message);
             message.save().then(() => {
             // 해당 roomId로 receive_message 이벤트 송신(해당 roomId에 접속한 클라이언트에게 메시지 전송)
-            io.in(data.roomId).emit("receive_message", {...data, id: message._id});
+            io.in(data.roomId).emit("receive_message", {...data, id: message._id, nickname: 0 });
             console.log('data: ', data);
             console.log('data.roomId: ', data.roomId);
             });
