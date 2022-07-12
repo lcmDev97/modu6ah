@@ -13,7 +13,7 @@ async function chatMessagesGet(req, res) {
         if (!chatMessageList[0]) {
             return res.status(400).send({ result: "false", message: "해당 채팅방의 메시지가 존재하지 않습니다."});
         } else {
-            return res.status(200).send({chatMessageList: chatMessageList});
+            return res.status(200).send({ chatMessageList: chatMessageList });
         }
     } catch (err) {
         return res.status(400).send({

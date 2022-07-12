@@ -61,7 +61,6 @@ async function chatRooms(req, res) {
                 result: "true",
                 message: "채팅방이 생성되었습니다.",
                 roomId: createdChats.roomId,
-                postNickname
         });
     } catch (err) {
         return res.status(400).send({
@@ -80,9 +79,10 @@ async function chatRoomsAllGet(req, res) {
             {nickname: nickname},
             {postNickname: nickname}
             ]}
-        );
+        )
+        // .populate('chatMessage');
         // console.log(chatRoomList);
-        
+
         // 채팅의 마지막 내용 불러오기(lastChat)
         let chatRoomId = [];
         let lastChats = [];
@@ -100,10 +100,10 @@ async function chatRoomsAllGet(req, res) {
         // console.log(chatRoomList)
         // console.log(lastChats)
         
-        // map 함수 이용해 lastChat만 추출
+        // map 함수 이용해 lastChat message만 추출
         // let eachLastChat = lastChats.map(row => row.message);
 
-        return res.status(200).send({ chatRoomList, lastChats });
+        return res.status(200).send({ chatRoomList });
 
     } catch (err) {
         return res.status(400).send({
