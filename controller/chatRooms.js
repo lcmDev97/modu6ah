@@ -60,7 +60,8 @@ async function chatRooms(req, res) {
         return res.status(200).send({
                 result: "true",
                 message: "채팅방이 생성되었습니다.",
-                roomId: createdChats.roomId
+                roomId: createdChats.roomId,
+                postNickname
         });
     } catch (err) {
         return res.status(400).send({
@@ -90,7 +91,9 @@ async function chatRoomsAllGet(req, res) {
         }
         for (let i = 0; i < chatRoomId.length; i++) {
             let lastChat = '';
+
             lastChat = await chatMessage.findOne({ roomId: chatRoomId[i] }).sort({ createdAt: -1 })
+            // console.log(lastChat)
             lastChats.push(lastChat);
         }
         
