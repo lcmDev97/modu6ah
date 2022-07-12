@@ -6,7 +6,7 @@ const recruitComment = require("../schemas/recruitComment");
 const placeComment = require("../schemas/placeComment");
 const reviewComment = require("../schemas/reviewComment");
 
-// 프로필 조회
+// 프로필 조회 - 로그인한 사람/안한 사람
 async function profileGet(req, res) {
     try {
         const { nickname } = req.params

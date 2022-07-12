@@ -16,6 +16,7 @@ async function recruitComments(req, res) {
         // 게시글 작성
         const recruitComments = await recruitComment.create({
             nickname : nickname ,
+            profileUrl,
             recruitPostId : findPost.recruitPostId, 
             comment : comment,
             

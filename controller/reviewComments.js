@@ -25,6 +25,7 @@ async function reviewComments(req, res) {
         // 게시글 작성
         const reviewComments = await reviewComment.create({
             nickname : nickname ,
+            profileUrl,
             reviewPostId : findPost.reviewPostId, 
             comment : comment,
             

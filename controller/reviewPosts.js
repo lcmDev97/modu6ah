@@ -16,6 +16,7 @@ async function reviewPosts(req, res) {
       // 게시글 작성
       const createdPosts = await reviewPost.create({
           nickname,
+          profileUrl,
           title,
           content,
           imageUrl,

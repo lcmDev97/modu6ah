@@ -8,7 +8,7 @@ const moment = require("moment");
 async function chatRooms(req, res) {
     try {
         // 불러올 정보 및 받아올 정보
-        const { nickname } = res.locals.user; // 로그인한 사용자 닉네임
+        const { nickname, profileUrl } = res.locals.user; // 로그인한 사용자 닉네임/프로필 이미지 url
         const { recruitPostId } = req.params; // 게시글 번호
         const createdAt = moment().format('YYYY-MM-DD HH:mm');
         const existPost = await recruitPost.findOne({recruitPostId: Number(recruitPostId), nickname: nickname}); // 게시글-닉네임 존재 여부 확인위함
@@ -48,9 +48,10 @@ async function chatRooms(req, res) {
         const createdChats = await chatRoom.create({
                 recruitPostId,
                 nickname,
+                profileUrl,
                 postNickname: existPostId.nickname,
                 postTitle: existPostId.title,
-                createdAt: createdAt
+                createdAt: createdAt,
         })
             // console.log(createdChats);
 
@@ -60,7 +61,7 @@ async function chatRooms(req, res) {
         return res.status(200).send({
                 result: "true",
                 message: "채팅방이 생성되었습니다.",
-                roomId: createdChats.roomId
+                roomId: createdChats.roomId,
         });
     } catch (err) {
         return res.status(400).send({
@@ -79,9 +80,10 @@ async function chatRoomsAllGet(req, res) {
             {nickname: nickname},
             {postNickname: nickname}
             ]}
-        );
+        )
+        // .populate('chatMessage');
         // console.log(chatRoomList);
-        
+
         // 채팅의 마지막 내용 불러오기(lastChat)
         let chatRoomId = [];
         let lastChats = [];
@@ -90,17 +92,19 @@ async function chatRoomsAllGet(req, res) {
         }
         for (let i = 0; i < chatRoomId.length; i++) {
             let lastChat = '';
+
             lastChat = await chatMessage.findOne({ roomId: chatRoomId[i] }).sort({ createdAt: -1 })
+            // console.log(lastChat)
             lastChats.push(lastChat);
         }
         
         // console.log(chatRoomList)
         // console.log(lastChats)
         
-        // map 함수 이용해 lastChat만 추출
-        let eachLastChat = lastChats.map(row => row.message);
+        // map 함수 이용해 lastChat message만 추출
+        // let eachLastChat = lastChats.map(row => row.message);
 
-        return res.status(200).send({ chatRoomList, eachLastChat });
+        return res.status(200).send({ chatRoomList });
 
     } catch (err) {
         return res.status(400).send({
