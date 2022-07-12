@@ -4,7 +4,7 @@ const mypagesController = require("../controller/mypages");
 const authMiddleware = require("../middlewares/authmiddleware");
 
 // 프로필 조회
-router.get("/mypage", authMiddleware, mypagesController.profileGet);
+router.get("/mypage/profile/:nickname", mypagesController.profileGet);
 
 // 북마크 게시글 조회
 router.get("/mypage/bookmark", authMiddleware, mypagesController.myBookmark);
