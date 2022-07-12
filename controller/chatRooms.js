@@ -8,7 +8,7 @@ const moment = require("moment");
 async function chatRooms(req, res) {
     try {
         // 불러올 정보 및 받아올 정보
-        const { nickname } = res.locals.user; // 로그인한 사용자 닉네임
+        const { nickname, profileUrl } = res.locals.user; // 로그인한 사용자 닉네임/프로필 이미지 url
         const { recruitPostId } = req.params; // 게시글 번호
         const createdAt = moment().format('YYYY-MM-DD HH:mm');
         const existPost = await recruitPost.findOne({recruitPostId: Number(recruitPostId), nickname: nickname}); // 게시글-닉네임 존재 여부 확인위함
@@ -50,7 +50,7 @@ async function chatRooms(req, res) {
                 nickname,
                 postNickname: existPostId.nickname,
                 postTitle: existPostId.title,
-                createdAt: createdAt
+                createdAt: createdAt,
         })
             // console.log(createdChats);
 

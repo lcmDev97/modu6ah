@@ -10,7 +10,7 @@ const chatRoomSchema = new Schema(
         postNickname: { type: String },
         postTitle: { type: String },
         // lastChat: { type: mongoose.Schema.Types.ObjectId, ref: 'chatMessage' },
-        // profileUrl1: { type: String }, // nickname의 profileUrl
+        profileUrl: { type: String }, // nickname의 profileUrl
         createdAt: { type: String }
     },
     // { timestamps: true }
