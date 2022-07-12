@@ -38,11 +38,17 @@ module.exports = (server) => {
             });
         });
 
-        // back 이벤트 수신(채팅방 뒤로가기 클릭시, roomId 받음)
+        // back 이벤트 수신(채팅방 뒤로가기 클릭시 roomId 받음)
         socket.on("back", (data) => {
             socket.leave(data); // 해당 roomId에서 임시로 나감(완전 나가는 것x)
             console.log(`User with ID: ${socket.id} left room: ${data}`);
         });
+
+        // 메시지 알림(메시지 전송시 senderNick,)
+        socket.on("notify", (data) => {
+            socket.broadcast.to(data.roomId).emit(data)
+            console.log(`${data.senderNick}님이 메시지를 보냈습니다.`);
+        })
 
         // 연결 중지
         socket.on("disconnect", () => {

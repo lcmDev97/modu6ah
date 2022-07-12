@@ -81,7 +81,7 @@ async function chatRoomsAllGet(req, res) {
             {postNickname: nickname}
             ]}
         )
-        // .populate('chatMessage');
+        // .populate('lastChat');
         // console.log(chatRoomList);
 
         // 채팅의 마지막 내용 불러오기(lastChat)
