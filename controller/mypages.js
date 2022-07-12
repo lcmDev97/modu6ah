@@ -9,9 +9,15 @@ const reviewComment = require("../schemas/reviewComment");
 // 프로필 조회
 async function profileGet(req, res) {
     try {
-        const { nickname } = res.locals.user;
+        const { nickname } = req.params
         const mypageGet = await User.findOne({ nickname }, { _id: 0, email: 1, nickname: 1, profileUrl: 1, myComment: 1 });
-        res.status(200).send({ mypageGet });
+        if(!mypageGet){
+            return res.status(400).send({
+                result: "false",
+                message: "존재하지 않는 유저입니다."
+            });
+        }
+        return res.status(200).send({ mypageGet });
     } catch (err) {
         res.status(400).send({
             result: "false",
@@ -27,9 +33,13 @@ async function myBookmark(req, res) {
         const bookmarkList1 = await recruitPost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 모집 게시글
         const bookmarkList2 = await placePost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 장소 추천
         const bookmarkList3 = await reviewPost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 육아용품 리뷰
-        // console.log(bookmarkList1, bookmarkList2, bookmarkList3);
-
-        return res.send({ bookmarkList });
+        
+        return res.send({ 
+            result : true,
+            bookmarkList1,
+            bookmarkList2,
+            bookmarkList3,
+        });
 
     } catch (err) {
         res.status(400).send({
