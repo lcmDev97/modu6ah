@@ -26,6 +26,7 @@ async function placeComments(req, res) {
         // 게시글 작성
         const placeComments = await placeComment.create({
             nickname : nickname ,
+            profileUrl,
             placePostId : findPost.placePostId, 
             comment : comment,
             

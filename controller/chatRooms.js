@@ -48,6 +48,7 @@ async function chatRooms(req, res) {
         const createdChats = await chatRoom.create({
                 recruitPostId,
                 nickname,
+                profileUrl,
                 postNickname: existPostId.nickname,
                 postTitle: existPostId.title,
                 createdAt: createdAt,

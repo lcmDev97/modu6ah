@@ -16,6 +16,7 @@ async function placePosts(req, res) {
       // 게시글 작성
       const createdPosts = await placePost.create({
           nickname,
+          profileUrl,
           title,
           content,
           region,
