@@ -4,6 +4,7 @@ const socketIO = require('socket.io');
 // DB
 const chatRoom = require("./schemas/chatRoom");
 const chatMessage = require("./schemas/chatMessage");
+const User = require("./schemas/user");
 
 // 소켓
 module.exports = (server) => {
@@ -36,7 +37,7 @@ module.exports = (server) => {
             console.log('data: ', data);
             console.log('data.roomId: ', data.roomId);
             // notify 이벤트 송신(알림 메시지 전송)
-            io.emit("notify", data);
+            io.sockets.in(data.receiverNick).emit("notify", data);
             console.log(`${data.senderNick}님이 메시지를 보냈습니다.`)            
             });
         });
