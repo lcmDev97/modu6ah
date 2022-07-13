@@ -100,14 +100,13 @@ async function chatRoomsAllGet(req, res) {
         // 채팅 마지막 내용 + 사용자가 누구랑 채팅하는지에 대한 정보
         // for (let i = 0; i < lastChat.length; i++) {
         //     if (lastChat[i].senderNick === nickname) {
-        //         lastChat[i]
         //     }
         // }
         
         // map 함수 이용해 lastChat message만 추출
         // let eachLastChat = lastChats.map(row => row.message);
 
-        return res.status(200).send({ chatRoomList });
+        return res.status(200).send({ chatRoomList, lastChats });
 
     } catch (err) {
         return res.status(400).send({
