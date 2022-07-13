@@ -81,7 +81,6 @@ async function chatRoomsAllGet(req, res) {
             {postNickname: nickname}
             ]}
         )
-        // .populate('lastChat');
         // console.log(chatRoomList);
 
         // 채팅의 마지막 내용 불러오기(lastChat)
@@ -97,9 +96,12 @@ async function chatRoomsAllGet(req, res) {
             // console.log(lastChat)
             lastChats.push(lastChat);
         }
-        
-        // console.log(chatRoomList)
-        // console.log(lastChats)
+
+        for (let i = 0; i < lastChat.length; i++) {
+            if (lastChat[i].senderNick === nickname) {
+                const 
+            }
+        }
         
         // map 함수 이용해 lastChat message만 추출
         // let eachLastChat = lastChats.map(row => row.message);
