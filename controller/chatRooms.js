@@ -97,9 +97,10 @@ async function chatRoomsAllGet(req, res) {
             lastChats.push(lastChat);
         }
 
+        // 채팅 마지막 내용 + 사용자가 누구랑 채팅하는지에 대한 정보
         // for (let i = 0; i < lastChat.length; i++) {
         //     if (lastChat[i].senderNick === nickname) {
-        //         const 
+        //         lastChat[i]
         //     }
         // }
         

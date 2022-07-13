@@ -29,7 +29,7 @@ module.exports = (server) => {
         // send_message 이벤트 수신(roomId, senderNick, message 받음)
         socket.on("send_message", async (data) => {
             // notify 이벤트 송신(알림 메시지 전송)
-            io.emit("notify", data)
+            socket.broadcast.emit("notify", data)
             console.log(`${data.senderNick}님이 메시지를 보냈습니다.`)
             const message = new chatMessage(data); // 받은 메시지 DB 저장
             console.log(message);
