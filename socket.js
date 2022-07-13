@@ -24,7 +24,7 @@ module.exports = (server) => {
         socket.on("join_room", (data) => {
             socket.join(data); // 해당 roomId 입장
             socket.emit("test", data);
-            console.log(`User with ID: ${socket.id} joined room: ${data}`);
+            console.log(`User with ID: ${socket.id} joined room: ${data.roomId} joined nickname: ${data.nickname}`);
       });
 
         // send_message 이벤트 수신(roomId, senderNick, receiverNick, message, profileUrl, time 받음)
