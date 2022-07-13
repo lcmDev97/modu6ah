@@ -24,7 +24,7 @@ module.exports = (server) => {
         socket.on("join_room", (data) => {
             socket.join(data.roomId); // 해당 roomId 입장
             socket.emit("test", data);
-            console.log(`User with ID: ${socket.id} joined room: ${data.roomId}, ${data.nickname}`);
+            console.log(`User with ID: ${socket.id} joined room: ${data.roomId}, ${data.senderNick}`);
       });
 
         // send_message 이벤트 수신(roomId, senderNick, receiverNick, message, profileUrl, time 받음)
@@ -37,7 +37,7 @@ module.exports = (server) => {
             console.log('data: ', data);
             console.log('data.roomId: ', data.roomId);
             // notify 이벤트 송신(알림 메시지 전송)
-            io.sockets.to(data.receiverNick).emit("notify", data);
+            io.emit("notify", data);
             console.log(`${data.senderNick}님이 메시지를 보냈습니다.`)            
             });
         });

@@ -5,6 +5,7 @@ const chatMessageSchema = new Schema(
     {
         roomId: { type: Number },
         profileUrl: { type: String }, // senderNick의 profileUrl
+        profileUrlTwo: { type: String },
         senderNick: { type: String },
         receiverNick: { type: String },
         message: { type: String },
