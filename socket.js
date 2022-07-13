@@ -35,11 +35,14 @@ module.exports = (server) => {
             // 해당 roomId로 receive_message 이벤트 송신(해당 roomId에 접속한 클라이언트에게 메시지 전송)
             io.in(data.roomId).emit("receive_message", {...data, id: message._id });
             console.log('data: ', data);
-            console.log('data.roomId: ', data.roomId);
-            // notify 이벤트 송신(알림 메시지 전송)
-            socket.broadcast.to(data.roomId).emit("notify", data);
-            console.log(`${data.senderNick}님이 메시지를 보냈습니다.`)            
+            console.log('data.roomId: ', data.roomId);     
             });
+        });
+
+        socket.on("test2", (data) => {
+            // notify 이벤트 송신(알림 메시지 전송)
+            socket.broadcast.in(data.roomId).emit("notify", data);
+            console.log(`${data.senderNick}님이 메시지를 보냈습니다.`)       
         });
 
         // back 이벤트 수신(채팅방 뒤로가기 클릭시 roomId 받음)
