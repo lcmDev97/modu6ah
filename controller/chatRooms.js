@@ -97,11 +97,11 @@ async function chatRoomsAllGet(req, res) {
             lastChats.push(lastChat);
         }
 
-        for (let i = 0; i < lastChat.length; i++) {
-            if (lastChat[i].senderNick === nickname) {
-                const 
-            }
-        }
+        // for (let i = 0; i < lastChat.length; i++) {
+        //     if (lastChat[i].senderNick === nickname) {
+        //         const 
+        //     }
+        // }
         
         // map 함수 이용해 lastChat message만 추출
         // let eachLastChat = lastChats.map(row => row.message);
