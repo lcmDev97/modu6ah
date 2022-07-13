@@ -41,7 +41,7 @@ module.exports = (server) => {
 
         socket.on("test2", (data) => {
             // notify 이벤트 송신(알림 메시지 전송)
-            socket.broadcast.in(data.roomId).emit("notify", data);
+            io.sockets.in(data.roomId).emit("notify", data);
             console.log(`${data.senderNick}님이 메시지를 보냈습니다.`)       
         });
 
