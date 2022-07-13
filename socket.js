@@ -36,7 +36,7 @@ module.exports = (server) => {
             console.log('data: ', data);
             console.log('data.roomId: ', data.roomId);
             // notify 이벤트 송신(알림 메시지 전송)
-            io.to(data.receiverNick).emit("notify", data)
+            socket.to(data.receiverNick).emit("notify", data)
             console.log(`${data.senderNick}님이 메시지를 보냈습니다.`)            
             });
         });
