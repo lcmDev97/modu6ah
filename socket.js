@@ -22,9 +22,9 @@ module.exports = (server) => {
         
         // join_room 이벤트 수신(roomId 받음)
         socket.on("join_room", (data) => {
-            socket.join(data); // 해당 roomId 입장
+            socket.join(data.roomId); // 해당 roomId 입장
             socket.emit("test", data);
-            console.log(`User with ID: ${socket.id} joined room: ${data}`);
+            console.log(`User with ID: ${socket.id} joined room: ${data.roomId}, ${data.nickname}`);
       });
 
         // send_message 이벤트 수신(roomId, senderNick, receiverNick, message, profileUrl, time 받음)
