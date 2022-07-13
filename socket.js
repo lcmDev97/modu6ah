@@ -25,25 +25,39 @@ module.exports = (server) => {
             socket.join(data); // 해당 roomId 입장
             socket.emit("test", data);
             console.log(`User with ID: ${socket.id} joined room: ${data.roomId} joined nickname: ${data.nickname}`);
-      });
-
-        // send_message 이벤트 수신(roomId, senderNick, receiverNick, message, profileUrl, time 받음)
-        socket.on("send_message", async (data) => {
-            const message = new chatMessage(data); // 받은 메시지 DB 저장
+        
+        socket.on("send_message", async (message) => {
+            const message = new chatMessage(message); // 받은 메시지 DB 저장
             console.log(message);
             message.save().then(() => {
             // 해당 roomId로 receive_message 이벤트 송신(해당 roomId에 접속한 클라이언트에게 메시지 전송)
-            io.in(data.roomId).emit("receive_message", {...data, id: message._id });
-            console.log('data: ', data);
-            console.log('data.roomId: ', data.roomId);     
+            io.in(message.roomId).emit("receive_message", {...message, id: message._id });
+            console.log('data: ', message);
+            console.log('data.roomId: ', message.roomId);
+            // notify 이벤트 송신(알림 메시지 전송)
+            io.sockets.in(data.nickname).emit("notify", message);
+            console.log(`${message.senderNick}님이 메시지를 보냈습니다.`)         
             });
         });
+      });
 
-        socket.on("test2", (data) => {
-            // notify 이벤트 송신(알림 메시지 전송)
-            io.sockets.in(data.roomId).emit("notify", data);
-            console.log(`${data.senderNick}님이 메시지를 보냈습니다.`)       
-        });
+        // send_message 이벤트 수신(roomId, senderNick, receiverNick, message, profileUrl, time 받음)
+        // socket.on("send_message", async (data) => {
+        //     const message = new chatMessage(data); // 받은 메시지 DB 저장
+        //     console.log(message);
+        //     message.save().then(() => {
+        //     // 해당 roomId로 receive_message 이벤트 송신(해당 roomId에 접속한 클라이언트에게 메시지 전송)
+        //     io.in(data.roomId).emit("receive_message", {...data, id: message._id });
+        //     console.log('data: ', data);
+        //     console.log('data.roomId: ', data.roomId);     
+        //     });
+        // });
+
+        // socket.on("test2", (data) => {
+        //     // notify 이벤트 송신(알림 메시지 전송)
+        //     io.sockets.in(data.roomId).emit("notify", data);
+        //     console.log(`${data.senderNick}님이 메시지를 보냈습니다.`)       
+        // });
 
         // back 이벤트 수신(채팅방 뒤로가기 클릭시 roomId 받음)
         socket.on("back", (data) => {
