@@ -27,9 +27,9 @@ module.exports = (server) => {
             console.log(`User with ID: ${socket.id} joined room: ${data.roomId} joined nickname: ${data.nickname}`);
         
         socket.on("send_message", async (message) => {
-            const message = new chatMessage(message); // 받은 메시지 DB 저장
-            console.log(message);
-            message.save().then(() => {
+            const msg = new chatMessage(message); // 받은 메시지 DB 저장
+            console.log(msg);
+            msg.save().then(() => {
             // 해당 roomId로 receive_message 이벤트 송신(해당 roomId에 접속한 클라이언트에게 메시지 전송)
             io.in(message.roomId).emit("receive_message", {...message, id: message._id });
             console.log('data: ', message);
