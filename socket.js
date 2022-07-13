@@ -28,9 +28,6 @@ module.exports = (server) => {
 
         // send_message 이벤트 수신(roomId, senderNick, message 받음)
         socket.on("send_message", async (data) => {
-            // notify 이벤트 송신(알림 메시지 전송)
-            socket.broadcast.emit("notify", data)
-            console.log(`${data.senderNick}님이 메시지를 보냈습니다.`)
             const message = new chatMessage(data); // 받은 메시지 DB 저장
             console.log(message);
             message.save().then(() => {
@@ -38,7 +35,9 @@ module.exports = (server) => {
             io.in(data.roomId).emit("receive_message", {...data, id: message._id });
             console.log('data: ', data);
             console.log('data.roomId: ', data.roomId);
-            
+            // notify 이벤트 송신(알림 메시지 전송)
+            socket.broadcast.emit("notify", data)
+            console.log(`${data.senderNick}님이 메시지를 보냈습니다.`)            
             });
         });
 
