@@ -20,14 +20,14 @@ module.exports = (server) => {
     io.on("connection", (socket) => {
         console.log(`User Connected: ${socket.id}`);
         
-        // join_room 이벤트 수신(roomId 받음)
+        // join_room 이벤트 수신(roomId, nickname 받음)
         socket.on("join_room", (data) => {
             socket.join(data.roomId); // 해당 roomId 입장
             socket.emit("test", data);
             console.log(`User with ID: ${socket.id} joined room: ${data.roomId}, ${data.senderNick}`);
       });
 
-        // send_message 이벤트 수신(roomId, senderNick, receiverNick, message, profileUrl, time 받음)
+        // send_message 이벤트 수신(roomId, senderNick, receiverNick, message, profileUrl, profileUrl1, time 받음)
         socket.on("send_message", async (data) => {
             const message = new chatMessage(data); // 받은 메시지 DB 저장
             console.log(message);
