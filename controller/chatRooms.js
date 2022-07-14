@@ -175,18 +175,15 @@ async function chatRoomsDelete(req, res) {
         }
 
         // 채팅 메시지 조건부 삭제
-        const deleteChatMessage = await chatMessage.find({
+        const deleteChatMessage = await chatRoom.find({
             roomId: Number(roomId),
+            nickname : deleteUser.outUsers,
+            postNickname : deleteUser.outUsers
         });
         if(deleteChatMessage){
             await chatMessage.deleteMany({
-                roomId: Number(roomId)
+                roomId: Number(roomId),
             });
-        }else{
-            return res.status(200).send({
-                result: "true",
-                message: "message가 이미 삭제되었거나 message 데이터가 없습니다."
-            })
         }
 
     } catch (err) {
