@@ -123,34 +123,7 @@ async function signin(req, res, next) {
             result: false,
         });
     }
-}
-
-//   [passport-local 이용 함수]
-// async function signup (req, res, next) {
-// passport.authenticate('local', (authError, user, info) => {
-//   if (authError) {
-//     console.error(authError);
-//     return next(authError);
-//   }
-//   if (!user) {
-//     return res.send('user가 존재하지 않습니다.')    //기존 코드 return res.redirect(`/?loginError=${info.message}`);
-//   }
-//   return req.login(user, (loginError) => {
-//     if (loginError) {
-//       console.error(loginError);
-//       return next(loginError);
-//     }
-//     return res.send('로컬로그인 완료되었습니다.')     // <= 원래 코드 return res.redirect('/');
-//   });
-// })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
-// }
-
-const KAKAO_OAUTH_TOKEN_API_URL = 'https://kauth.kakao.com/oauth/token';
-const KAKAO_GRANT_TYPE = 'authorization_code';
-const client_id = "	e9ef94fab6bfeb25509276a4582209b6";
-const KAKAO_REDIRECT_URL = 'http://localhost:3000/api/users/kakao/callback';
-
-  
+} 
   // router.post - '/kakao/member'
   function kakao_member(req, res) {
     try {
