@@ -20,7 +20,7 @@ module.exports = (server) => {
     io.on("connection", (socket) => {
         console.log(`User Connected: ${socket.id}`);
         
-        // join_room 이벤트 수신(roomId, nickname 받음)
+        // join_room 이벤트 수신(roomId, receiverNick, senderNick 받음)
         socket.on("join_room", (data) => {
             socket.join(data.roomId); // 해당 roomId 입장
             socket.emit("test", data);
