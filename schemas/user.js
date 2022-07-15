@@ -8,7 +8,7 @@ const UserSchema = new Schema({
     myComment: { type: String },
     profileUrl: { type: String, },
     refreshToken: { type: String },
-    snsId: { type: String, required: true },
+    snsId: { type: String },
     provider: { type: String, required: true },
 });
 
