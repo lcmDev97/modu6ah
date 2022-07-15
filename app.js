@@ -92,3 +92,5 @@ socket(server);
 server.listen(PORT, () => {
     console.log(`${PORT}번 포트로 서버가 열렸습니다.`);
 });
+
+module.exports = app;
