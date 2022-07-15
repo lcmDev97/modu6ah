@@ -15,6 +15,7 @@ const reviewPostSchema = new Schema(
         bookmarkUsers: { type: Array, default: [] }, // 게시글 북마크한 사용자들
         bookmarkStatus: {type : Boolean , default : false }, // 북마크한 상태
         category: { type: Number, default: 3 }, // 게시글 카테고리
+        createdAt: { type: String }
     },
     { timestamps: true } // 게시글 생성 및 수정날짜
 );

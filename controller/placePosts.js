@@ -11,7 +11,7 @@ async function placePosts(req, res) {
       // 불러올 정보 및 받아올 정보
       const { nickname, profileUrl } = res.locals.user;
       const { title, content, region, imageUrl, star } = req.body;
-      const createdAt = moment().format('YYYY-MM-DD HH:mm');
+      const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
 
       // 게시글 작성
       const createdPosts = await placePost.create({
