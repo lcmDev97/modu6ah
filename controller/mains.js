@@ -62,8 +62,8 @@ async function mainPostGet(req, res) {
             return res.status(200).send({
                 result : true,
                 recruitPosts,
-                // placePosts,
-                // reviewPosts
+                placePosts,
+                reviewPosts
             })
         }
 
