@@ -13,6 +13,7 @@ async function recruitPosts(req, res) {
       const { nickname, profileUrl } = res.locals.user;
       const { title, content, age, date, time, place } = req.body;
       let status = false;
+      const date2 = moment().add('9','h').format('YYYY-MM-DD');
       const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
 
       // 게시글 작성
@@ -22,7 +23,7 @@ async function recruitPosts(req, res) {
           title,
           content,
           age,
-          date,
+          date: date2,
           time,
           place,
           status,
