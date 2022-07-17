@@ -76,7 +76,7 @@ async function mainPostGet(req, res) {
         //case2) 비로그인 일떄 (bookmarkUsers 제외하고 보내기)
         const recruitPosts = await recruitPost.find({ status: false },{ updatedAt: 0, _id: 0, bookmarkUsers:0 }).limit(6).sort({ createdAt: -1 })
         let remainNum;
-        if( recruitPosts.length < 8 ){
+        if( recruitPosts.length < 6 ){
             remainNum = 6 - recruitPosts.length
         }
         const truePosts = await recruitPost.find({ status: true },{ updatedAt: 0, _id: 0, bookmarkUsers:0 }).limit(remainNum).sort({ createdAt: -1 })
