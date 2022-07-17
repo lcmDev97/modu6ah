@@ -9,10 +9,9 @@ const reviewPost = require("../schemas/reviewPost");
 async function mainPostGet(req, res) {
     try{
         const { authorization } = req.headers;
-        // console.log('메인페이지조회시작')
-        // console.log('authorization값이다 요놈아',authorization )
+
         //case1) 로그인 되어있을떄(포함되어있을경우 bookmarkStatus값만 true로 바꾸고, bookmarkUsers는 배열아닌 null로 바꿔 프론트에 전달 )
-        if(authorization !== "Bearer undefined"){
+        if(authorization){
             // console.log('로그인유저 로직시작')
             const [authType, authToken] = authorization.split(" ");
             const decodedToken = jwt.decode(authToken, SECRET_KEY);
