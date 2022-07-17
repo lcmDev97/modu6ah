@@ -5,7 +5,7 @@ const User = require("../schemas/user");
 const recruitComment = require("../schemas/recruitComment");
 const placeComment = require("../schemas/placeComment");
 const reviewComment = require("../schemas/reviewComment");
-
+const RecruitBookmark = require("../schemas/recruitBookmark");
 // 프로필 조회 - 로그인한 사람/안한 사람
 async function profileGet(req, res) {
     try {
@@ -30,15 +30,16 @@ async function profileGet(req, res) {
 async function myBookmark(req, res) {
     try {
         const { nickname } = res.locals.user;
-        const bookmarkList1 = await recruitPost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 모집 게시글
-        const bookmarkList2 = await placePost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 장소 추천
-        const bookmarkList3 = await reviewPost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 육아용품 리뷰
-        
+        const recruitBookmarkList = await RecruitBookmark.find({ nickname }).sort({createdAt:-1})
+        // const bookmarkList1 = await recruitPost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 모집 게시글
+        // const bookmarkList2 = await placePost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 장소 추천
+        // const bookmarkList3 = await reviewPost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 육아용품 리뷰
         return res.send({ 
             result : true,
-            bookmarkList1,
-            bookmarkList2,
-            bookmarkList3,
+            recruitBookmarkList
+            // bookmarkList1,
+            // bookmarkList2,
+            // bookmarkList3,
         });
 
     } catch (err) {

@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const recruitPost = require("../schemas/recruitPost");
 const recruitComment = require("../schemas/recruitComment");
 const User = require("../schemas/user");
+const RecruitBookmark = require("../schemas/recruitBookmark");
 const moment = require("moment");
 
 // 모집 게시글 작성
@@ -181,6 +182,13 @@ async function recruitBookmark(req, res) {
         if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
             await user.updateOne({ $push: { bookmarkList: recruitPostId }})
+            const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
+            const newBookmark = new RecruitBookmark({
+                recruitPostId,
+                nickname,
+                createdAt
+            })
+            await newBookmark.save()
             res.status(200).send({
                    result: "true",
                    message: "북마크가 표시되었습니다."
@@ -188,6 +196,7 @@ async function recruitBookmark(req, res) {
         } else {
             await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
             await user.updateOne({ $pull: { bookmarkList: recruitPostId }})
+            await RecruitBookmark.deleteOne({ $and: [{ nickname }, { recruitPostId }], })
             res.status(200).send({
                    result: "true",
                    message: "북마크가 해제되었습니다."

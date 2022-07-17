@@ -33,6 +33,7 @@ module.exports = (req, res, next) => {
       const nickname = decodedToken.nickname;
       console.log(nickname)
       User.findOne({ nickname }).then((user) => {
+        console.log(user)
         const targetRefreshToken = user.refreshToken
         console.log('찾은 유저의 refreshtoken정보입니다.',targetRefreshToken);
         const refreshTokenCheck = verifyrefeshToken(targetRefreshToken);
