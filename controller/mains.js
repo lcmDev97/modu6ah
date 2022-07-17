@@ -32,7 +32,7 @@ async function mainPostGet(req, res) {
             // console.log("recruitPosts기본",recruitPosts)
             let remainNum;
             if( recruitPosts.length !==6 ){
-                remainNum = 8 - recruitPosts.length
+                remainNum = 6 - recruitPosts.length
             }
             const truePosts = await recruitPost.find({ status: true }).limit(remainNum).sort({ createdAt: -1 })
             for(let i = 0; i <truePosts.length ; i++ ){ 
@@ -74,10 +74,10 @@ async function mainPostGet(req, res) {
 
         // console.log('비로그인유저 로직시작')
         //case2) 비로그인 일떄 (bookmarkUsers 제외하고 보내기)
-        const recruitPosts = await recruitPost.find({ status: false },{ updatedAt: 0, _id: 0, bookmarkUsers:0 }).limit(8).sort({ createdAt: -1 })
+        const recruitPosts = await recruitPost.find({ status: false },{ updatedAt: 0, _id: 0, bookmarkUsers:0 }).limit(6).sort({ createdAt: -1 })
         let remainNum;
         if( recruitPosts.length < 8 ){
-            remainNum = 8 - recruitPosts.length
+            remainNum = 6 - recruitPosts.length
         }
         const truePosts = await recruitPost.find({ status: true },{ updatedAt: 0, _id: 0, bookmarkUsers:0 }).limit(remainNum).sort({ createdAt: -1 })
         for(let i = 0 ; i < remainNum ; i++){
