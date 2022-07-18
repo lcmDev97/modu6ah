@@ -158,8 +158,7 @@ async function chatRoomsDelete(req, res) {
         });
 
         console.log("deleteChatRoom"+deleteChatRoom)
-        if(deleteChatRoom){
-            // 채팅방지우기 
+                    // 채팅방지우기 
             await chatRoom.deleteOne({ 
                 roomId: Number(roomId),
                 nickname : deleteUser.outUsers,
@@ -168,9 +167,10 @@ async function chatRoomsDelete(req, res) {
             // 채팅내용 지우기 
             await chatMessage.deleteMany({ 
                 roomId: Number(roomId),
-                
+                senderNick : deleteUser.outUsers,
+                receiverNick : deleteUser.outUsers,
             });   
-        }
+        
            
         res.status(200).send({
                 result: "true",
