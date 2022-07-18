@@ -10,6 +10,8 @@ router.post("/chats/rooms/:recruitPostId", authMiddleware, chatRoomsController.c
 router.get("/chats/rooms", authMiddleware, chatRoomsController.chatRoomsAllGet);
 
 // 채팅방 조건부 삭제 
-router.put("/chats/rooms/:roomId", authMiddleware, chatRoomsController.chatRoomsDelete);
+router.put("/chats/rooms/:roomId", authMiddleware, chatRoomsController.chatRoomsPut);
+
+router.delete("/chats/rooms/:roomId", authMiddleware, chatRoomsController.chatRoomsDelete);
 
 module.exports = router;
