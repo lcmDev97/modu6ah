@@ -5,6 +5,7 @@ const User = require("../schemas/user");
 const recruitComment = require("../schemas/recruitComment");
 const placeComment = require("../schemas/placeComment");
 const reviewComment = require("../schemas/reviewComment");
+const chatMessage = require("../schemas/chatMessage");
 
 // 프로필 조회 - 로그인한 사람/안한 사람
 async function profileGet(req, res) {
@@ -54,13 +55,13 @@ async function profileUpdate(req, res) {
     try {
         const { nickname } = res.locals.user;
         const { profileUrl, myComment } = req.body;
-        await User.updateOne({ nickname }, { $set: { profileUrl, myComment }});
-        await recruitPost.updateOne({ nickname }, { $set: { profileUrl }});
-        await placePost.updateOne({ nickname }, { $set: { profileUrl}});
-        await reviewPost.updateOne({ nickname }, { $set: { profileUrl }});
-        await recruitComment.updateOne({ nickname }, { $set: { profileUrl }});
-        await placeComment.updateOne({ nickname }, { $set: { profileUrl }});
-        await reviewComment.updateOne({ nickname }, { $set: { profileUrl}});
+        await User.updateMany({ nickname }, { $set: { profileUrl, myComment }});
+        await recruitPost.updateMany({ nickname }, { $set: { profileUrl }});
+        await placePost.updateMany({ nickname }, { $set: { profileUrl}});
+        await reviewPost.updateMany({ nickname }, { $set: { profileUrl }});
+        await recruitComment.updateMany({ nickname }, { $set: { profileUrl }});
+        await placeComment.updateMany({ nickname }, { $set: { profileUrl }});
+        await reviewComment.updateMany({ nickname }, { $set: { profileUrl}});
         res.status(200).send({ result: "true", message: "프로필 수정이 완료되었습니다." });
     } catch (err) {
         res.status(400).send({

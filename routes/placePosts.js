@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const placePostsController = require("../controller/placePosts");
 const authMiddleware = require("../middlewares/authmiddleware");
+const { placeImageUpload } = require('../middlewares/upload');
 
 // 장소추천 게시글 작성
-router.post("/places", authMiddleware, placePostsController.placePosts);
+router.post("/places", authMiddleware, placeImageUpload.array('imageUrl', 4), placePostsController.placePosts);
 
 // 장소추천 게시글 전체조회
 router.get("/places", placePostsController.placeAllGet);

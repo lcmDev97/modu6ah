@@ -84,7 +84,7 @@ async function chatRoomsAllGet(req, res) {
         })
         
         // console.log(chatRoomList);
-
+        
         // 채팅의 마지막 내용 불러오기(lastChat)
         let chatRoomId = [];
         let lastChats = [];
@@ -119,26 +119,26 @@ async function chatRoomsAllGet(req, res) {
 };
 
 // 유저의 특정 채팅방 삭제
-// async function chatRoomsDelete(req, res) {
-//     try {
-//         const { nickname } = res.locals.user; // 로그인한 사용자 닉네임
-//         const { roomId } = req.params; // 해당 roomId
-//         const chatRoomList = await chatRoom.findOne({ roomId: Number(roomId) })
-//         // console.log(chatRoomList)
-//         if (nickname === chatRoomList.nickname || nickname === chatRoomList.postNickname) {
-//             await chatRoomList.deleteOne({ roomId })
-//             return res.status(200).send({ result: "true", message: "채팅방이 삭제되었습니다." });
-//         } else {
-//             return res.status(400).send({ result: false, message: "채팅방 삭제 권한이 없습니다."})
-//         }
+async function chatRoomsDelete(req, res) {
+    try {
+        const { nickname } = res.locals.user; // 로그인한 사용자 닉네임
+        const { roomId } = req.params; // 해당 roomId
+        const chatRoomList = await chatRoom.findOne({ roomId: Number(roomId) })
+        // console.log(chatRoomList)
+        if (nickname === chatRoomList.nickname || nickname === chatRoomList.postNickname) {
+            await chatRoomList.deleteOne({ roomId })
+            return res.status(200).send({ result: "true", message: "채팅방이 삭제되었습니다." });
+        } else {
+            return res.status(400).send({ result: false, message: "채팅방 삭제 권한이 없습니다."})
+        }
 
-//     } catch (err) {
-//         return res.status(400).send({
-//             result: "false",
-//             message: "채팅방 삭제 실패"
-//         })
-//     }
-// };
+    } catch (err) {
+        return res.status(400).send({
+            result: "false",
+            message: "채팅방 삭제 실패"
+        })
+    }
+};
 
 // 유저의 특정 채팅방 및 채팅목록 조건부 삭제
 async function chatRoomsDelete(req, res) {

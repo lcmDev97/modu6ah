@@ -4,14 +4,26 @@ const jwt = require("jsonwebtoken");
 const placePost = require("../schemas/placePost");
 const placeComment = require("../schemas/placeComment");
 const User = require("../schemas/user");
+const moment = require("moment");
 
 // 장소추천 게시글 작성
 async function placePosts(req, res) {
   try {
       // 불러올 정보 및 받아올 정보
       const { nickname, profileUrl } = res.locals.user;
-      const { title, content, region, imageUrl, star } = req.body;
+      const { title, content, region, star } = req.body;
       const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
+      let imageUrl;
+      if (req.files.length != 0) {
+          imageUrl = [];
+          for (let i = 0; i < req.files.length; i++) {
+              imageUrl.push(req.files[i].location);
+          }
+      } else {
+          imageUrl = [
+            "https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png"
+          ]
+      }
 
       // 게시글 작성
       const createdPosts = await placePost.create({
@@ -20,7 +32,7 @@ async function placePosts(req, res) {
           title,
           content,
           region,
-          imageUrl,
+          imageUrl: imageUrl,
           star,
           createdAt: createdAt
       });
