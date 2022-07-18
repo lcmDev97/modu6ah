@@ -6,6 +6,8 @@ const recruitComment = require("../schemas/recruitComment");
 const placeComment = require("../schemas/placeComment");
 const reviewComment = require("../schemas/reviewComment");
 const RecruitBookmark = require("../schemas/recruitBookmark");
+const PlaceBookmark = require("../schemas/placeBookmark");
+const ReviewBookmark = require("../schemas/reviewBookmark");
 // 프로필 조회 - 로그인한 사람/안한 사람
 async function profileGet(req, res) {
     try {
@@ -31,16 +33,28 @@ async function myBookmark(req, res) {
     // try {
         const { nickname } = res.locals.user;
         const recruitBookmarkList = await RecruitBookmark.find({ nickname }).sort({markedAt:-1})
-        for(let i = 0; i <recruitBookmarkList.length ; i++ ){         //forEach문? 다른거?로 바꾸면 더 효율 좋나?
+        for(let i = 0; i <recruitBookmarkList.length ; i++ ){
             recruitBookmarkList[i].bookmarkStatus = true
             recruitBookmarkList[i].bookmarkUsers = null
+        }
+        const placeBookmarkList = await PlaceBookmark.find({ nickname }).sort({markedAt:-1})
+        for(let i = 0; i <recruitBookmarkList.length ; i++ ){
+            placeBookmarkList[i].bookmarkStatus = true
+            placeBookmarkList[i].bookmarkUsers = null
+        }
+        const reviewBookmarkList = await ReviewBookmark.find({ nickname }).sort({markedAt:-1})
+        for(let i = 0; i <recruitBookmarkList.length ; i++ ){
+            reviewBookmarkList[i].bookmarkStatus = true
+            reviewBookmarkList[i].bookmarkUsers = null
         }
         // const bookmarkList1 = await recruitPost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 모집 게시글
         // const bookmarkList2 = await placePost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 장소 추천
         // const bookmarkList3 = await reviewPost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 육아용품 리뷰
         return res.send({ 
             result : true,
-            recruitBookmarkList
+            recruitBookmarkList,
+            placeBookmarkList,
+            reviewBookmarkList,
             // bookmarkList1,
             // bookmarkList2,
             // bookmarkList3,
