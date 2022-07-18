@@ -19,6 +19,6 @@ router.put("/reviews/:reviewPostId", authMiddleware, reviewPostsController.revie
 router.delete("/reviews/:reviewPostId", authMiddleware, reviewPostsController.reviewDelete);
 
 // 육아용품 리뷰 게시글 북마크 표시/해제
-// router.put("/reviews/bookmark/:reviewPostId", authMiddleware, reviewPostsController.reviewBookmark);
+router.put("/reviews/bookmark/:reviewPostId", authMiddleware, reviewPostsController.reviewBookmark);
 
 module.exports = router;
