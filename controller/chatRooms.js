@@ -149,11 +149,12 @@ async function chatRoomsDelete(req, res) {
             roomId 
         });
         console.log("dfdf  : "+deleteUser)
-        // 삭제 할 수 있는 채팅방 찾기 
+    
+
         const deleteChatRoom = await chatRoom.find({ 
             roomId: Number(roomId),
             nickname : deleteUser.outUsers,
-            postNickname : deleteUser.outUsers,
+            postNickname : deleteUser.outUsers, 
         });
 
         console.log("deleteChatRoom"+deleteChatRoom)
@@ -161,10 +162,13 @@ async function chatRoomsDelete(req, res) {
             // 채팅방지우기 
             await chatRoom.deleteOne({ 
                 roomId: Number(roomId),
+                nickname : deleteUser.outUsers,
+                postNickname : deleteUser.outUsers, 
             });     
             // 채팅내용 지우기 
             await chatMessage.deleteMany({ 
                 roomId: Number(roomId),
+                
             });   
         }
            
