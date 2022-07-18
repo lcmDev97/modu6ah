@@ -1,5 +1,6 @@
 const recruitPost = require("../schemas/recruitPost"); 
 const recruitComment = require("../schemas/recruitComment");
+const recruitReComment = require("../schemas/recruitReComment");
 const User = require("../schemas/user");
 
 // 모집 댓글 등록
@@ -82,7 +83,75 @@ async function recruitCommentsDelete(req, res) {
         });
 }};
 
+// 모집 대댓글 등록 
+async function recruitReCommentsCreate(req, res) {
+    try {
+        const { nickname, profileUrl } = res.locals.user;
+        const { recruitCommentId } = req.params;
+        const { comment } = req.body;
+        let status = false;
+        
+        // 댓글 찾기 
+        const [findComment] = await recruitComment.find({ 
+            recruitCommentId : recruitCommentId ,
+        });
+
+        console.log(findComment.recruitCommentId);
+
+        // 게시글 작성
+        const recruitReComments = await recruitReComment.create({
+            nickname : nickname,
+            profileUrl,
+            recruitPostId : findComment.recruitPostId, 
+            recruitCommentId : findComment.recruitCommentId,
+            comment : comment,
+        });
+        console.log(recruitReComments)
+  
+        res.status(200).send({
+            result: "true",
+            message: "댓글이 성공적으로 등록되었습니다."
+        });
+
+        if(!findComment.recruitPostId){
+            res.status(400).send({
+                result: "false",
+                message: "게시글 번호가 없습니다 "
+            });
+        }
+    } 
+    catch (err) {
+        res.status(400).send({
+            result: "false",
+            message: "댓글 작성 실패"
+        });
+    }
+ };
+ //모집 대댓글 조회 
+ async function recruitReCommentsGet(req, res) {
+    try {
+      const { recruitCommentId } = req.params;
+      const recruitReComments = await recruitReComment.find({       
+        recruitCommentId
+    }).sort({ createdAt: -1 });
+   console.log(recruitReComments)  
+    
+
+   return res.status(200).send({ 
+      recruitReComments 
+   });
+
+    } catch (err) {
+        res.status(400).send({
+            result: "false",
+            message: "대댓글 전체조회 실패"
+        });
+    }
+};
+
 module.exports = {
     recruitComments,
     recruitCommentsDelete,
+    recruitReCommentsCreate,
+    recruitReCommentsGet,
 };
