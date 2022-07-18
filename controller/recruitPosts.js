@@ -12,6 +12,8 @@ async function recruitPosts(req, res) {
   try {
       // 불러올 정보 및 받아올 정보
       const { nickname, profileUrl } = res.locals.user;
+    //   console.log(nickname)
+    //   console.log(profileUrl)
       const { title, content, age, date, time, place } = req.body;
       let status = false;
       const date2 = moment().add('9','h').format('YYYY-MM-DD');

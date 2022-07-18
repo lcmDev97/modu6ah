@@ -6,7 +6,7 @@ const UserSchema = new Schema({
     nickname: { type: String, required: true },
     password: { type: String, required: true },
     myComment: { type: String },
-    profileUrl: { type: String, },
+    profileUrl: { type: String },
     refreshToken: { type: String },
     snsId: { type: String },
     provider: { type: String, required: true },
