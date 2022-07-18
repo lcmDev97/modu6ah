@@ -8,7 +8,6 @@ router.post("/chats/rooms/:recruitPostId", authMiddleware, chatRoomsController.c
 
 // 유저의 채팅방 전체조회
 router.get("/chats/rooms", authMiddleware, chatRoomsController.chatRoomsAllGet);
-
 // 채팅방 조건부 삭제 
 router.put("/chats/rooms/:roomId", authMiddleware, chatRoomsController.chatRoomsPut);
 // 채팅방 삭제 
