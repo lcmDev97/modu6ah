@@ -9,7 +9,7 @@ const UserSchema = new Schema({
     profileUrl: { type: String },
     refreshToken: { type: String },
     snsId: { type: String },
-    provider: { type: String },
+    provider: { type: String, required: true },
 });
 
 module.exports = mongoose.model("User", UserSchema);

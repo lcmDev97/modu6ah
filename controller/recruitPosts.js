@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const recruitPost = require("../schemas/recruitPost");
 const recruitComment = require("../schemas/recruitComment");
 const User = require("../schemas/user");
+const RecruitBookmark = require("../schemas/recruitBookmark");
 const moment = require("moment");
 
 // 모집 게시글 작성
@@ -11,9 +12,12 @@ async function recruitPosts(req, res) {
   try {
       // 불러올 정보 및 받아올 정보
       const { nickname, profileUrl } = res.locals.user;
+    //   console.log(nickname)
+    //   console.log(profileUrl)
       const { title, content, age, date, time, place } = req.body;
       let status = false;
-      const createdAt = moment().format('YYYY-MM-DD HH:mm');
+      const date2 = moment().add('9','h').format('YYYY-MM-DD');
+      const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
 
       // 게시글 작성
       const createdPosts = await recruitPost.create({
@@ -22,13 +26,13 @@ async function recruitPosts(req, res) {
           title,
           content,
           age,
-          date,
+          date: date2,
           time,
           place,
           status,
           createdAt: createdAt
       });
-      console.log(createdPosts)
+    //   console.log(createdPosts)
 
       res.status(200).send({
           result: "true",
@@ -53,7 +57,7 @@ async function recruitAllGet(req, res) {
         const decodedToken = jwt.decode(authToken, SECRET_KEY);
         const userNickname = decodedToken.nickname
         
-        let recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0 });
+        let recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0 }).sort({createdAt:-1})
         for(let i = 0; i <recruitPosts.length ; i++ ){         //forEach문? 다른거?로 바꾸면 더 효율 좋나?
             if( recruitPosts[i].bookmarkUsers.includes(userNickname) ){
                 recruitPosts[i].bookmarkStatus = true
@@ -180,6 +184,26 @@ async function recruitBookmark(req, res) {
         if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
             await user.updateOne({ $push: { bookmarkList: recruitPostId }})
+            const markedAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
+
+            const addedBookmark = new RecruitBookmark({
+                recruitPostId,
+                nickname : bookmarkPost.nickname,
+                profileUrl : bookmarkPost.profileUrl,
+                title : bookmarkPost.title,
+                content : bookmarkPost.content,
+                age : bookmarkPost.age,
+                date : bookmarkPost.date,
+                time : bookmarkPost.time,
+                place : bookmarkPost.place,
+                status : bookmarkPost.status,
+                bookmarkUsers : bookmarkPost.bookmarkUsers,
+                bookmarkStatus : bookmarkPost.bookmarkStatus,
+                category :bookmarkPost.category,
+                adder : nickname,
+                markedAt : markedAt
+            })
+            await addedBookmark.save()
             res.status(200).send({
                    result: "true",
                    message: "북마크가 표시되었습니다."
@@ -187,6 +211,7 @@ async function recruitBookmark(req, res) {
         } else {
             await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
             await user.updateOne({ $pull: { bookmarkList: recruitPostId }})
+            await RecruitBookmark.deleteOne({ $and: [{ nickname }, { recruitPostId }], })
             res.status(200).send({
                    result: "true",
                    message: "북마크가 해제되었습니다."

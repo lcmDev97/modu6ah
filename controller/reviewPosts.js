@@ -4,14 +4,27 @@ const jwt = require("jsonwebtoken");
 const reviewPost = require("../schemas/reviewPost");
 const reviewComment = require("../schemas/reviewComment");
 const User = require("../schemas/user");
+const ReviewBookmark = require("../schemas/reviewBookmark");
+const moment = require("moment");
 
 // 육아용품 리뷰 게시글 작성
 async function reviewPosts(req, res) {
   try {
       // 불러올 정보 및 받아올 정보
       const { nickname, profileUrl } = res.locals.user;
-      const { title, content, imageUrl, url, productType } = req.body;
-      const createdAt = moment().format('YYYY-MM-DD HH:mm');
+      const { title, content, url, productType } = req.body;
+      const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
+      let imageUrl;
+      if (req.files.length != 0) {
+          imageUrl = [];
+          for (let i = 0; i < req.files.length; i++) {
+              imageUrl.push(req.files[i].location);
+          }
+      } else {
+          imageUrl = [
+            "https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png"
+          ]
+      }
 
       // 게시글 작성
       const createdPosts = await reviewPost.create({
@@ -19,7 +32,7 @@ async function reviewPosts(req, res) {
           profileUrl,
           title,
           content,
-          imageUrl,
+          imageUrl: imageUrl,
           url,
           productType,
           createdAt: createdAt
@@ -170,6 +183,24 @@ async function reviewBookmark(req, res) {
         if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
             await user.updateOne({ $push: { bookmarkList: reviewPostId }})
+            const markedAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
+            const addedBookmark = new ReviewBookmark({
+                reviewPostId,
+                nickname : bookmarkPost.nickname,
+                profileUrl : bookmarkPost.profileUrl,
+                title : bookmarkPost.title,
+                content : bookmarkPost.content,
+                url : bookmarkPost.url,
+                productType : bookmarkPost.productType,
+                imageUrl : bookmarkPost.imageUrl,
+                bookmarkUsers : bookmarkPost.bookmarkUsers,
+                bookmarkStatus : bookmarkPost.bookmarkStatus,
+                category :bookmarkPost.category,
+                createdAt : bookmarkPost.createdAt,
+                adder : nickname,
+                markedAt : markedAt,
+            })
+            await addedBookmark.save()
             res.status(200).send({
                 result: "true",
                 message: "북마크가 표시되었습니다."
@@ -177,6 +208,7 @@ async function reviewBookmark(req, res) {
         } else {
             await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
             await user.updateOne({ $pull: { bookmarkList: reviewPostId }})
+            await ReviewBookmark.deleteOne({ $and: [{ nickname }, { reviewPostId }], })
             res.status(200).send({
                 result: "true",
                 message: "북마크가 해제되었습니다."
