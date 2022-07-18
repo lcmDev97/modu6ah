@@ -182,13 +182,26 @@ async function recruitBookmark(req, res) {
         if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
             await user.updateOne({ $push: { bookmarkList: recruitPostId }})
-            const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
-            const newBookmark = new RecruitBookmark({
+            const markedAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
+
+            const addedBookmark = new RecruitBookmark({
                 recruitPostId,
-                nickname,
-                createdAt
+                nickname : bookmarkPost.nickname,
+                profileUrl : bookmarkPost.profileUrl,
+                title : bookmarkPost.title,
+                content : bookmarkPost.content,
+                age : bookmarkPost.age,
+                date : bookmarkPost.date,
+                time : bookmarkPost.time,
+                place : bookmarkPost.place,
+                status : bookmarkPost.status,
+                bookmarkUsers : bookmarkPost.bookmarkUsers,
+                bookmarkStatus : bookmarkPost.bookmarkStatus,
+                category :bookmarkPost.category,
+                adder : nickname,
+                markedAt : markedAt
             })
-            await newBookmark.save()
+            await addedBookmark.save()
             res.status(200).send({
                    result: "true",
                    message: "북마크가 표시되었습니다."

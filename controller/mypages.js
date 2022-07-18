@@ -28,9 +28,13 @@ async function profileGet(req, res) {
 
 // 북마크 게시글 조회
 async function myBookmark(req, res) {
-    try {
+    // try {
         const { nickname } = res.locals.user;
-        const recruitBookmarkList = await RecruitBookmark.find({ nickname }).sort({createdAt:-1})
+        const recruitBookmarkList = await RecruitBookmark.find({ nickname }).sort({markedAt:-1})
+        for(let i = 0; i <recruitBookmarkList.length ; i++ ){         //forEach문? 다른거?로 바꾸면 더 효율 좋나?
+            recruitBookmarkList[i].bookmarkStatus = true
+            recruitBookmarkList[i].bookmarkUsers = null
+        }
         // const bookmarkList1 = await recruitPost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 모집 게시글
         // const bookmarkList2 = await placePost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 장소 추천
         // const bookmarkList3 = await reviewPost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 육아용품 리뷰
@@ -42,12 +46,12 @@ async function myBookmark(req, res) {
             // bookmarkList3,
         });
 
-    } catch (err) {
-        res.status(400).send({
-            result: "false",
-            message: "북마크 게시글 조회 실패"
-        });
-    }
+    // } catch (err) {
+    //     res.status(400).send({
+    //         result: "false",
+    //         message: err
+    //     });
+    // }
 };
 
 // 프로필 수정
