@@ -30,7 +30,7 @@ async function profileGet(req, res) {
 
 // 북마크 게시글 조회
 async function myBookmark(req, res) {
-    // try {
+    try {
         const { nickname } = res.locals.user;
         const recruitBookmarkList = await RecruitBookmark.find({ nickname }).sort({markedAt:-1})
         for(let i = 0; i <recruitBookmarkList.length ; i++ ){
@@ -47,25 +47,21 @@ async function myBookmark(req, res) {
             reviewBookmarkList[i].bookmarkStatus = true
             reviewBookmarkList[i].bookmarkUsers = null
         }
-        // const bookmarkList1 = await recruitPost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 모집 게시글
-        // const bookmarkList2 = await placePost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 장소 추천
-        // const bookmarkList3 = await reviewPost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 육아용품 리뷰
+
         return res.send({ 
             result : true,
             recruitBookmarkList,
             placeBookmarkList,
             reviewBookmarkList,
-            // bookmarkList1,
-            // bookmarkList2,
-            // bookmarkList3,
+
         });
 
-    // } catch (err) {
-    //     res.status(400).send({
-    //         result: "false",
-    //         message: err
-    //     });
-    // }
+    } catch (err) {
+        res.status(400).send({
+            result: "false",
+            message: err
+        });
+    }
 };
 
 // 프로필 수정
