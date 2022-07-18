@@ -5,8 +5,9 @@ const User = require("../schemas/user");
 const recruitComment = require("../schemas/recruitComment");
 const placeComment = require("../schemas/placeComment");
 const reviewComment = require("../schemas/reviewComment");
-const chatMessage = require("../schemas/chatMessage");
-
+const RecruitBookmark = require("../schemas/recruitBookmark");
+const PlaceBookmark = require("../schemas/placeBookmark");
+const ReviewBookmark = require("../schemas/reviewBookmark");
 // 프로필 조회 - 로그인한 사람/안한 사람
 async function profileGet(req, res) {
     try {
@@ -31,21 +32,34 @@ async function profileGet(req, res) {
 async function myBookmark(req, res) {
     try {
         const { nickname } = res.locals.user;
-        const bookmarkList1 = await recruitPost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 모집 게시글
-        const bookmarkList2 = await placePost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 장소 추천
-        const bookmarkList3 = await reviewPost.find({ bookmarkUsers: nickname }, { _id: 0, bookmarkUsers: 0 }); // 육아용품 리뷰
-        
+        const recruitBookmarkList = await RecruitBookmark.find({ nickname }).sort({markedAt:-1})
+        for(let i = 0; i <recruitBookmarkList.length ; i++ ){
+            recruitBookmarkList[i].bookmarkStatus = true
+            recruitBookmarkList[i].bookmarkUsers = null
+        }
+        const placeBookmarkList = await PlaceBookmark.find({ nickname }).sort({markedAt:-1})
+        for(let i = 0; i <recruitBookmarkList.length ; i++ ){
+            placeBookmarkList[i].bookmarkStatus = true
+            placeBookmarkList[i].bookmarkUsers = null
+        }
+        const reviewBookmarkList = await ReviewBookmark.find({ nickname }).sort({markedAt:-1})
+        for(let i = 0; i <recruitBookmarkList.length ; i++ ){
+            reviewBookmarkList[i].bookmarkStatus = true
+            reviewBookmarkList[i].bookmarkUsers = null
+        }
+
         return res.send({ 
             result : true,
-            bookmarkList1,
-            bookmarkList2,
-            bookmarkList3,
+            recruitBookmarkList,
+            placeBookmarkList,
+            reviewBookmarkList,
+
         });
 
     } catch (err) {
         res.status(400).send({
             result: "false",
-            message: "북마크 게시글 조회 실패"
+            message: err
         });
     }
 };

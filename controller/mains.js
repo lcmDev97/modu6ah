@@ -9,8 +9,10 @@ const reviewPost = require("../schemas/reviewPost");
 async function mainPostGet(req, res) {
     try{
         const { authorization } = req.headers;
+
         //case1) 로그인 되어있을떄(포함되어있을경우 bookmarkStatus값만 true로 바꾸고, bookmarkUsers는 배열아닌 null로 바꿔 프론트에 전달 )
         if(authorization){
+            // console.log('로그인유저 로직시작')
             const [authType, authToken] = authorization.split(" ");
             const decodedToken = jwt.decode(authToken, SECRET_KEY);
             const userNickname = decodedToken.nickname
@@ -20,16 +22,17 @@ async function mainPostGet(req, res) {
             //TODO      status:false + limit(8)만족하는게시글 검색 => bookmarkStatus 작업 => remainNum 저장 => 
             //TODO      => status:true + limit(remainNum)만족하는게시글 검색 =>bookmarkStatus 작업 => 반복문이용해서 배열에 push
             // #1 모집 게시글 조회
-            let recruitPosts = await recruitPost.find({ status: false },{ updatedAt: 0, _id: 0 }).limit(8).sort({ createdAt: -1,})
+            let recruitPosts = await recruitPost.find({ status: false },{ updatedAt: 0, _id: 0 }).limit(6).sort({ createdAt: -1,})
             for(let i = 0; i <recruitPosts.length ; i++ ){
                 if( recruitPosts[i].bookmarkUsers.includes(userNickname) ){
                     recruitPosts[i].bookmarkStatus = true
                 }
                 recruitPosts[i].bookmarkUsers = null
             }
+            // console.log("recruitPosts기본",recruitPosts)
             let remainNum;
-            if( recruitPosts.length !==8 ){
-                remainNum = 8 - recruitPosts.length
+            if( recruitPosts.length !==6 ){
+                remainNum = 6 - recruitPosts.length
             }
             const truePosts = await recruitPost.find({ status: true }).limit(remainNum).sort({ createdAt: -1 })
             for(let i = 0; i <truePosts.length ; i++ ){ 
@@ -38,10 +41,12 @@ async function mainPostGet(req, res) {
                 }
                 truePosts[i].bookmarkUsers = null
             }
+            // console.log("truePostss정보다",recruitPosts)
             for(let i = 0 ; i < remainNum ; i++){
                 recruitPosts.push(truePosts[i])
             }
-
+            // console.log("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ")
+            // console.log('최종 recruit포스트들',)
             //#2 장소추천 게시글 조회
             let placePosts = await placePost.find({}, { updatedAt: 0, _id: 0 }).limit(2);
             for(let i = 0; i <placePosts.length ; i++ ){
@@ -58,7 +63,7 @@ async function mainPostGet(req, res) {
             }
             reviewPosts[i].bookmarkUsers = null
         }
-
+        // console.log('로그인유저 로직끝')
             return res.status(200).send({
                 result : true,
                 recruitPosts,
@@ -67,12 +72,12 @@ async function mainPostGet(req, res) {
             })
         }
 
-
+        // console.log('비로그인유저 로직시작')
         //case2) 비로그인 일떄 (bookmarkUsers 제외하고 보내기)
-        const recruitPosts = await recruitPost.find({ status: false },{ updatedAt: 0, _id: 0, bookmarkUsers:0 }).limit(8).sort({ createdAt: -1 })
+        const recruitPosts = await recruitPost.find({ status: false },{ updatedAt: 0, _id: 0, bookmarkUsers:0 }).limit(6).sort({ createdAt: -1 })
         let remainNum;
-        if( recruitPosts.length < 8 ){
-            remainNum = 8 - recruitPosts.length
+        if( recruitPosts.length < 6 ){
+            remainNum = 6 - recruitPosts.length
         }
         const truePosts = await recruitPost.find({ status: true },{ updatedAt: 0, _id: 0, bookmarkUsers:0 }).limit(remainNum).sort({ createdAt: -1 })
         for(let i = 0 ; i < remainNum ; i++){
@@ -84,7 +89,10 @@ async function mainPostGet(req, res) {
         // 리뷰 조회
         const reviewPosts = await reviewPost.find({},{ updatedAt: 0, _id: 0, bookmarkUsers:0 }).sort({createdAt:-1}).limit(2);
         
-      
+        // console.log('recruitPosts정보다',recruitPosts)
+        // console.log('ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ')
+        // console.log('truePosts정보다',truePosts)
+        // console.log('비로그인유저 로직끝')
         return res.json({
             result:true,
             recruitPosts,
@@ -95,7 +103,7 @@ async function mainPostGet(req, res) {
     } catch (err) {
       res.status(400).send({
           result: "false",
-          message: "메인페이지 조회 실패"
+          message: "메인페이지 조회 실패",
       });
   }
 };

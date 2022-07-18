@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const placePost = require("../schemas/placePost");
 const placeComment = require("../schemas/placeComment");
 const User = require("../schemas/user");
+const PlaceBookmark = require("../schemas/placeBookmark");
 const moment = require("moment");
 
 // 장소추천 게시글 작성
@@ -182,6 +183,23 @@ async function placeBookmark(req, res) {
         if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
             await user.updateOne({ $push: { bookmarkList: placePostId }})
+            const markedAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
+            const addedBookmark = new PlaceBookmark({
+                placePostId,
+                nickname : bookmarkPost.nickname,
+                profileUrl : bookmarkPost.profileUrl,
+                title : bookmarkPost.title,
+                content : bookmarkPost.content,
+                region : bookmarkPost.region,
+                imageUrl : bookmarkPost.imageUrl,
+                star : bookmarkPost.star,
+                bookmarkUsers : bookmarkPost.bookmarkUsers,
+                bookmarkStatus : bookmarkPost.bookmarkStatus,
+                category :bookmarkPost.category,
+                adder : nickname,
+                markedAt : markedAt
+            })
+            await addedBookmark.save()
             res.status(200).send({
                 result: "true",
                 message: "북마크가 표시되었습니다."
@@ -189,6 +207,7 @@ async function placeBookmark(req, res) {
         } else {
             await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
             await user.updateOne({ $pull: { bookmarkList: placePostId }})
+            await PlaceBookmark.deleteOne({ $and: [{ nickname }, { placePostId }], })
             res.status(200).send({
                 result: "true",
                 message: "북마크가 해제되었습니다."
