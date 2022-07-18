@@ -10,16 +10,14 @@ async function chatRooms(req, res) {
         // 불러올 정보 및 받아올 정보
         const { nickname, profileUrl } = res.locals.user; // 로그인한 사용자 닉네임/프로필 이미지 url
         const { recruitPostId } = req.params; // 게시글 번호
-        const createdAt = moment().format('YYYY-MM-DD HH:mm');
+        const createdAt = moment().add("9", "h").format("YYYY-MM-DD HH:mm");
         const existPost = await recruitPost.findOne({recruitPostId: Number(recruitPostId), nickname: nickname}); // 게시글-닉네임 존재 여부 확인위함
         const existPostId = await recruitPost.findOne({recruitPostId: Number(recruitPostId)}); // 게시글 번호 존재여부 확인 위함
         const existRoom = await chatRoom.findOne({recruitPostId: Number(recruitPostId), nickname: nickname}); // 방 존재 여부 확인위함
-
         // console.log(recruitPostId);
         // console.log(existPost);
         // console.log(existPostId);
         // console.log(existRoom);
-
         // 이미 채팅방 만들어져있는 경우
         if ( existRoom ) {
            return res.status(400).send({
@@ -28,7 +26,6 @@ async function chatRooms(req, res) {
                 roomId: existRoom.roomId
             });
         }
-
         // 본인이 본인 채팅방 들어가는 경우
         if ( existPost ) {
             return res.status(400).send({
@@ -36,14 +33,12 @@ async function chatRooms(req, res) {
                 message: "본인이 본인 채팅하는 것은 불가합니다."
             });
         }
-
         // 게시글 번호 존재 여부 확인
         if (!existPostId) {
-            return res.status(400).send({ 
-                result: "false", 
+            return res.status(400).send({
+                result: "false",
                 message: "게시글이 없습니다."});
         }
-
         // 채팅방 생성
         const createdChats = await chatRoom.create({
                 recruitPostId,
@@ -54,10 +49,8 @@ async function chatRooms(req, res) {
                 createdAt: createdAt,
         })
             // console.log(createdChats);
-
             // const roomId = createdChats.roomId;
             // await chatMessage.create({ roomId : roomId });
-            
         return res.status(200).send({
                 result: "true",
                 message: "채팅방이 생성되었습니다.",
@@ -79,10 +72,13 @@ async function chatRoomsAllGet(req, res) {
             $or: [
             {nickname: nickname},
             {postNickname: nickname}
-            ]}
-        )
+            ] 
+            ,outUsers: { $ne: nickname }
+            
+        })
         // .populate('chatMessage');
         // console.log(chatRoomList);
+        
 
         // 채팅의 마지막 내용 불러오기(lastChat)
         let chatRoomId = [];
@@ -114,7 +110,59 @@ async function chatRoomsAllGet(req, res) {
     };
 };
 
+// 채팅방 나간 사람 
+async function chatRoomsDelete(req, res) {
+    try {
+        const { roomId } = req.params;
+        const { nickname } = res.locals.user;
+        const deleteUser = await chatRoom.findOne({ roomId: Number(roomId) });
+        console.log (deleteUser)
+        if (!deleteUser.outUsers.includes(nickname)) {
+            await deleteUser.updateOne({ $push: { outUsers: nickname }});
+            return res.status(200).send({
+                result: "true",
+                message: "채팅방을 나갔습니다."
+            });
+        } else {  
+            res.status(200).send({
+                result: "true",
+                message: "채팅방이 이미 삭제되었습니다."
+            });
+        }
+        
+        // 삭제 할 수 있는 채팅방 찾기 
+        const deleteChatRoom = await chatRoom.find({ 
+            roomId: Number(roomId),
+            nickname : deleteUser.outUsers,
+            postNickname : deleteUser.outUsers
+        });
+        console.log("deleteChatRoom"+deleteChatRoom) 
+         
+        if(deleteChatRoom){
+            // 채팅방지우기 
+            await chatRoom.deleteOne({ 
+                roomId: Number(roomId),
+                nickname : deleteUser.outUsers,
+                postNickname : deleteUser.outUsers
+            });     
+            // 채팅내용 지우기 
+            await chatMessage.deleteMany({ 
+                roomId: Number(roomId),
+            });   
+        }
+
+       
+
+    } catch (err) {
+        res.status(400).send({
+            result: "false",
+            message: "채팅방 삭제 실패"
+        });
+    }
+}
+
 module.exports = {
     chatRooms,
-    chatRoomsAllGet
+    chatRoomsAllGet,
+    chatRoomsDelete
 };

@@ -28,7 +28,7 @@ async function recruitComments(req, res) {
             message: "댓글이 성공적으로 등록되었습니다."
         });
 
-        if(!findPost.postId){
+        if(!findPost.recruitPostId){
             res.status(400).send({
                 result: "false",
                 message: "게시글 번호가 없습니다 "
