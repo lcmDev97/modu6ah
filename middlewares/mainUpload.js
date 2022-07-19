@@ -14,7 +14,7 @@ const s3 = new aws.S3({
     region : S3_BUCKET_REGION,
 });
 
-// 장소추천 파일 업로드
+// 장소추천 이미지 업로드(리사이징 적용)
 const placeImageUpload = multer({
     storage: multerS3({
         s3: s3,
@@ -40,15 +40,15 @@ const placeImageUpload = multer({
             },
         ],
     }),
-    // limits: { fileSize: 20 * 1024 * 1024 },
+    limits: { fileSize: 20 * 1024 * 1024 },
 });
 
-// 육아용품 리뷰 파일 업로드
+// 육아용품 리뷰 이미지 업로드(리사이징 적용)
 const reviewImageUpload = multer({
     storage: multerS3({
         s3: s3,
         bucket: `${S3_BUCKET_NAME}/uploadReviewImage`,
-        acl: 'public-read',
+        acl: 'public-read-write',
         contentType: multerS3.AUTO_CONTENT_TYPE,
         shouldTransform: true,
         transforms: [
@@ -69,7 +69,7 @@ const reviewImageUpload = multer({
             },
         ],
     }),
-    // limits: { fileSize: 20 * 1024 * 1024 },
+    limits: { fileSize: 20 * 1024 * 1024 },
 });
 
 // const reviewImageUpload = multer({

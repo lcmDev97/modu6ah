@@ -18,7 +18,7 @@ async function reviewPosts(req, res) {
       if (req.files.length != 0) {
           imageUrl = [];
           for (let i = 0; i < req.files.length; i++) {
-              imageUrl.push(req.files[i].location);
+              imageUrl.push(req.files[i].transforms[0].location);
           }
       } else {
           imageUrl = [

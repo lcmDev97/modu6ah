@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mypagesController = require("../controller/mypages");
 const authMiddleware = require("../middlewares/authmiddleware");
+const { profileUpload } = require('../middlewares/profileUpload');
 
 // 프로필 조회
 router.get("/mypage/profile/:nickname", mypagesController.profileGet);
