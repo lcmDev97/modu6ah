@@ -16,4 +16,4 @@ const recruitReCommentSchema = new Schema(
 
 recruitReCommentSchema.plugin(autoIncrement, {inc_field: "recruitReCommentId"});
 
-module.exports = mongoose.model("recruitReCommentId", recruitReCommentSchema);
+module.exports = mongoose.model("recruitReComment", recruitReCommentSchema);
