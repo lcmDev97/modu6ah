@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const autoIncrement = require("mongoose-sequence")(mongoose);
 const { Schema } = mongoose;
+
 const recruitCommentSchema = new Schema(
     {
         recruitCommentId: { type: Number }, // 댓글 번호

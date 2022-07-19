@@ -73,6 +73,10 @@ async function recruitCommentsDelete(req, res) {
             recruitPostId: Number(recruitPostId),
             recruitCommentId: Number(recruitCommentId),
         });
+        await recruitReComment.deleteMany({ 
+            recruitPostId: Number(recruitPostId),
+            recruitCommentId: Number(recruitCommentId),
+        });
         
         return res.json({ success: true })
     } 
@@ -82,6 +86,12 @@ async function recruitCommentsDelete(req, res) {
             message: "알 수 없는 에러가 발생하였습니다"
         });
 }};
+
+/**
+  * 대댓글 등록 / 조회 / 삭제 기능 구현 
+  * 일자 : 2022-07-19
+  * 안재훈 
+  * */
 
 // 모집 대댓글 등록 
 async function recruitReCommentsCreate(req, res) {
@@ -127,18 +137,20 @@ async function recruitReCommentsCreate(req, res) {
         });
     }
  };
+
  //모집 대댓글 조회 
  async function recruitReCommentsGet(req, res) {
     try {
       const { recruitCommentId } = req.params;
+
       const recruitReComments = await recruitReComment.find({       
         recruitCommentId
     }).sort({ createdAt: -1 });
-   console.log(recruitReComments)  
+   //console.log(recruitReComments)  
     
-
    return res.status(200).send({ 
-      recruitReComments 
+      recruitReComments,
+      message: "대댓글이 성공적으로 조회되었습니다."
    });
 
     } catch (err) {
@@ -149,9 +161,53 @@ async function recruitReCommentsCreate(req, res) {
     }
 };
 
+// 모집 대댓글 삭제 
+async function recruitReCommentsDelete(req, res) {
+    try {
+        const { recruitCommentId, recruitReCommentId } = req.params;
+        const { nickname } = res.locals.user;
+        
+        const recruitReComments = await recruitReComment.findOne({ 
+            recruitCommentId: Number(recruitCommentId),
+            recruitReCommentId: Number(recruitReCommentId),         
+        });
+
+        if(!recruitReComments.recruitCommentId){
+            return res.status(400).send({  
+            result: "false",
+            message: "이미 지워진 댓글입니다."
+            });
+        };
+        
+        if (!(recruitReComments.nickname==nickname)) {
+            return res.status(400).send({  
+                result: "false",
+                message: "닉네임이 일치하지 않습니다"
+            });
+        }  
+        
+        await recruitReComment.deleteOne({ 
+            nickname ,
+            recruitCommentId: Number(recruitCommentId),
+            recruitReCommentId: Number(recruitReCommentId),
+        });
+        
+        return res.json({ 
+            success: true,
+            message: "대댓글 메시지가 성공적으로 삭제되었습니다." 
+            })
+    } 
+    catch (err) {
+        res.status(400).send({
+            result: "false",
+            message: "알 수 없는 에러가 발생하였습니다"
+        });
+}};
+
 module.exports = {
     recruitComments,
     recruitCommentsDelete,
     recruitReCommentsCreate,
     recruitReCommentsGet,
+    recruitReCommentsDelete,
 };

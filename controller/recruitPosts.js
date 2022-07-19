@@ -3,6 +3,7 @@ const SECRET_KEY = process.env.SECRET_KEY;
 const jwt = require("jsonwebtoken");
 const recruitPost = require("../schemas/recruitPost");
 const recruitComment = require("../schemas/recruitComment");
+const recruitReComment = require("../schemas/recruitReComment");
 const User = require("../schemas/user");
 const RecruitBookmark = require("../schemas/recruitBookmark");
 const moment = require("moment");
@@ -154,7 +155,7 @@ async function recruitDelete(req, res) {
         if (nickname === recruitPosts.nickname) {
             await recruitPost.deleteOne({ recruitPostId });
             await recruitComment.deleteMany({ recruitPostId });
-
+            await recruitReComment.deleteMany({ recruitPostId });
             res.status(200).send({
                    result: "true",
                    message: "게시글이 성공적으로 삭제되었습니다."
