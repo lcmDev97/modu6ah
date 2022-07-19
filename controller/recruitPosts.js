@@ -72,7 +72,7 @@ async function recruitAllGet(req, res) {
         }
 
         //case2) 비로그인 일떄 (bookmarkUsers 제외하고 보내기)
-        let recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0, bookmarkUsers:0 });
+        let recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0, bookmarkUsers:0 }).sort({createdAt:-1})
         return res.status(200).send({
             recruitPosts
         });

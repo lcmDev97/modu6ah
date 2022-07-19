@@ -31,6 +31,8 @@ const chatRoomsRouter = require("./routes/chatRooms");
 const chatMessagesRouter = require("./routes/chatMessages");
 const usersRouter = require("./routes/users");
 const mainRouter = require("./routes/mains")
+const searchRouter = require("./routes/searchs")
+
 passportConfig();
 
 //미들웨어
@@ -66,7 +68,8 @@ app.use(
     [chatRoomsRouter],
     [chatMessagesRouter],
     [mypagesRouter],
-    [mainRouter]
+    [mainRouter],
+    [searchRouter]
 );
 app.use("/api/users", express.urlencoded({ extended: false }), [usersRouter]);
 // app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile)); // 스웨거 파일
