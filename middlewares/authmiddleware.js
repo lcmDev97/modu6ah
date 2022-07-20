@@ -21,9 +21,13 @@ module.exports = (req, res, next) => {
     });
     return;
   }
+  console.log("authorization정보",authorization)
 
   try {
     const myToken = verifyToken(authToken);
+    console.log("authToken정보",authToken)
+    const test = jwt.decode(authToken, SECRET_KEY);
+    console.log("authToken 디코드한거",test)
     console.log("accessToken 유효성 검사 정보입니다.",myToken)
     if (myToken == "jwt expired") {
       // access token 만료
@@ -61,6 +65,8 @@ module.exports = (req, res, next) => {
     } else {
       const { nickname } = jwt.verify(authToken, SECRET_KEY);
       User.findOne({ nickname }).then((user) => {
+        console.log("여기 지남")
+        console.log("user정보",user)
         res.locals.user = user;
         next();
       });
