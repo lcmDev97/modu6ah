@@ -19,7 +19,7 @@ const limits = {
     fieldNameSize: 200,
     fieldSize: 5 * 1024 * 1024,
     filedSize: 15 * 1024 * 1024,
-    files: 5
+    files: 3
 }
 
 const fileFilter = (req, file, cb) => {
@@ -115,18 +115,54 @@ const reviewImageUpload = multer({
 // 육아용품 리뷰 이미지 삭제
 const reviewImageDelete = (imageUrl) => {
     if (imageUrl) {
-        s3.deleteObjects(
+        s3.deleteObject(
             {
                 Bucket: `${S3_BUCKET_NAME}/uploadReviewImage`,
-                Delete: {
-                    'Objects': [ {'Key': imageUrl}, {'Key': imageUrl}, {'Key': imageUrl}, {'Key': imageUrl}, {'Key': imageUrl}]
-                },
+                Key: filename,
             },
             function (err, data) {}
         );
     }
 
 };
+
+// const deleteImg = (url) => {
+//     if (url) {
+//         s3.deleteObject(
+//             {
+//                 Bucket: process.env.AWS_S3_BUCKET,
+//                 Key: url,
+//             },
+//             function (err, data) {}
+//         )
+//         s3.deleteObject(
+//             {
+//                 Bucket: process.env.AWS_S3_BUCKET_W384,
+//                 Key: url,
+//             },
+//             function (err, data) {}
+//         )
+//         s3.deleteObject(
+//             {
+//                 Bucket: process.env.AWS_S3_BUCKET_W758,
+//                 Key: url,
+//             },
+//             function (err, data) {}
+//         )
+//     }
+// }
+
+// const deleteCourseImg = (url) => {
+//     if (url) {
+//         // const filename = url.split('/')[4]
+//         s3.deleteObject(
+//             {
+//                 Bucket: process.env.AWS_S3_BUCKET3,
+//                 Key: url,
+//             },
+//             function (err, data) {}
+//         )
+//     }
 
 exports.placeImageUpload = multer(placeImageUpload);
 exports.reviewImageUpload = multer(reviewImageUpload);
