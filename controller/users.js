@@ -162,27 +162,13 @@ async function signin(req, res, next) {
   // post -'/kakao/parsing'
   async function kakao_parsing(req, res) {
     try {
-    // console.log("kakao_parsing의 req정보다",req)
       const user_info = req.body;
-      // console.log("user_info정보다",user_info)
       const snsId = user_info.user_id;
       const userEmail = user_info.user_email;
       const userNickname = user_info.user_name
       const exUser = await User.findOne({ $and: [{ snsId }, { provider: "kakao" }], });
-      // console.log('exUser정보: ', exUser);
-      //TODO const accessToken = jwt.sign({ nickname }, process.env.SECRET_KEY, {
-      //TODO   expiresIn: '4h',
-      //TODO });
-      // console.log('accessToken 정보임', accessToken);
-      // const refresh_token = jwt.sign({}, process.env.REFRESH_SECRET_KEY, {
-        //   expiresIn: '14d',
-        // });
-        
-        // 만약 디비에 user의 email이 없다면,
-        
 
         if (!exUser) {
-          // console.log('여기1111')
         const newUser = new User({ 
           email : userEmail, 
           nickname : userNickname + Math.floor(Math.random() * 10000000),
@@ -193,15 +179,11 @@ async function signin(req, res, next) {
           snsId : snsId,
           provider : "kakao",
         });
-        // console.log("newUser정보임",newUser)
-        // 저장하기
         newUser.save();
-        console.log('여기222222222')
         const nickname = newUser.nickname
         const accessToken = jwt.sign({ nickname }, process.env.SECRET_KEY, {
           expiresIn: '4h',
         });
-        // await newUser.update({ refresh_token }, { where: { userEmail } });
         return res.json({
           accessToken,
           nickname,
