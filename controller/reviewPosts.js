@@ -46,9 +46,7 @@ async function reviewPosts(req, res) {
           title,
           content,
           url,
-          imageUrl1,
-          imageUrl2,
-          imageUrl3,
+          imageUrl: imageUrl,
           productType,
           createdAt: createdAt
       });
