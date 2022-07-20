@@ -164,12 +164,12 @@ async function signin(req, res, next) {
     try {
     // console.log("kakao_parsing의 req정보다",req)
       const user_info = req.body;
-      console.log("user_info정보다",user_info)
+      // console.log("user_info정보다",user_info)
       const snsId = user_info.user_id;
       const userEmail = user_info.user_email;
       const userNickname = user_info.user_name
       const exUser = await User.findOne({ $and: [{ snsId }, { provider: "kakao" }], });
-      console.log('exUser정보: ', exUser);
+      // console.log('exUser정보: ', exUser);
       //TODO const accessToken = jwt.sign({ nickname }, process.env.SECRET_KEY, {
       //TODO   expiresIn: '4h',
       //TODO });
@@ -182,7 +182,7 @@ async function signin(req, res, next) {
         
 
         if (!exUser) {
-          console.log('여기1111')
+          // console.log('여기1111')
         const newUser = new User({ 
           email : userEmail, 
           nickname : userNickname + Math.floor(Math.random() * 10000000),
@@ -193,7 +193,7 @@ async function signin(req, res, next) {
           snsId : snsId,
           provider : "kakao",
         });
-        console.log("newUser정보임",newUser)
+        // console.log("newUser정보임",newUser)
         // 저장하기
         newUser.save();
         console.log('여기222222222')
