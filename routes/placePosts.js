@@ -5,7 +5,7 @@ const authMiddleware = require("../middlewares/authmiddleware");
 const { placeImageUpload } = require('../middlewares/mainMulter');
 
 // 장소추천 게시글 작성
-router.post("/places", authMiddleware, placeImageUpload.array('imageUrl', 5), placePostsController.placePosts);
+router.post("/places", authMiddleware, placeImageUpload.array('imageUrl', 3), placePostsController.placePosts);
 
 // 장소추천 게시글 전체조회
 router.get("/places", placePostsController.placeAllGet);
