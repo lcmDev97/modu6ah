@@ -68,7 +68,7 @@ async function myBookmark(req, res) {
 
 // 프로필 수정
 async function profileUpdate(req, res) {
-    // try {
+    try {
         const { nickname } = res.locals.user;
         const { myComment } = req.body;
         const findUser = await User.findOne({ nickname });
@@ -91,25 +91,13 @@ async function profileUpdate(req, res) {
             let profileUrl = findUser.profileUrl;
             res.status(200).send({ profileUrl })
         }
-
-        // if (findUser.profileUrl) {
-        //     profileMiddleware.profileDelete(findUser.profileUrl)
-        // }
-
-        // await User.updateMany({ nickname }, { $set: { profileUrl, myComment }});
-        // await recruitPost.updateMany({ nickname }, { $set: { profileUrl }});
-        // await placePost.updateMany({ nickname }, { $set: { profileUrl}});
-        // await reviewPost.updateMany({ nickname }, { $set: { profileUrl }});
-        // await recruitComment.updateMany({ nickname }, { $set: { profileUrl }});
-        // await placeComment.updateMany({ nickname }, { $set: { profileUrl }});
-        // await reviewComment.updateMany({ nickname }, { $set: { profileUrl}});
-        // res.status(200).send({ result: "true", message: "프로필 수정이 완료되었습니다." });
-    // } catch (err) {
-    //     res.status(400).send({
-    //         result: "false",
-    //         message: "프로필 수정 실패"
-    //     });
-    // }
+        
+    } catch (err) {
+        res.status(400).send({
+            result: "false",
+            message: "프로필 수정 실패"
+        });
+    }
 };
 
 

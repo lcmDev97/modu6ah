@@ -119,7 +119,7 @@ const reviewImageDelete = (imageUrl) => {
             {
                 Bucket: `${S3_BUCKET_NAME}/uploadReviewImage`,
                 Delete: {
-                    'Objects': [ {'Key': imageUrl, 'Key': imageUrl, 'Key': imageUrl, 'Key': imageUrl, 'Key': imageUrl, }]
+                    'Objects': [ {'Key': imageUrl}, {'Key': imageUrl}, {'Key': imageUrl}, {'Key': imageUrl}, {'Key': imageUrl}]
                 },
             },
             function (err, data) {}
