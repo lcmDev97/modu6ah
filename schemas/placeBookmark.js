@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 const PlaceBookmarkkSchema = new Schema({
-    placePostId: { type: Number, required: true },
+    placePostId: { type: Number },
     nickname: { type: String },
     profileUrl: { type: String },
     title: { type: String, required: true },
