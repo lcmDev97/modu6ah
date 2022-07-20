@@ -40,12 +40,12 @@ async function myBookmark(req, res) {
             recruitBookmarkList[i].bookmarkUsers = null
         }
         const placeBookmarkList = await PlaceBookmark.find({ nickname }).sort({markedAt:-1})
-        for(let i = 0; i <recruitBookmarkList.length ; i++ ){
+        for(let i = 0; i <placeBookmarkList.length ; i++ ){
             placeBookmarkList[i].bookmarkStatus = true
             placeBookmarkList[i].bookmarkUsers = null
         }
         const reviewBookmarkList = await ReviewBookmark.find({ nickname }).sort({markedAt:-1})
-        for(let i = 0; i <recruitBookmarkList.length ; i++ ){
+        for(let i = 0; i <reviewBookmarkList.length ; i++ ){
             reviewBookmarkList[i].bookmarkStatus = true
             reviewBookmarkList[i].bookmarkUsers = null
         }
