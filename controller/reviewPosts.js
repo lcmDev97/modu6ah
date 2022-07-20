@@ -155,7 +155,7 @@ async function reviewDelete(req, res) {
                    message: "게시글 삭제 권한 없음"
             });
         }
-
+        reviewImageDelete(reviewPosts.imageUrl)
         await reviewPost.deleteOne({ reviewPostId });
         await reviewComment.deleteMany({ reviewPostId });
         
