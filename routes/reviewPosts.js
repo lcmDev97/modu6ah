@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const reviewPostsController = require("../controller/reviewPosts");
 const authMiddleware = require("../middlewares/authmiddleware");
-const { reviewImageUpload } = require('../middlewares/mainUpload');
+const { reviewImageUpload } = require('../middlewares/mainMulter');
 
 // 육아용품 리뷰 게시글 작성
 router.post("/reviews", authMiddleware, reviewImageUpload.array('imageUrl', 5), reviewPostsController.reviewPosts);

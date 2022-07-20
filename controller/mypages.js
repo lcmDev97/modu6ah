@@ -8,6 +8,8 @@ const reviewComment = require("../schemas/reviewComment");
 const RecruitBookmark = require("../schemas/recruitBookmark");
 const PlaceBookmark = require("../schemas/placeBookmark");
 const ReviewBookmark = require("../schemas/reviewBookmark");
+const profileMiddleware = require('../middlewares/profileMulter');
+
 // 프로필 조회 - 로그인한 사람/안한 사람
 async function profileGet(req, res) {
     try {
@@ -66,23 +68,48 @@ async function myBookmark(req, res) {
 
 // 프로필 수정
 async function profileUpdate(req, res) {
-    try {
+    // try {
         const { nickname } = res.locals.user;
-        const { profileUrl, myComment } = req.body;
-        await User.updateMany({ nickname }, { $set: { profileUrl, myComment }});
-        await recruitPost.updateMany({ nickname }, { $set: { profileUrl }});
-        await placePost.updateMany({ nickname }, { $set: { profileUrl}});
-        await reviewPost.updateMany({ nickname }, { $set: { profileUrl }});
-        await recruitComment.updateMany({ nickname }, { $set: { profileUrl }});
-        await placeComment.updateMany({ nickname }, { $set: { profileUrl }});
-        await reviewComment.updateMany({ nickname }, { $set: { profileUrl}});
-        res.status(200).send({ result: "true", message: "프로필 수정이 완료되었습니다." });
-    } catch (err) {
-        res.status(400).send({
-            result: "false",
-            message: "프로필 수정 실패"
-        });
-    }
+        const { myComment } = req.body;
+        const findUser = await User.findOne({ nickname });
+        let profileUrl;
+        let newProfileUrl = req.file;
+
+        // req.file이 있을 때
+        if (newProfileUrl) {
+            profileMiddleware.profileDelete(findUser.profileUrl)
+            await User.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location, myComment }});
+            await recruitPost.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location }});
+            await placePost.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location }});
+            await reviewPost.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location }});
+            await recruitComment.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location }});
+            await placeComment.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location }});
+            await reviewComment.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location}});
+            res.status(200).send({ result: "true", message: "프로필 수정이 완료되었습니다." });
+        // req.file이 없을 때
+        } else {
+            let profileUrl = findUser.profileUrl;
+            res.status(200).send({ profileUrl })
+        }
+
+        // if (findUser.profileUrl) {
+        //     profileMiddleware.profileDelete(findUser.profileUrl)
+        // }
+
+        // await User.updateMany({ nickname }, { $set: { profileUrl, myComment }});
+        // await recruitPost.updateMany({ nickname }, { $set: { profileUrl }});
+        // await placePost.updateMany({ nickname }, { $set: { profileUrl}});
+        // await reviewPost.updateMany({ nickname }, { $set: { profileUrl }});
+        // await recruitComment.updateMany({ nickname }, { $set: { profileUrl }});
+        // await placeComment.updateMany({ nickname }, { $set: { profileUrl }});
+        // await reviewComment.updateMany({ nickname }, { $set: { profileUrl}});
+        // res.status(200).send({ result: "true", message: "프로필 수정이 완료되었습니다." });
+    // } catch (err) {
+    //     res.status(400).send({
+    //         result: "false",
+    //         message: "프로필 수정 실패"
+    //     });
+    // }
 };
 
 

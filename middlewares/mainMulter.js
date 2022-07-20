@@ -14,6 +14,30 @@ const s3 = new aws.S3({
     region : S3_BUCKET_REGION,
 });
 
+// 이미지 관련 설정
+const limits = {
+    fieldNameSize: 200,
+    fieldSize: 5 * 1024 * 1024,
+    filedSize: 15 * 1024 * 1024,
+    files: 5
+}
+
+const fileFilter = (req, file, cb) => {
+    const typeArray = file.mimetype.split('/');
+    const fileType = typeArray[1];
+
+    if (fileType === 'jpg' ||
+        fileType === 'png' ||
+        fileType === 'jpeg' ||
+        fileType === 'gif' ||
+        fileType === 'webp'
+        ) {
+            cb(null, true)
+        } else {
+            return cb( { message: '지원되는 이미지 파일 형식이 아닙니다.' }, false)
+        }
+}
+
 // 장소추천 이미지 업로드(리사이징 적용)
 const placeImageUpload = multer({
     storage: multerS3({
@@ -40,15 +64,30 @@ const placeImageUpload = multer({
             },
         ],
     }),
-    limits: { fileSize: 20 * 1024 * 1024 },
+    limits: limits,
+    fileFilter: fileFilter,
 });
+
+// 장소추천 이미지 삭제
+const placeImageDelete = (imageUrl) => {
+    if (imageUrl === 'https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png')
+        return;
+    const filename = imageUrl.split('/')[4];
+    s3.deleteObject(
+        {
+            Bucket: `${S3_BUCKET_NAME}/uploadPlaceImage`,
+            Key: filename,
+        },
+        function (err, data) {}
+    );
+};
 
 // 육아용품 리뷰 이미지 업로드(리사이징 적용)
 const reviewImageUpload = multer({
     storage: multerS3({
         s3: s3,
         bucket: `${S3_BUCKET_NAME}/uploadReviewImage`,
-        acl: 'public-read-write',
+        acl: 'public-read',
         contentType: multerS3.AUTO_CONTENT_TYPE,
         shouldTransform: true,
         transforms: [
@@ -69,27 +108,27 @@ const reviewImageUpload = multer({
             },
         ],
     }),
-    limits: { fileSize: 20 * 1024 * 1024 },
+    limits: limits,
+    fileFilter: fileFilter,
 });
 
-// const reviewImageUpload = multer({
-//     storage: multerS3({
-//         s3: s3,
-//         bucket: `${S3_BUCKET_NAME}/uploadReviewImage`,
-//         acl: 'public-read',
-//         contentType: multerS3.AUTO_CONTENT_TYPE,
-//         key: function (req, file, cb) {
-//             cb(
-//                 null,
-//                 Math.floor(Math.random() * 1000).toString() +
-//                     Date.now() +
-//                     '.' +
-//                     file.originalname.split('.').pop()
-//             );
-//         },
-//     }),
-//     limits: { fileSize: 20 * 1024 * 1024 },
-// });
+// 육아용품 리뷰 이미지 삭제
+const reviewImageDelete = (imageUrl) => {
+    if (imageUrl) {
+        s3.deleteObjects(
+            {
+                Bucket: `${S3_BUCKET_NAME}/uploadReviewImage`,
+                Delete: {
+                    'Objects': [ {'Key': imageUrl, 'Key': imageUrl, 'Key': imageUrl, 'Key': imageUrl, 'Key': imageUrl, }]
+                },
+            },
+            function (err, data) {}
+        );
+    }
+
+};
 
 exports.placeImageUpload = multer(placeImageUpload);
 exports.reviewImageUpload = multer(reviewImageUpload);
+exports.reviewImageDelete = reviewImageDelete;
+exports.placeImageDelete = placeImageDelete;

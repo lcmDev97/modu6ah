@@ -14,6 +14,30 @@ const s3 = new aws.S3({
     region : S3_BUCKET_REGION,
 });
 
+// 이미지 관련 설정
+const limits = {
+    fieldNameSize: 200,
+    fieldSize: 5 * 1024 * 1024,
+    filedSize: 15 * 1024 * 1024,
+    files: 5
+}
+
+const fileFilter = (req, file, cb) => {
+    const typeArray = file.mimetype.split('/');
+    const fileType = typeArray[1];
+
+    if (fileType === 'jpg' ||
+        fileType === 'png' ||
+        fileType === 'jpeg' ||
+        fileType === 'gif' ||
+        fileType === 'webp'
+        ) {
+            cb(null, true)
+        } else {
+            return cb( { message: '지원되는 이미지 파일 형식이 아닙니다.' }, false)
+        }
+}
+
 // 프로필 이미지 업로드(리사이징 적용)
 const profileUpload = multer({
     storage: multerS3({
@@ -40,9 +64,24 @@ const profileUpload = multer({
             },
         ],
     }),
-    limits: { fileSize: 20 * 1024 * 1024 },
+    limits: limits,
+    fileFilter: fileFilter,
 });
 
 // 프로필 이미지 삭제
+const profileDelete = (profileUrl) => {
+    if (profileUrl === 'https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png')
+        return;
+    const filename = profileUrl.split('/')[4];
+
+    s3.deleteObject(
+        {
+            Bucket: `${S3_BUCKET_NAME}/uploadProfile`,
+            Key: filename,
+        },
+        function (err, data) {}
+    );
+};
 
 exports.profileUpload = multer(profileUpload);
+exports.profileDelete = profileDelete;

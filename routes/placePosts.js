@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const placePostsController = require("../controller/placePosts");
 const authMiddleware = require("../middlewares/authmiddleware");
-const { placeImageUpload } = require('../middlewares/mainUpload');
+const { placeImageUpload } = require('../middlewares/mainMulter');
 
 // 장소추천 게시글 작성
 router.post("/places", authMiddleware, placeImageUpload.array('imageUrl', 5), placePostsController.placePosts);
