@@ -6,6 +6,7 @@ const placeComment = require("../schemas/placeComment");
 const User = require("../schemas/user");
 const PlaceBookmark = require("../schemas/placeBookmark");
 const moment = require("moment");
+const mainMiddleware = require("../middlewares/mainMulter");
 
 // 장소추천 게시글 작성
 async function placePosts(req, res) {
@@ -18,7 +19,7 @@ async function placePosts(req, res) {
       if (req.files.length != 0) {
           imageUrl = [];
           for (let i = 0; i < req.files.length; i++) {
-              imageUrl.push(req.files[i].location);
+              imageUrl.push(req.files[i].transforms[0].location);
           }
       } else {
           imageUrl = [
@@ -121,20 +122,17 @@ async function placeUpdate(req, res) {
         const { title, content, region, imageUrl, star } = req.body;
         const { nickname } = res.locals.user;
         const placePosts = await placePost.findOne({ placePostId: Number(placePostId) });
-
-        if (nickname === placePosts.nickname) {
-            await placePost.updateOne({ placePostId }, { $set: { title, content, region, imageUrl, star }});
- 
-            res.status(200).send({
-                result: "true",
-                message: "게시글이 성공적으로 수정되었습니다."
-            });
-        } else {
-            res.status(400).send({
+        if (nickname !== placePosts.nickname) {
+            return res.status(400).send({
                 result: "false",
                 message: "게시글 수정 권한 없음"
             });
         }
+        await placePost.updateOne({ placePostId }, { $set: { title, content, region, imageUrl, star }});
+        return res.status(200).send({
+               result: "true",
+               message: "게시글이 성공적으로 수정되었습니다."
+        });
     } catch (err) {
         res.status(400).send({
             result: "false",
@@ -149,21 +147,19 @@ async function placeDelete(req, res) {
         const { placePostId } = req.params;
         const { nickname } = res.locals.user;
         const placePosts = await placePost.findOne({ placePostId: Number(placePostId) })
-
-        if (nickname === placePosts.nickname) {
-            await placePost.deleteOne({ placePostId });
-            await placeComment.deleteMany({ placePostId });
-
-            res.status(200).send({
+        if (nickname !== placePosts.nickname) {
+            return res.status(400).send({
+                   result: "false",
+                   message: "게시글 삭제 권한 없음"
+             });
+        }
+        await placePost.deleteOne({ placePostId });
+        await placeComment.deleteMany({ placePostId });
+        // mainMiddleware.placeImageDelete(placePosts.imageUrl);
+        return res.status(200).send({
                 result: "true",
                 message: "게시글이 성공적으로 삭제되었습니다."
-            });
-        } else {
-            res.status(400).send({
-                result: "false",
-                message: "게시글 삭제 권한 없음"
-            });
-        }
+        }); 
     } catch (err) {
         res.status(400).send({
             result: "false",

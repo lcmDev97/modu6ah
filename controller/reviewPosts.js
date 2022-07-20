@@ -6,6 +6,7 @@ const reviewComment = require("../schemas/reviewComment");
 const User = require("../schemas/user");
 const ReviewBookmark = require("../schemas/reviewBookmark");
 const moment = require("moment");
+const { reviewImageDelete } = require("../middlewares/mainMulter");
 
 // 육아용품 리뷰 게시글 작성
 async function reviewPosts(req, res) {
@@ -18,7 +19,7 @@ async function reviewPosts(req, res) {
       if (req.files.length != 0) {
           imageUrl = [];
           for (let i = 0; i < req.files.length; i++) {
-              imageUrl.push(req.files[i].location);
+              imageUrl.push(req.files[i].transforms[0].location);
           }
       } else {
           imageUrl = [
@@ -123,18 +124,17 @@ async function reviewUpdate(req, res) {
         const { nickname } = res.locals.user;
         const reviewPosts = await reviewPost.findOne({ reviewPostId: Number(reviewPostId) });
 
-        if (nickname === reviewPosts.nickname) {
-            await reviewPost.updateOne({ reviewPostId }, { $set: { title, content, imageUrl, url, productType }});
-            res.status(200).send({
-                result: "true",
-                message: "게시글이 성공적으로 수정되었습니다."
-            });
-        } else {
-            res.status(400).send({
-                result: "false",
-                message: "게시글 수정 권한 없음"
-            });
+        if (nickname !== reviewPosts.nickname) {
+            return res.status(400).send({
+                   result: "false",
+                   message: "게시글 수정 권한 없음"
+         });  
         }
+        await reviewPost.updateOne({ reviewPostId }, { $set: { title, content, imageUrl, url, productType }});
+        return res.status(200).send({
+               result: "true",
+               message: "게시글이 성공적으로 수정되었습니다."
+        });
     } catch (err) {
         res.status(400).send({
             result: "false",
@@ -149,21 +149,20 @@ async function reviewDelete(req, res) {
         const { reviewPostId } = req.params;
         const { nickname } = res.locals.user;
         const reviewPosts = await reviewPost.findOne({ reviewPostId: Number(reviewPostId) })
-
-        if (nickname === reviewPosts.nickname) {
-            await reviewPost.deleteOne({ reviewPostId });
-            await reviewComment.deleteMany({ reviewPostId });
-
-            res.status(200).send({
-                result: "true",
-                message: "게시글이 성공적으로 삭제되었습니다."
-            });
-        } else {
-            res.status(400).send({
-                result: "false",
-                message: "게시글 삭제 권한 없음"
+        if (nickname !== reviewPosts.nickname) {
+            return res.status(400).send({
+                   result: "false",
+                   message: "게시글 삭제 권한 없음"
             });
         }
+
+        await reviewPost.deleteOne({ reviewPostId });
+        await reviewComment.deleteMany({ reviewPostId });
+        
+        return res.status(200).send({
+               result: "true",
+               message: "게시글이 성공적으로 삭제되었습니다."
+        });
     } catch (err) {
         res.status(400).send({
             result: "false",
