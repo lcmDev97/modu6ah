@@ -10,7 +10,7 @@ const moment = require("moment");
 
 // 모집 게시글 작성
 async function recruitPosts(req, res) {
-  try {
+//   try {
       // 불러올 정보 및 받아올 정보
       const { nickname, profileUrl } = res.locals.user;
     //   console.log(nickname)
@@ -39,12 +39,12 @@ async function recruitPosts(req, res) {
           result: "true",
           message: "게시글이 성공적으로 등록되었습니다."
       });
-  } catch (err) {
-      res.status(400).send({
-          result: "false",
-          message: "게시글 작성 실패"
-      });
-  }
+//   } catch (err) {
+//       res.status(400).send({
+//           result: "false",
+//           message: "게시글 작성 실패"
+//       });
+//   }
 };
 
 // 모집 게시글 전체조회
