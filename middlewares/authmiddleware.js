@@ -21,10 +21,12 @@ module.exports = (req, res, next) => {
     });
     return;
   }
+  console.log("authorization정보",authorization)
 
   try {
     const myToken = verifyToken(authToken);
-    console.log("accessToken 유효성 검사 정보입니다.",myToken)
+    // console.log("authToken정보",authToken)
+    // console.log("accessToken 유효성 검사 정보입니다.",myToken)
     if (myToken == "jwt expired") {
       // access token 만료
       console.log("accessToken이 만료되었습니다.");
@@ -35,9 +37,9 @@ module.exports = (req, res, next) => {
       User.findOne({ nickname }).then((user) => {
         console.log(user)
         const targetRefreshToken = user.refreshToken
-        console.log('찾은 유저의 refreshtoken정보입니다.',targetRefreshToken);
+        // console.log('찾은 유저의 refreshtoken정보입니다.',targetRefreshToken);
         const refreshTokenCheck = verifyrefeshToken(targetRefreshToken);
-        console.log("RefreshToken 유효성 검사 정보입니다.", refreshTokenCheck);
+        // console.log("RefreshToken 유효성 검사 정보입니다.", refreshTokenCheck);
         if (refreshTokenCheck == "jwt expired") {
           console.log('두 토큰 모두 만료된 상태')
           return res.status(401).send({ message : "로그인이 필요합니다." });
@@ -61,6 +63,8 @@ module.exports = (req, res, next) => {
     } else {
       const { nickname } = jwt.verify(authToken, SECRET_KEY);
       User.findOne({ nickname }).then((user) => {
+        console.log("여기 지남")
+        console.log("user정보",user)
         res.locals.user = user;
         next();
       });

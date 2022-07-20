@@ -3,6 +3,7 @@ const SECRET_KEY = process.env.SECRET_KEY;
 const jwt = require("jsonwebtoken");
 const recruitPost = require("../schemas/recruitPost");
 const recruitComment = require("../schemas/recruitComment");
+const recruitReComment = require("../schemas/recruitReComment");
 const User = require("../schemas/user");
 const RecruitBookmark = require("../schemas/recruitBookmark");
 const moment = require("moment");
@@ -71,7 +72,7 @@ async function recruitAllGet(req, res) {
         }
 
         //case2) 비로그인 일떄 (bookmarkUsers 제외하고 보내기)
-        let recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0, bookmarkUsers:0 });
+        let recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0, bookmarkUsers:0 }).sort({createdAt:-1})
         return res.status(200).send({
             recruitPosts
         });
@@ -170,7 +171,7 @@ async function recruitDelete(req, res) {
 
 // 모집 게시글 북마크 표시/해제
 async function recruitBookmark(req, res) {
-    try {
+    // try {
         const { recruitPostId } = req.params;
         const { nickname } = res.locals.user;
         const bookmarkPost = await recruitPost.findOne({ recruitPostId: Number(recruitPostId) });
@@ -212,12 +213,12 @@ async function recruitBookmark(req, res) {
                    message: "북마크가 해제되었습니다."
             });
         }
-    } catch (err) {
-        res.status(400).send({
-            result: "false",
-            message: "게시글 북마크 표시/해제 실패"
-        });
-    }
+    // } catch (err) {
+    //     res.status(400).send({
+    //         result: "false",
+    //         message: "게시글 북마크 표시/해제 실패"
+    //     });
+    // }
 }
 
 module.exports = {

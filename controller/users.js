@@ -142,9 +142,9 @@ async function signin(req, res, next) {
           res.end(body);
 
           // console.log("받아오는 error",error);
-          console.log("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+          // console.log("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
           // console.log("받아오는 response",response);
-          console.log("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+          // console.log("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
           // console.log("받아오는 body값",body);
         } else {
           console.log('error');
@@ -164,16 +164,16 @@ async function signin(req, res, next) {
     try {
     // console.log("kakao_parsing의 req정보다",req)
       const user_info = req.body;
-      console.log("user_info정보다",user_info)
+      // console.log("user_info정보다",user_info)
       const snsId = user_info.user_id;
       const userEmail = user_info.user_email;
-      const nickname = user_info.user_name
+      const userNickname = user_info.user_name
       const exUser = await User.findOne({ $and: [{ snsId }, { provider: "kakao" }], });
-      console.log('exUser: ', exUser);
-      const accessToken = jwt.sign({ nickname }, process.env.SECRET_KEY, {
-        expiresIn: '4h',
-      });
-      console.log('accessToken 정보임', accessToken);
+      // console.log('exUser정보: ', exUser);
+      //TODO const accessToken = jwt.sign({ nickname }, process.env.SECRET_KEY, {
+      //TODO   expiresIn: '4h',
+      //TODO });
+      // console.log('accessToken 정보임', accessToken);
       // const refresh_token = jwt.sign({}, process.env.REFRESH_SECRET_KEY, {
         //   expiresIn: '14d',
         // });
@@ -182,10 +182,10 @@ async function signin(req, res, next) {
         
 
         if (!exUser) {
-          console.log('여기1111')
+          // console.log('여기1111')
         const newUser = new User({ 
           email : userEmail, 
-          nickname : nickname + Math.floor(Math.random() * 10000000),
+          nickname : userNickname + Math.floor(Math.random() * 10000000),
           password : process.env.KAKAO_BASIC_PASSWORD,
           myComment : "",
           profileUrl: "https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png",
@@ -193,10 +193,14 @@ async function signin(req, res, next) {
           snsId : snsId,
           provider : "kakao",
         });
-        console.log("newUser정보임",newUser)
+        // console.log("newUser정보임",newUser)
         // 저장하기
         newUser.save();
         console.log('여기222222222')
+        const nickname = newUser.nickname
+        const accessToken = jwt.sign({ nickname }, process.env.SECRET_KEY, {
+          expiresIn: '4h',
+        });
         // await newUser.update({ refresh_token }, { where: { userEmail } });
         return res.json({
           accessToken,
@@ -208,6 +212,10 @@ async function signin(req, res, next) {
         // 기존에서 리프레시 토큰만 대체하기
         // await exUser.update({ refresh_token }, { where: { userEmail } });
         const profileUrl = exUser.profileUrl
+        const nickname = exUser.nickname
+        const accessToken = jwt.sign({ nickname }, process.env.SECRET_KEY, {
+           expiresIn: '4h',
+         });
         return res.json({
           accessToken,
           nickname,

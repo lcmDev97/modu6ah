@@ -138,5 +138,6 @@ async function chatRoomsDelete(req, res) {
 module.exports = {
     chatRooms,
     chatRoomsAllGet,
-    chatRoomsDelete
+    chatRoomsPut,
+    chatRoomsDelete, 
 };
