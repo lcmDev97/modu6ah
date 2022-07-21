@@ -131,6 +131,7 @@ async function placeUpdate(req, res) {
             });
         }
         await placePost.updateOne({ placePostId }, { $set: { title, content, region, location, imageUrl, star }});
+        await PlaceBookmark.updateMany({ placePostId }, { $set: { title, content, region, location, imageUrl, star }})
         return res.status(200).send({
                result: "true",
                message: "게시글이 성공적으로 수정되었습니다."

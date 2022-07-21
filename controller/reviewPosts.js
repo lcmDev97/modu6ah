@@ -143,6 +143,7 @@ async function reviewUpdate(req, res) {
          });  
         }
         await reviewPost.updateOne({ reviewPostId }, { $set: { title, content, imageUrl, url, productType }});
+        await ReviewBookmark.updateMany({ reviewPostId }, { $set: { title, content, imageUrl, url, productType }});
         return res.status(200).send({
                result: "true",
                message: "게시글이 성공적으로 수정되었습니다."

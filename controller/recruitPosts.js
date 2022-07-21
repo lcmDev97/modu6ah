@@ -131,6 +131,7 @@ async function recruitUpdate(req, res) {
             });   
         }
         await recruitPost.updateOne({ recruitPostId }, { $set: { title, content, age, date, time, place, status }});
+        await recruitBookmark.updateMany({recruitPostId}, { $set: { title, content, age, date, time, place, status }} )
         return res.status(200).send({
                result: "true",
                message: "게시글이 성공적으로 수정되었습니다."
