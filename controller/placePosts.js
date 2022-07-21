@@ -13,7 +13,7 @@ async function placePosts(req, res) {
   try {
       // 불러올 정보 및 받아올 정보
       const { nickname, profileUrl } = res.locals.user;
-      const { title, content, region, star } = req.body;
+      const { title, content, region, star, location } = req.body;
       const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
       let imageUrl;
       if (req.files.length != 0) {
@@ -37,7 +37,8 @@ async function placePosts(req, res) {
           location,
           imageUrl: imageUrl,
           star,
-          createdAt: createdAt
+          createdAt: createdAt,
+          location,
       });
       console.log(createdPosts)
 
