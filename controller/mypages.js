@@ -34,17 +34,17 @@ async function profileGet(req, res) {
 async function myBookmark(req, res) {
     try {
         const { nickname } = res.locals.user;
-        const recruitBookmarkList = await RecruitBookmark.find({ adder:nickname }).sort({markedAt:-1})
+        const recruitBookmarkList = await RecruitBookmark.find({ adder:nickname }).limit(3).sort({markedAt:-1})
         for(let i = 0; i <recruitBookmarkList.length ; i++ ){
             recruitBookmarkList[i].bookmarkStatus = true
             recruitBookmarkList[i].bookmarkUsers = null
         }
-        const placeBookmarkList = await PlaceBookmark.find({ adder:nickname }).sort({markedAt:-1})
+        const placeBookmarkList = await PlaceBookmark.find({ adder:nickname }).limit(3).sort({markedAt:-1})
         for(let i = 0; i <placeBookmarkList.length ; i++ ){
             placeBookmarkList[i].bookmarkStatus = true
             placeBookmarkList[i].bookmarkUsers = null
         }
-        const reviewBookmarkList = await ReviewBookmark.find({ adder:nickname }).sort({markedAt:-1})
+        const reviewBookmarkList = await ReviewBookmark.find({ adder:nickname }).limit(3).sort({markedAt:-1})
         for(let i = 0; i <reviewBookmarkList.length ; i++ ){
             reviewBookmarkList[i].bookmarkStatus = true
             reviewBookmarkList[i].bookmarkUsers = null
@@ -66,7 +66,7 @@ async function myBookmark(req, res) {
     }
 };
 
-//북마크한 목록(모집 게시글만)
+//북마크한 목록펼치기(모집 게시글만)
 async function myBookmarkRecruit(req, res) {
     try {
         const { nickname } = res.locals.user;
@@ -88,7 +88,7 @@ async function myBookmarkRecruit(req, res) {
     }
 };
 
-//북마크한 목록(장소추천 게시글만)
+//북마크한 목록펼치기(장소추천 게시글만)
 async function myBookmarkPlace(req, res) {
     try {
         const { nickname } = res.locals.user;
@@ -110,7 +110,7 @@ async function myBookmarkPlace(req, res) {
     }
 };
 
-//북마크한 목록(육아템리뷰 게시글만)
+//북마크한 목록펼치기 (육아템리뷰 게시글만)
 async function myBookmarkReview(req, res) {
     try {
         const { nickname } = res.locals.user;
@@ -131,6 +131,8 @@ async function myBookmarkReview(req, res) {
         });
     }
 };
+
+
 
 // 프로필 수정
 async function profileUpdate(req, res) {
