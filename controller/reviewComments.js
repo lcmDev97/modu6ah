@@ -1,6 +1,7 @@
 const reviewPost = require("../schemas/reviewPost"); 
 const reviewComment = require("../schemas/reviewComment");
-const reviewReComment = require("../schemas/reviewReComment")
+const reviewReComment = require("../schemas/reviewReComment");
+const moment = require("moment");
 const User = require("../schemas/user");
 
 // 육아용품 리뷰 댓글 등록
@@ -30,7 +31,7 @@ async function reviewComments(req, res) {
             profileUrl,
             reviewPostId : findPost.reviewPostId, 
             comment : comment,
-            createdAt
+            createdAt : createdAt
         });
         console.log(reviewComments);
 

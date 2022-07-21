@@ -1,11 +1,12 @@
 const placePost = require("../schemas/placePost"); 
 const placeComment = require("../schemas/placeComment");
-const placeReComment = require("../schemas/placeReComment")
+const placeReComment = require("../schemas/placeReComment");
+const moment = require("moment");
 const User = require("../schemas/user");
 
 // 장소추천 댓글 등록
 async function placeComments(req, res) {
-    try {
+    // try {
         const { nickname, profileUrl } = res.locals.user;
         const { placePostId } = req.params;
         const { comment } = req.body;
@@ -31,7 +32,7 @@ async function placeComments(req, res) {
             profileUrl,
             placePostId : findPost.placePostId, 
             comment : comment,
-            createdAt
+            createdAt:createdAt
         });
          console.log(placeComments)
   
@@ -41,13 +42,13 @@ async function placeComments(req, res) {
         });
 
     } 
-    catch (err) {
-        res.status(400).send({
-            result: "false",
-            message: "댓글 작성 실패"
-        });
-    }
-};
+    // catch (err) {
+    //     res.status(400).send({
+    //         result: "false",
+    //         message: "댓글 작성 실패"
+    //     });
+    // }
+// };
  
 
 // 장소추천 댓글 삭제 

@@ -1,6 +1,7 @@
 const recruitPost = require("../schemas/recruitPost"); 
 const recruitComment = require("../schemas/recruitComment");
 const recruitReComment = require("../schemas/recruitReComment");
+const moment = require("moment");
 const User = require("../schemas/user");
 
 // 모집 댓글 등록
@@ -9,6 +10,7 @@ async function recruitComments(req, res) {
         const { nickname, profileUrl } = res.locals.user;
         const { recruitPostId } = req.params;
         const { comment } = req.body;
+        const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
         let status = false;
         
         // 게시글 찾기 
@@ -20,7 +22,7 @@ async function recruitComments(req, res) {
             profileUrl,
             recruitPostId : findPost.recruitPostId, 
             comment : comment,
-            
+            createdAt : createdAt
         });
         console.log(recruitComments)
   
