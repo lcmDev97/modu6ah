@@ -172,7 +172,7 @@ async function recruitDelete(req, res) {
 
 // 모집 게시글 북마크 표시/해제
 async function recruitBookmark(req, res) {
-    // try {
+    try {
         const { recruitPostId } = req.params;
         const { nickname } = res.locals.user;
         const bookmarkPost = await recruitPost.findOne({ recruitPostId: Number(recruitPostId) });
@@ -183,9 +183,7 @@ async function recruitBookmark(req, res) {
                     if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
                     await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
                     await user.updateOne({ $push: { bookmarkList: recruitPostId }})
-                    // const markedAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
                     const markedAt = moment().add(9, 'h');
-
                     const addedBookmark = new RecruitBookmark({
                         recruitPostId,
                         nickname : bookmarkPost.nickname,
@@ -227,12 +225,12 @@ async function recruitBookmark(req, res) {
                     });
             }
         
-    // } catch (err) {
-    //     res.status(400).send({
-    //         result: "false",
-    //         message: "게시글 북마크 표시/해제 실패"
-    //     });
-    // }
+    } catch (err) {
+        res.status(400).send({
+            result: "false",
+            message: "게시글 북마크 표시/해제 실패"
+        });
+    }
 }
 
 module.exports = {
