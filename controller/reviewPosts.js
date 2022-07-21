@@ -74,7 +74,7 @@ async function reviewAllGet(req, res) {
             const decodedToken = jwt.decode(authToken, SECRET_KEY);
             const userNickname = decodedToken.nickname
 
-            let reviewPosts = await reviewPost.find({}, { updatedAt: 0, _id: 0 }).sort({createdAt:-1});  // bookmarkUsers = [test1,test2]
+            let reviewPosts = await reviewPost.find({}, { updatedAt: 0, _id: 0 }).sort({reviewPostId:-1});  // bookmarkUsers = [test1,test2]
             for(let i = 0; i <reviewPosts.length ; i++ ){         //forEach문? 다른거?로 바꾸면 더 효율 좋나?
             if( reviewPosts[i].bookmarkUsers.includes(userNickname) ){
                 reviewPosts[i].bookmarkStatus = true
@@ -87,7 +87,7 @@ async function reviewAllGet(req, res) {
     }
 
         //case2) 비로그인 일떄 (bookmarkUsers 제외하고 보내기)
-        const reviewPosts = await reviewPost.find({}, { updatedAt: 0, _id: 0,bookmarkUsers:0 }).sort({createdAt:-1});
+        const reviewPosts = await reviewPost.find({}, { updatedAt: 0, _id: 0,bookmarkUsers:0 }).sort({reviewPostId:-1});
         return res.status(200).send({reviewPosts});
     } catch (err) {
         res.status(400).send({

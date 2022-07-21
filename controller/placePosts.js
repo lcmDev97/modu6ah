@@ -63,7 +63,7 @@ async function placeAllGet(req, res) {
             const decodedToken = jwt.decode(authToken, SECRET_KEY);
             const userNickname = decodedToken.nickname
 
-            let placePosts = await placePost.find({}, { updatedAt: 0, _id: 0 }).sort({createdAt:-1});
+            let placePosts = await placePost.find({}, { updatedAt: 0, _id: 0 }).sort({placePostId:-1});
             for(let i = 0; i <placePosts.length ; i++ ){
                 if( placePosts[i].bookmarkUsers.includes(userNickname) ){
                     placePosts[i].bookmarkStatus = true
@@ -75,7 +75,7 @@ async function placeAllGet(req, res) {
             })
         }
 
-        const placePosts = await placePost.find({}, { updatedAt: 0, _id: 0, bookmarkUsers:0 }).sort({createdAt:-1});
+        const placePosts = await placePost.find({}, { updatedAt: 0, _id: 0, bookmarkUsers:0 }).sort({placePostId:-1});
         res.status(200).send({placePosts: placePosts});
     } catch (err) {
         res.status(400).send({
