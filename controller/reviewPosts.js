@@ -191,7 +191,7 @@ async function reviewBookmark(req, res) {
         if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
             await user.updateOne({ $push: { bookmarkList: reviewPostId }})
-            const markedAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
+            const markedAt = moment().add(9, 'h');
             const addedBookmark = new ReviewBookmark({
                 reviewPostId,
                 nickname : bookmarkPost.nickname,

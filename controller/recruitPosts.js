@@ -180,7 +180,8 @@ async function recruitBookmark(req, res) {
         if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
             await user.updateOne({ $push: { bookmarkList: recruitPostId }})
-            const markedAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
+            // const markedAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
+            const markedAt = moment().add(9, 'h');
 
             const addedBookmark = new RecruitBookmark({
                 recruitPostId,

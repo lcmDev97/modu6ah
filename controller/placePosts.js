@@ -181,7 +181,7 @@ async function placeBookmark(req, res) {
         if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
             await user.updateOne({ $push: { bookmarkList: placePostId }})
-            const markedAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
+            const markedAt = moment().add(9, 'h');
             const addedBookmark = new PlaceBookmark({
                 placePostId,
                 nickname : bookmarkPost.nickname,
