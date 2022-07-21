@@ -58,7 +58,7 @@ async function recruitAllGet(req, res) {
         const decodedToken = jwt.decode(authToken, SECRET_KEY);
         const userNickname = decodedToken.nickname
         
-        let recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0 }).sort({createdAt:-1})
+        let recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0 }).sort({recruitPostId:-1})
         for(let i = 0; i <recruitPosts.length ; i++ ){         //forEach문? 다른거?로 바꾸면 더 효율 좋나?
             if( recruitPosts[i].bookmarkUsers.includes(userNickname) ){
                 recruitPosts[i].bookmarkStatus = true
@@ -72,7 +72,7 @@ async function recruitAllGet(req, res) {
         }
 
         //case2) 비로그인 일떄 (bookmarkUsers 제외하고 보내기)
-        let recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0, bookmarkUsers:0 }).sort({createdAt:-1})
+        let recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0, bookmarkUsers:0 }).sort({recruitPostId:-1})
         return res.status(200).send({
             recruitPosts
         });
@@ -180,7 +180,8 @@ async function recruitBookmark(req, res) {
         if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
             await user.updateOne({ $push: { bookmarkList: recruitPostId }})
-            const markedAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
+            // const markedAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
+            const markedAt = moment().add(9, 'h');
 
             const addedBookmark = new RecruitBookmark({
                 recruitPostId,
