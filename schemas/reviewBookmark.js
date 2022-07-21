@@ -13,7 +13,7 @@ const ReviewBookmarkSchema = new Schema({
     bookmarkUsers: { type: Array, default: [] },
     bookmarkStatus: {type : Boolean , default : false },
     category: { type: Number, default: 3 },
-    createdAt: { type: String },
+    createdAt: { type: String, required: true },
     adder : { type : String, required: true },
     markedAt : { type : Date, required: true },
 });

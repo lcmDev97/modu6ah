@@ -193,6 +193,7 @@ async function placeBookmark(req, res) {
                 bookmarkStatus : bookmarkPost.bookmarkStatus,
                 category :bookmarkPost.category,
                 adder : nickname,
+                createdAt : bookmarkPost.createdAt,
                 markedAt : markedAt
             })
             await addedBookmark.save()
