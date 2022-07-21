@@ -34,6 +34,7 @@ async function placePosts(req, res) {
           title,
           content,
           region,
+          location,
           imageUrl: imageUrl,
           star,
           createdAt: createdAt
@@ -119,7 +120,7 @@ async function placeGet(req, res) {
 async function placeUpdate(req, res) {
     try {
         const { placePostId } = req.params;
-        const { title, content, region, imageUrl, star } = req.body;
+        const { title, content, region, location, imageUrl, star } = req.body;
         const { nickname } = res.locals.user;
         const placePosts = await placePost.findOne({ placePostId: Number(placePostId) });
         if (nickname !== placePosts.nickname) {
@@ -128,7 +129,7 @@ async function placeUpdate(req, res) {
                 message: "게시글 수정 권한 없음"
             });
         }
-        await placePost.updateOne({ placePostId }, { $set: { title, content, region, imageUrl, star }});
+        await placePost.updateOne({ placePostId }, { $set: { title, content, region, location, imageUrl, star }});
         return res.status(200).send({
                result: "true",
                message: "게시글이 성공적으로 수정되었습니다."

@@ -9,7 +9,8 @@ const placePostSchema = new Schema(
         profileUrl: { type: String }, // 게시글 작성자 프로필 이미지
         title: { type: String, required: true }, // 게시글 제목
         content: { type: String, required: true }, // 게시글 내용
-        region: { type: String, required: true }, // 게시글 장소추천 지역
+        region: { type: String, required: true }, // 게시글 장소추천 지역(카카오)
+        location: { type: String, required: true }, // 게시글 장소추천 장소
         imageUrl: { type: Array, required: true }, // 게시글 이미지
         star: { type: String, required: true }, // 게시글 별점
         bookmarkUsers: { type: Array, default: [] }, // 게시글 북마크한 사용자들
