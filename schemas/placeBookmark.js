@@ -16,6 +16,7 @@ const PlaceBookmarkkSchema = new Schema({
     createdAt: { type: String, required: true },
     adder : { type : String, required: true },
     markedAt : { type : Date, required: true },
+    location : { type : String, required: true },
 });
 
 module.exports = mongoose.model("PlaceBookmark", PlaceBookmarkkSchema);

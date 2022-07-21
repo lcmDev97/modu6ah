@@ -131,6 +131,7 @@ async function recruitUpdate(req, res) {
             });   
         }
         await recruitPost.updateOne({ recruitPostId }, { $set: { title, content, age, date, time, place, status }});
+        await recruitBookmark.updateMany({recruitPostId}, { $set: { title, content, age, date, time, place, status }} )
         return res.status(200).send({
                result: "true",
                message: "게시글이 성공적으로 수정되었습니다."
@@ -171,56 +172,65 @@ async function recruitDelete(req, res) {
 
 // 모집 게시글 북마크 표시/해제
 async function recruitBookmark(req, res) {
-    // try {
+    try {
         const { recruitPostId } = req.params;
         const { nickname } = res.locals.user;
         const bookmarkPost = await recruitPost.findOne({ recruitPostId: Number(recruitPostId) });
         const user = await User.findOne({ nickname });
-        console.log(bookmarkPost)
-        if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
-            await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
-            await user.updateOne({ $push: { bookmarkList: recruitPostId }})
-            // const markedAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
-            const markedAt = moment().add(9, 'h');
+        console.log("bookmarkPost정보",bookmarkPost)
+            if(bookmarkPost){
 
-            const addedBookmark = new RecruitBookmark({
-                recruitPostId,
-                nickname : bookmarkPost.nickname,
-                profileUrl : bookmarkPost.profileUrl,
-                title : bookmarkPost.title,
-                content : bookmarkPost.content,
-                age : bookmarkPost.age,
-                date : bookmarkPost.date,
-                time : bookmarkPost.time,
-                place : bookmarkPost.place,
-                status : bookmarkPost.status,
-                bookmarkUsers : bookmarkPost.bookmarkUsers,
-                bookmarkStatus : bookmarkPost.bookmarkStatus,
-                category :bookmarkPost.category,
-                adder : nickname,
-                createdAt : bookmarkPost.createdAt,
-                markedAt : markedAt
-            })
-            await addedBookmark.save()
-            res.status(200).send({
-                   result: "true",
-                   message: "북마크가 표시되었습니다."
-            });
-        } else {
-            await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
-            await user.updateOne({ $pull: { bookmarkList: recruitPostId }})
-            await RecruitBookmark.deleteOne({ $and: [{ nickname }, { recruitPostId }], })
-            res.status(200).send({
-                   result: "true",
-                   message: "북마크가 해제되었습니다."
-            });
-        }
-    // } catch (err) {
-    //     res.status(400).send({
-    //         result: "false",
-    //         message: "게시글 북마크 표시/해제 실패"
-    //     });
-    // }
+                    if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
+                    await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
+                    await user.updateOne({ $push: { bookmarkList: recruitPostId }})
+                    const markedAt = moment().add(9, 'h');
+                    const addedBookmark = new RecruitBookmark({
+                        recruitPostId,
+                        nickname : bookmarkPost.nickname,
+                        profileUrl : bookmarkPost.profileUrl,
+                        title : bookmarkPost.title,
+                        content : bookmarkPost.content,
+                        age : bookmarkPost.age,
+                        date : bookmarkPost.date,
+                        time : bookmarkPost.time,
+                        place : bookmarkPost.place,
+                        status : bookmarkPost.status,
+                        bookmarkUsers : bookmarkPost.bookmarkUsers,
+                        bookmarkStatus : bookmarkPost.bookmarkStatus,
+                        category :bookmarkPost.category,
+                        adder : nickname,
+                        createdAt : bookmarkPost.createdAt,
+                        markedAt : markedAt
+                    })
+                    await addedBookmark.save()
+                    return res.status(200).send({
+                        result: "true",
+                        message: "북마크가 표시되었습니다."
+                    });
+                } else {
+                    await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
+                    await user.updateOne({ $pull: { bookmarkList: recruitPostId }})
+                    await RecruitBookmark.deleteOne({ $and: [{ nickname }, { recruitPostId }], })
+                    return res.status(200).send({
+                        result: "true",
+                        message: "북마크가 해제되었습니다."
+                    });
+                } 
+
+            }else{
+                await RecruitBookmark.deleteOne({ $and: [{ nickname }, { recruitPostId }], })
+                    return res.status(200).send({
+                        result: "true",
+                        message: "북마크가 해제되었습니다."
+                    });
+            }
+        
+    } catch (err) {
+        res.status(400).send({
+            result: "false",
+            message: "게시글 북마크 표시/해제 실패"
+        });
+    }
 }
 
 module.exports = {
