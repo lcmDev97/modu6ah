@@ -85,7 +85,7 @@ async function profileUpdate(req, res) {
             await recruitComment.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location }});
             await placeComment.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location }});
             await reviewComment.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location}});
-            res.status(200).send({ result: "true", message: "프로필 수정이 완료되었습니다." });
+            res.status(200).send({ result: "true", message: "프로필 수정이 완료되었습니다.", profileUrl: newProfileUrl.transforms[0].location });
         // req.file이 없을 때
         } else {
             let profileUrl = findUser.profileUrl;

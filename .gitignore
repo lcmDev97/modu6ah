@@ -5,5 +5,9 @@ swagger-output.json
 swagger.js
 loadtest.json
 loadtest.yaml
-report.json
-report.json.html
+myReport
+myReport.html
+myReport2
+myReport2.html
+myReport3
+myReport3.html
