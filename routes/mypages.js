@@ -7,7 +7,7 @@ const { profileUpload } = require('../middlewares/profileMulter');
 // 프로필 조회
 router.get("/mypage/profile/:nickname", mypagesController.profileGet);
 
-// 북마크 게시글 조회
+// 북마크 전체게시글 조회
 router.get("/mypage/bookmark", authMiddleware, mypagesController.myBookmark);
 
 // 프로필 수정

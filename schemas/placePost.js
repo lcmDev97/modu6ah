@@ -16,7 +16,8 @@ const placePostSchema = new Schema(
         bookmarkUsers: { type: Array, default: [] }, // 게시글 북마크한 사용자들
         bookmarkStatus: {type : Boolean , default : false }, // 북마크한 상태
         category: { type: Number, default: 2 }, // 게시글 카테고리
-        createdAt: { type: String }
+        createdAt: { type: String, required : true },
+        location : { type: String, required: true }, //상세 주소(직접 수기)
     },
     { timestamps: true } // 게시글 생성 및 수정날짜
 );

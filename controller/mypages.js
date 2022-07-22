@@ -30,7 +30,7 @@ async function profileGet(req, res) {
     }
 };
 
-// 북마크 게시글 조회
+// 북마크한 목록 전체보기
 async function myBookmark(req, res) {
     try {
         const { nickname } = res.locals.user;
@@ -61,7 +61,7 @@ async function myBookmark(req, res) {
     } catch (err) {
         res.status(400).send({
             result: "false",
-            message: err
+            message: "북마크 조회에 실패하였습니다."
         });
     }
 };
@@ -104,5 +104,5 @@ async function profileUpdate(req, res) {
 module.exports = {
     profileGet,
     myBookmark,
-    profileUpdate
+    profileUpdate,
   };
