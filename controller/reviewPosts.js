@@ -6,7 +6,7 @@ const reviewComment = require("../schemas/reviewComment");
 const User = require("../schemas/user");
 const ReviewBookmark = require("../schemas/reviewBookmark");
 const moment = require("moment");
-const { reviewImageUpload } = require('../middlewares/mainMulter');
+const { reviewImageUpload, reviewImageDelete } = require('../middlewares/mainMulter');
 
 // 육아용품 리뷰 게시글 작성
 async function reviewPosts(req, res) {
@@ -38,7 +38,7 @@ async function reviewPosts(req, res) {
         // for (let i = 0; i < req.files.length; i++) {
         //     (`imageUrl${i+1}`) = req.files[i].transforms[0].location
         // }
-
+        
       // 게시글 작성
       const createdPosts = await reviewPost.create({
           nickname,
@@ -161,14 +161,20 @@ async function reviewDelete(req, res) {
         const { reviewPostId } = req.params;
         const { nickname } = res.locals.user;
         const reviewPosts = await reviewPost.findOne({ reviewPostId: Number(reviewPostId) })
-        let imageUrl;
+        console.log(reviewPosts)
+        // const imageUrls = reviewPosts.imageUrl;
         if (nickname !== reviewPosts.nickname) {
             return res.status(400).send({
                    result: "false",
                    message: "게시글 삭제 권한 없음"
             });
         }
-
+        // const objectArr = imageUrls.map(url => {
+        //     const splited = url.split('uploadReviewImage');
+        //     const key = 'uploadReviewImage' + splited[splited.length - 1];
+        //     return { Key: key }
+        // })
+        // await reviewImageDelete(objectArr)
         await reviewPost.deleteOne({ reviewPostId });
         await reviewComment.deleteMany({ reviewPostId });
 

@@ -113,18 +113,35 @@ const reviewImageUpload = multer({
 });
 
 // 육아용품 리뷰 이미지 삭제
-const reviewImageDelete = (imageUrl) => {
-    if (imageUrl) {
-        s3.deleteObject(
-            {
-                Bucket: `${S3_BUCKET_NAME}/uploadReviewImage`,
-                Key: filename,
-            },
-            function (err, data) {}
-        );
-    }
+// const reviewImageDelete = async objectArr => {
+//     const params = {
+//         Bucket: `${S3_BUCKET_NAME}/uploadReviewImage`,
+//         Delete: {
+//             Objects: objectArr,
+//             Quiet: false
+//         }
+//     };
 
-};
+//     try {
+//         const result = await s3.deleteObjects(params).promise();
+//         return result;
+//     } catch(err) {
+//         console.log(err);
+//     }
+// }
+
+// const reviewImageDelete = (imageUrl) => {
+//     if (imageUrl) {
+//         s3.deleteObject(
+//             {
+//                 Bucket: `${S3_BUCKET_NAME}/uploadReviewImage`,
+//                 Key: filename,
+//             },
+//             function (err, data) {}
+//         );
+//     }
+
+// };
 
 // const deleteImg = (url) => {
 //     if (url) {
@@ -165,6 +182,6 @@ const reviewImageDelete = (imageUrl) => {
 //     }
 
 exports.placeImageUpload = multer(placeImageUpload);
-exports.reviewImageUpload = multer(reviewImageUpload);
+// exports.reviewImageUpload = multer(reviewImageUpload);
 exports.reviewImageDelete = reviewImageDelete;
 exports.placeImageDelete = placeImageDelete;
