@@ -3,6 +3,7 @@ node_modules
 tests
 swagger-output.json
 swagger.js
+loadtest.json
 loadtest.yaml
 report.json
 report.json.html
