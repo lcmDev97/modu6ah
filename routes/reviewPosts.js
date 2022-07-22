@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 const reviewPostsController = require("../controller/reviewPosts");
 const authMiddleware = require("../middlewares/authmiddleware");
-const { reviewImageUpload } = require('../middlewares/upload');
+const { reviewImageUpload } = require('../middlewares/mainMulter');
 
 // 육아용품 리뷰 게시글 작성
-router.post("/reviews", authMiddleware, reviewImageUpload.array('imageUrl', 4), reviewPostsController.reviewPosts);
+router.post("/reviews", authMiddleware, reviewImageUpload.array('imageUrl', 3), reviewPostsController.reviewPosts);
 
 // 육아용품 리뷰 게시글 전체조회
 router.get("/reviews", reviewPostsController.reviewAllGet);

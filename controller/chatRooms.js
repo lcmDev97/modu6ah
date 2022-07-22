@@ -112,84 +112,31 @@ async function chatRoomsAllGet(req, res) {
     };
 };
 
-// 채팅방 업데이트
-async function chatRoomsPut(req, res) {
-     try {
-        const { roomId } = req.params;
-        const { nickname } = res.locals.user;
-        const deleteUser = await chatRoom.findOne({ roomId: Number(roomId) });
-        
-        console.log (deleteUser)
-        if (!deleteUser.outUsers.includes(nickname)) {
-            await deleteUser.updateOne({ $push: { outUsers: nickname }});
-            return res.status(200).send({
-                result: "true",
-                message: "채팅방을 나갔습니다."
-            });
-        } else {  
-            res.status(200).send({
-                result: "true",
-                message: "채팅방이 이미 삭제되었습니다."
-            });
-        }
-    } catch (err) {
-        res.status(400).send({
-            result: "false",
-            message: "채팅방 삭제 실패"
-        });
-    }
-}
-
-// 채팅방 업데이트
+// 유저의 특정 채팅방 삭제
 async function chatRoomsDelete(req, res) {
     try {
-        const { roomId } = req.params;
-        const { nickname } = res.locals.user;
-        const deleteUser = await chatRoom.findOne({ 
-            roomId 
-        });
-        console.log("dfdf  : "+deleteUser)
-    
-
-        const deleteChatRoom = await chatRoom.find({ 
-            roomId: Number(roomId),
-            nickname : deleteUser.outUsers,
-            postNickname : deleteUser.outUsers, 
-        });
-
-        console.log("deleteChatRoom"+deleteChatRoom)
-            // 채팅방지우기 
-        if(deleteChatRoom){
-            await chatRoom.deleteOne({ 
-                roomId: Number(roomId),
-                nickname : deleteUser.outUsers,
-                postNickname : deleteUser.outUsers, 
-            });     
-            // 채팅내용 지우기 
-            await chatMessage.deleteMany({ 
-                roomId: Number(roomId),
-                senderNick : deleteUser.outUsers,
-                receiverNick : deleteUser.outUsers,
-            });   
-        }    
-             
-        res.status(200).send({
-                result: "true",
-                message: "채팅방이 삭제되었습니다."
-        });
-        
+        const { nickname } = res.locals.user; // 로그인한 사용자 닉네임
+        const { roomId } = req.params; // 해당 roomId
+        const chatRoomList = await chatRoom.findOne({ roomId: Number(roomId) })
+        // console.log(chatRoomList)
+        if (nickname === chatRoomList.nickname || nickname === chatRoomList.postNickname) {
+            await chatRoomList.deleteOne({ roomId })
+            await chatMessage.deleteMany({ roomId })
+            return res.status(200).send({ result: "true", message: "채팅방이 삭제되었습니다." });
+        } else {
+            return res.status(400).send({ result: "false", message: "채팅방 삭제 권한이 없습니다."})
+        }
 
     } catch (err) {
         return res.status(400).send({
             result: "false",
             message: "채팅방 삭제 실패"
-        });
+        })
     }
- }
+};
 
 module.exports = {
     chatRooms,
     chatRoomsAllGet,
-    chatRoomsPut,
     chatRoomsDelete, 
 };

@@ -22,7 +22,7 @@ async function mainPostGet(req, res) {
             //TODO      status:false + limit(8)만족하는게시글 검색 => bookmarkStatus 작업 => remainNum 저장 => 
             //TODO      => status:true + limit(remainNum)만족하는게시글 검색 =>bookmarkStatus 작업 => 반복문이용해서 배열에 push
             // #1 모집 게시글 조회
-            let recruitPosts = await recruitPost.find({ status: false },{ updatedAt: 0, _id: 0 }).limit(6).sort({ createdAt: -1,})
+            let recruitPosts = await recruitPost.find({ status: false },{ updatedAt: 0, _id: 0 }).limit(6).sort({ recruitPostId: -1,})
             for(let i = 0; i <recruitPosts.length ; i++ ){
                 if( recruitPosts[i].bookmarkUsers.includes(userNickname) ){
                     recruitPosts[i].bookmarkStatus = true
@@ -34,7 +34,7 @@ async function mainPostGet(req, res) {
             if( recruitPosts.length !==6 ){
                 remainNum = 6 - recruitPosts.length
             }
-            const truePosts = await recruitPost.find({ status: true }).limit(remainNum).sort({ createdAt: -1 })
+            const truePosts = await recruitPost.find({ status: true }).limit(remainNum).sort({ recruitPostId: -1 })
             for(let i = 0; i <truePosts.length ; i++ ){ 
                 if( truePosts[i].bookmarkUsers.includes(userNickname) ){
                     truePosts[i].bookmarkStatus = true
@@ -48,7 +48,7 @@ async function mainPostGet(req, res) {
             // console.log("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ")
             // console.log('최종 recruit포스트들',)
             //#2 장소추천 게시글 조회
-            let placePosts = await placePost.find({}, { updatedAt: 0, _id: 0 }).limit(2);
+            let placePosts = await placePost.find({}, { updatedAt: 0, _id: 0 }).limit(2).sort({ star: -1,  placePostId: -1 })
             for(let i = 0; i <placePosts.length ; i++ ){
                 if( placePosts[i].bookmarkUsers.includes(userNickname) ){
                     placePosts[i].bookmarkStatus = true
@@ -56,7 +56,7 @@ async function mainPostGet(req, res) {
                 placePosts[i].bookmarkUsers = null
             }
             //#3 리뷰 게시글 조회
-            let reviewPosts = await reviewPost.find({}, { updatedAt: 0, _id: 0 }).limit(2);
+            let reviewPosts = await reviewPost.find({}, { updatedAt: 0, _id: 0 }).limit(2).sort({reviewPostId:-1})
             for(let i = 0; i <reviewPosts.length ; i++ ){        
             if( reviewPosts[i].bookmarkUsers.includes(userNickname) ){
                 reviewPosts[i].bookmarkStatus = true
@@ -74,20 +74,20 @@ async function mainPostGet(req, res) {
 
         // console.log('비로그인유저 로직시작')
         //case2) 비로그인 일떄 (bookmarkUsers 제외하고 보내기)
-        const recruitPosts = await recruitPost.find({ status: false },{ updatedAt: 0, _id: 0, bookmarkUsers:0 }).limit(6).sort({ createdAt: -1 })
+        const recruitPosts = await recruitPost.find({ status: false },{ updatedAt: 0, _id: 0, bookmarkUsers:0 }).limit(6).sort({ recruitPostId: -1 })
         let remainNum;
         if( recruitPosts.length < 6 ){
             remainNum = 6 - recruitPosts.length
         }
-        const truePosts = await recruitPost.find({ status: true },{ updatedAt: 0, _id: 0, bookmarkUsers:0 }).limit(remainNum).sort({ createdAt: -1 })
+        const truePosts = await recruitPost.find({ status: true },{ updatedAt: 0, _id: 0, bookmarkUsers:0 }).limit(remainNum).sort({ recruitPostId: -1 })
         for(let i = 0 ; i < remainNum ; i++){
             recruitPosts.push(truePosts[i])
         }
       
         //장소추천게시글
-        const placePosts = await placePost.find({},{ updatedAt: 0, _id: 0, bookmarkUsers:0 }).sort({ star: -1,  createdAt: -1 }).limit(2);
+        const placePosts = await placePost.find({},{ updatedAt: 0, _id: 0, bookmarkUsers:0 }).sort({ star: -1,  placePostId: -1 }).limit(2);
         // 리뷰 조회
-        const reviewPosts = await reviewPost.find({},{ updatedAt: 0, _id: 0, bookmarkUsers:0 }).sort({createdAt:-1}).limit(2);
+        const reviewPosts = await reviewPost.find({},{ updatedAt: 0, _id: 0, bookmarkUsers:0 }).sort({reviewPostId:-1}).limit(2);
         
         // console.log('recruitPosts정보다',recruitPosts)
         // console.log('ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ')

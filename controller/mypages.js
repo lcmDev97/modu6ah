@@ -8,6 +8,8 @@ const reviewComment = require("../schemas/reviewComment");
 const RecruitBookmark = require("../schemas/recruitBookmark");
 const PlaceBookmark = require("../schemas/placeBookmark");
 const ReviewBookmark = require("../schemas/reviewBookmark");
+const profileMiddleware = require('../middlewares/profileMulter');
+
 // 프로필 조회 - 로그인한 사람/안한 사람
 async function profileGet(req, res) {
     try {
@@ -28,22 +30,22 @@ async function profileGet(req, res) {
     }
 };
 
-// 북마크 게시글 조회
+// 북마크한 목록 전체보기
 async function myBookmark(req, res) {
     try {
         const { nickname } = res.locals.user;
-        const recruitBookmarkList = await RecruitBookmark.find({ nickname }).sort({markedAt:-1})
+        const recruitBookmarkList = await RecruitBookmark.find({ adder:nickname }).sort({markedAt:-1})
         for(let i = 0; i <recruitBookmarkList.length ; i++ ){
             recruitBookmarkList[i].bookmarkStatus = true
             recruitBookmarkList[i].bookmarkUsers = null
         }
-        const placeBookmarkList = await PlaceBookmark.find({ nickname }).sort({markedAt:-1})
-        for(let i = 0; i <recruitBookmarkList.length ; i++ ){
+        const placeBookmarkList = await PlaceBookmark.find({ adder:nickname }).sort({markedAt:-1})
+        for(let i = 0; i <placeBookmarkList.length ; i++ ){
             placeBookmarkList[i].bookmarkStatus = true
             placeBookmarkList[i].bookmarkUsers = null
         }
-        const reviewBookmarkList = await ReviewBookmark.find({ nickname }).sort({markedAt:-1})
-        for(let i = 0; i <recruitBookmarkList.length ; i++ ){
+        const reviewBookmarkList = await ReviewBookmark.find({ adder:nickname }).sort({markedAt:-1})
+        for(let i = 0; i <reviewBookmarkList.length ; i++ ){
             reviewBookmarkList[i].bookmarkStatus = true
             reviewBookmarkList[i].bookmarkUsers = null
         }
@@ -59,7 +61,7 @@ async function myBookmark(req, res) {
     } catch (err) {
         res.status(400).send({
             result: "false",
-            message: err
+            message: "북마크 조회에 실패하였습니다."
         });
     }
 };
@@ -68,15 +70,28 @@ async function myBookmark(req, res) {
 async function profileUpdate(req, res) {
     try {
         const { nickname } = res.locals.user;
-        const { profileUrl, myComment } = req.body;
-        await User.updateMany({ nickname }, { $set: { profileUrl, myComment }});
-        await recruitPost.updateMany({ nickname }, { $set: { profileUrl }});
-        await placePost.updateMany({ nickname }, { $set: { profileUrl}});
-        await reviewPost.updateMany({ nickname }, { $set: { profileUrl }});
-        await recruitComment.updateMany({ nickname }, { $set: { profileUrl }});
-        await placeComment.updateMany({ nickname }, { $set: { profileUrl }});
-        await reviewComment.updateMany({ nickname }, { $set: { profileUrl}});
-        res.status(200).send({ result: "true", message: "프로필 수정이 완료되었습니다." });
+        const { myComment } = req.body;
+        const findUser = await User.findOne({ nickname });
+        let profileUrl;
+        let newProfileUrl = req.file;
+
+        // req.file이 있을 때
+        if (newProfileUrl) {
+            profileMiddleware.profileDelete(findUser.profileUrl)
+            await User.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location, myComment }});
+            await recruitPost.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location }});
+            await placePost.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location }});
+            await reviewPost.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location }});
+            await recruitComment.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location }});
+            await placeComment.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location }});
+            await reviewComment.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location}});
+            res.status(200).send({ result: "true", message: "프로필 수정이 완료되었습니다." });
+        // req.file이 없을 때
+        } else {
+            let profileUrl = findUser.profileUrl;
+            res.status(200).send({ profileUrl })
+        }
+        
     } catch (err) {
         res.status(400).send({
             result: "false",
@@ -89,5 +104,5 @@ async function profileUpdate(req, res) {
 module.exports = {
     profileGet,
     myBookmark,
-    profileUpdate
+    profileUpdate,
   };

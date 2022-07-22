@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 const RecruitBookmarkSchema = new Schema({
-    recruitPostId: { type: Number, unique: true },
+    recruitPostId: { type: Number },
     nickname: { type: String }, 
     profileUrl: { type: String },
     title: { type: String, required: true }, 
@@ -12,6 +12,7 @@ const RecruitBookmarkSchema = new Schema({
     time: { type: String, required: true },
     place: { type: String, required: true },
     status: { type: Boolean },
+    createdAt : { type : String, required: true },
     bookmarkUsers: { type: Array, default: [] },
     bookmarkStatus: {type : Boolean , default : false },
     category: { type: Number, default: 1 },
