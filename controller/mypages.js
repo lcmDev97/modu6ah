@@ -8,7 +8,7 @@ const reviewComment = require("../schemas/reviewComment");
 const RecruitBookmark = require("../schemas/recruitBookmark");
 const PlaceBookmark = require("../schemas/placeBookmark");
 const ReviewBookmark = require("../schemas/reviewBookmark");
-const profileMiddleware = require('../middlewares/profileMulter');
+const { profileUpload, profileDelete } = require('../middlewares/profileMulter');
 
 // 프로필 조회 - 로그인한 사람/안한 사람
 async function profileGet(req, res) {
@@ -77,7 +77,7 @@ async function profileUpdate(req, res) {
 
         // req.file이 있을 때
         if (newProfileUrl) {
-            profileMiddleware.profileDelete(findUser.profileUrl)
+            await profileDelete(findUser.profileUrl);
             await User.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location, myComment }});
             await recruitPost.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location }});
             await placePost.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location }});

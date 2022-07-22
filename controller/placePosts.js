@@ -6,7 +6,7 @@ const placeComment = require("../schemas/placeComment");
 const User = require("../schemas/user");
 const PlaceBookmarks = require("../schemas/placeBookmark");
 const moment = require("moment");
-const mainMiddleware = require("../middlewares/mainMulter");
+const { placeImageUpload, placeImageDelete } = require("../middlewares/mainMulter");
 
 // 장소추천 게시글 작성
 async function placePosts(req, res) {
@@ -15,7 +15,7 @@ async function placePosts(req, res) {
       const { nickname, profileUrl } = res.locals.user;
       const { title, content, region, star, location } = req.body;
       const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
-      let imageUrl;
+      let imageUrl = req.files;
       if (req.files.length != 0) {
           imageUrl = [];
           for (let i = 0; i < req.files.length; i++) {
@@ -40,11 +40,10 @@ async function placePosts(req, res) {
           createdAt: createdAt,
           location,
       });
-      console.log(createdPosts)
 
-      res.status(200).send({
-          result: "true",
-          message: "게시글이 성공적으로 등록되었습니다."
+      return res.status(200).send({
+             result: "true",
+             message: "게시글이 성공적으로 등록되었습니다."
       });
   } catch (err) {
       res.status(400).send({
@@ -121,7 +120,7 @@ async function placeGet(req, res) {
 async function placeUpdate(req, res) {
     try {
         const { placePostId } = req.params;
-        const { title, content, region, location, imageUrl, star } = req.body;
+        const { title, content, region, location, star } = req.body;
         const { nickname } = res.locals.user;
         const placePosts = await placePost.findOne({ placePostId: Number(placePostId) });
         if (nickname !== placePosts.nickname) {
@@ -130,8 +129,8 @@ async function placeUpdate(req, res) {
                 message: "게시글 수정 권한 없음"
             });
         }
-        await placePost.updateOne({ placePostId }, { $set: { title, content, region, imageUrl, star }});
-        await PlaceBookmarks.updateMany({ placePostId }, { $set: { title, content, region, imageUrl, star }});
+        await placePost.updateOne({ placePostId }, { $set: { title, content, region, location, star }});
+        await PlaceBookmarks.updateMany({ placePostId }, { $set: { title, content, region, location, star }});
         return res.status(200).send({
                result: "true",
                message: "게시글이 성공적으로 수정되었습니다."
@@ -150,6 +149,12 @@ async function placeDelete(req, res) {
         const { placePostId } = req.params;
         const { nickname } = res.locals.user;
         const placePosts = await placePost.findOne({ placePostId: Number(placePostId) })
+        const imageUrls = placePosts.imageUrl;
+        const objectArr = imageUrls.map(imageUrl => {
+            const splited = imageUrl.split('uploadPlaceImage');
+            const key = 'uploadPlaceImage' + splited[splited.length - 1];
+            return { Key: key }
+        });
         if (nickname !== placePosts.nickname) {
             return res.status(400).send({
                    result: "false",
@@ -158,7 +163,7 @@ async function placeDelete(req, res) {
         }
         await placePost.deleteOne({ placePostId });
         await placeComment.deleteMany({ placePostId });
-        // mainMiddleware.placeImageDelete(placePosts.imageUrl);
+        await placeImageDelete(objectArr);
         return res.status(200).send({
                 result: "true",
                 message: "게시글이 성공적으로 삭제되었습니다."

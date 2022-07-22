@@ -16,7 +16,6 @@ async function recruitPosts(req, res) {
       const { nickname, profileUrl } = res.locals.user;
       const { title, content, age, date, time, place } = req.body;
       let status = false;
-      const date2 = moment().add('9','h').format('YYYY-MM-DD');
       const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
 
       // 게시글 작성
@@ -26,7 +25,7 @@ async function recruitPosts(req, res) {
           title,
           content,
           age,
-          date: date2,
+          date,
           time,
           place,
           status,
@@ -128,7 +127,7 @@ async function recruitUpdate(req, res) {
                    message: "게시글 수정 권한 없음"
             });
         }
-        await recruitPost.updateOne({ recruitPostId }, { $set: { title, content, age, date, time, place, status }});    
+        await recruitPost.updateOne({ recruitPostId }, { $set: { title, content, age, date, time, place, status }});
         await recruitBookmarks.updateMany({recruitPostId}, { $set: { title, content, age, date, time, place, status }} )
         return res.status(200).send({
                result: "true",
