@@ -6,7 +6,7 @@ const recruitComment = require("../schemas/recruitComment");
 const recruitReComment = require("../schemas/recruitReComment");
 
 const User = require("../schemas/user");
-const RecruitBookmark = require("../schemas/recruitBookmark");
+const recruitBookmarks = require("../schemas/recruitBookmark");
 const moment = require("moment");
 
 // 모집 게시글 작성
@@ -128,7 +128,7 @@ async function recruitUpdate(req, res) {
             });
         }
         await recruitPost.updateOne({ recruitPostId }, { $set: { title, content, age, date, time, place, status }});
-        await RecruitBookmark.updateMany({recruitPostId}, { $set: { title, content, age, date, time, place, status }} )
+        await recruitBookmarks.updateMany({recruitPostId}, { $set: { title, content, age, date, time, place, status }} )
         return res.status(200).send({
                result: "true",
                message: "게시글이 성공적으로 수정되었습니다."
@@ -180,8 +180,9 @@ async function recruitBookmark(req, res) {
                     if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
                     await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
                     await user.updateOne({ $push: { bookmarkList: recruitPostId }})
+
                     const markedAt = moment().add(9, 'h');
-                    const addedBookmark = new RecruitBookmark({
+                    const addedBookmark = new recruitBookmarks({
                         recruitPostId,
                         nickname : bookmarkPost.nickname,
                         profileUrl : bookmarkPost.profileUrl,
@@ -207,7 +208,7 @@ async function recruitBookmark(req, res) {
                 } else {
                     await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
                     await user.updateOne({ $pull: { bookmarkList: recruitPostId }})
-                    await RecruitBookmark.deleteOne({ $and: [{ nickname }, { recruitPostId }], })
+                    await recruitBookmarks.deleteOne({ $and: [{ nickname }, { recruitPostId }], })
                     return res.status(200).send({
                         result: "true",
                         message: "북마크가 해제되었습니다."
@@ -215,7 +216,7 @@ async function recruitBookmark(req, res) {
                 } 
 
             }else{
-                await RecruitBookmark.deleteOne({ $and: [{ nickname }, { recruitPostId }], })
+                await recruitBookmarks.deleteOne({ $and: [{ nickname }, { recruitPostId }], })
                     return res.status(200).send({
                         result: "true",
                         message: "북마크가 해제되었습니다."
