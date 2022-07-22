@@ -69,18 +69,22 @@ const placeImageUpload = multer({
 });
 
 // 장소추천 이미지 삭제
-const placeImageDelete = (imageUrl) => {
-    if (imageUrl === 'https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png')
-        return;
-    const filename = imageUrl.split('/')[4];
-    s3.deleteObject(
-        {
-            Bucket: `${S3_BUCKET_NAME}/uploadPlaceImage`,
-            Key: filename,
-        },
-        function (err, data) {}
-    );
-};
+const placeImageDelete = async objectArr => {
+    const params = {
+        Bucket: S3_BUCKET_NAME,
+        Delete: {
+            Objects: objectArr,
+            Quiet: false
+        }
+    };
+
+    try {
+        const result = await s3.deleteObjects(params).promise();
+        return result;
+    } catch(err) {
+        console.log(err);
+    }
+}
 
 // 육아용품 리뷰 이미지 업로드(리사이징 적용)
 const reviewImageUpload = multer({
@@ -113,75 +117,24 @@ const reviewImageUpload = multer({
 });
 
 // 육아용품 리뷰 이미지 삭제
-// const reviewImageDelete = async objectArr => {
-//     const params = {
-//         Bucket: `${S3_BUCKET_NAME}/uploadReviewImage`,
-//         Delete: {
-//             Objects: objectArr,
-//             Quiet: false
-//         }
-//     };
+const reviewImageDelete = async objectArr => {
+    const params = {
+        Bucket: S3_BUCKET_NAME,
+        Delete: {
+            Objects: objectArr,
+            Quiet: false
+        }
+    };
 
-//     try {
-//         const result = await s3.deleteObjects(params).promise();
-//         return result;
-//     } catch(err) {
-//         console.log(err);
-//     }
-// }
-
-// const reviewImageDelete = (imageUrl) => {
-//     if (imageUrl) {
-//         s3.deleteObject(
-//             {
-//                 Bucket: `${S3_BUCKET_NAME}/uploadReviewImage`,
-//                 Key: filename,
-//             },
-//             function (err, data) {}
-//         );
-//     }
-
-// };
-
-// const deleteImg = (url) => {
-//     if (url) {
-//         s3.deleteObject(
-//             {
-//                 Bucket: process.env.AWS_S3_BUCKET,
-//                 Key: url,
-//             },
-//             function (err, data) {}
-//         )
-//         s3.deleteObject(
-//             {
-//                 Bucket: process.env.AWS_S3_BUCKET_W384,
-//                 Key: url,
-//             },
-//             function (err, data) {}
-//         )
-//         s3.deleteObject(
-//             {
-//                 Bucket: process.env.AWS_S3_BUCKET_W758,
-//                 Key: url,
-//             },
-//             function (err, data) {}
-//         )
-//     }
-// }
-
-// const deleteCourseImg = (url) => {
-//     if (url) {
-//         // const filename = url.split('/')[4]
-//         s3.deleteObject(
-//             {
-//                 Bucket: process.env.AWS_S3_BUCKET3,
-//                 Key: url,
-//             },
-//             function (err, data) {}
-//         )
-//     }
+    try {
+        const result = await s3.deleteObjects(params).promise();
+        return result;
+    } catch(err) {
+        console.log(err);
+    }
+}
 
 exports.placeImageUpload = multer(placeImageUpload);
 exports.reviewImageUpload = multer(reviewImageUpload);
-// exports.reviewImageDelete = reviewImageDelete;
-// exports.placeImageDelete = placeImageDelete;
+exports.reviewImageDelete = reviewImageDelete;
+exports.placeImageDelete = placeImageDelete;

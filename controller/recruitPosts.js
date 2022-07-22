@@ -4,8 +4,9 @@ const jwt = require("jsonwebtoken");
 const recruitPost = require("../schemas/recruitPost");
 const recruitComment = require("../schemas/recruitComment");
 const recruitReComment = require("../schemas/recruitReComment");
+
 const User = require("../schemas/user");
-const RecruitBookmark = require("../schemas/recruitBookmark");
+const recruitBookmarks = require("../schemas/recruitBookmark");
 const moment = require("moment");
 
 // 모집 게시글 작성
@@ -15,7 +16,6 @@ async function recruitPosts(req, res) {
       const { nickname, profileUrl } = res.locals.user;
       const { title, content, age, date, time, place } = req.body;
       let status = false;
-      const date2 = moment().add('9','h').format('YYYY-MM-DD');
       const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
 
       // 게시글 작성
@@ -25,7 +25,7 @@ async function recruitPosts(req, res) {
           title,
           content,
           age,
-          date: date2,
+          date,
           time,
           place,
           status,
@@ -116,7 +116,7 @@ async function recruitGet(req, res) {
 
 // 모집 게시글 수정
 async function recruitUpdate(req, res) {
-    try {
+    // try {
         const { recruitPostId } = req.params;
         const { title, content, age, date, time, place, status } = req.body;
         const { nickname } = res.locals.user;
@@ -125,20 +125,20 @@ async function recruitUpdate(req, res) {
             return res.status(400).send({
                    result: "false",
                    message: "게시글 수정 권한 없음"
-            });   
+            });
         }
         await recruitPost.updateOne({ recruitPostId }, { $set: { title, content, age, date, time, place, status }});
-        await recruitBookmark.updateMany({recruitPostId}, { $set: { title, content, age, date, time, place, status }} )
+        await recruitBookmarks.updateMany({recruitPostId}, { $set: { title, content, age, date, time, place, status }} )
         return res.status(200).send({
                result: "true",
                message: "게시글이 성공적으로 수정되었습니다."
         });
-    } catch (err) {
-        res.status(400).send({
-            result: "false",
-            message: "게시글 수정 실패"
-        });
-    }
+    // } catch (err) {
+    //     res.status(400).send({
+    //         result: "false",
+    //         message: "게시글 수정 실패"
+    //     });
+    // }
 };
 
 // 모집 게시글 삭제(모집 댓글도 같이 삭제)
@@ -180,8 +180,9 @@ async function recruitBookmark(req, res) {
                     if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
                     await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
                     await user.updateOne({ $push: { bookmarkList: recruitPostId }})
+
                     const markedAt = moment().add(9, 'h');
-                    const addedBookmark = new RecruitBookmark({
+                    const addedBookmark = new recruitBookmarks({
                         recruitPostId,
                         nickname : bookmarkPost.nickname,
                         profileUrl : bookmarkPost.profileUrl,
@@ -207,7 +208,7 @@ async function recruitBookmark(req, res) {
                 } else {
                     await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
                     await user.updateOne({ $pull: { bookmarkList: recruitPostId }})
-                    await RecruitBookmark.deleteOne({ $and: [{ nickname }, { recruitPostId }], })
+                    await recruitBookmarks.deleteOne({ $and: [{ nickname }, { recruitPostId }], })
                     return res.status(200).send({
                         result: "true",
                         message: "북마크가 해제되었습니다."
@@ -215,7 +216,7 @@ async function recruitBookmark(req, res) {
                 } 
 
             }else{
-                await RecruitBookmark.deleteOne({ $and: [{ nickname }, { recruitPostId }], })
+                await recruitBookmarks.deleteOne({ $and: [{ nickname }, { recruitPostId }], })
                     return res.status(200).send({
                         result: "true",
                         message: "북마크가 해제되었습니다."
