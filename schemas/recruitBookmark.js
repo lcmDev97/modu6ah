@@ -12,7 +12,7 @@ const RecruitBookmarkSchema = new Schema({
     time: { type: String, required: true },
     place: { type: String, required: true },
     status: { type: Boolean },
-    createdAt : { type : Date, required: true },
+    createdAt : { type : String, required: true },
     bookmarkUsers: { type: Array, default: [] },
     bookmarkStatus: {type : Boolean , default : false },
     category: { type: Number, default: 1 },

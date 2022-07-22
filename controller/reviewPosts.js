@@ -143,6 +143,7 @@ async function reviewUpdate(req, res) {
          });  
         }
         await reviewPost.updateOne({ reviewPostId }, { $set: { title, content, imageUrl, url, productType }});
+        await ReviewBookmark.updateMany({ reviewPostId }, { $set: { title, content, imageUrl, url, productType }});
         return res.status(200).send({
                result: "true",
                message: "게시글이 성공적으로 수정되었습니다."
@@ -187,41 +188,51 @@ async function reviewBookmark(req, res) {
         const { nickname } = res.locals.user;
         const bookmarkPost = await reviewPost.findOne({ reviewPostId: Number(reviewPostId) });
         const user = await User.findOne({ nickname });
-        console.log(bookmarkPost)
-        if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
-            await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
-            await user.updateOne({ $push: { bookmarkList: reviewPostId }})
-            const markedAt = moment().add(9, 'h');
-            const addedBookmark = new ReviewBookmark({
-                reviewPostId,
-                nickname : bookmarkPost.nickname,
-                profileUrl : bookmarkPost.profileUrl,
-                title : bookmarkPost.title,
-                content : bookmarkPost.content,
-                url : bookmarkPost.url,
-                productType : bookmarkPost.productType,
-                imageUrl : bookmarkPost.imageUrl,
-                bookmarkUsers : bookmarkPost.bookmarkUsers,
-                bookmarkStatus : bookmarkPost.bookmarkStatus,
-                category :bookmarkPost.category,
-                createdAt : bookmarkPost.createdAt,
-                adder : nickname,
-                markedAt : markedAt,
-            })
-            await addedBookmark.save()
-            res.status(200).send({
-                result: "true",
-                message: "북마크가 표시되었습니다."
-            });
-        } else {
-            await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
-            await user.updateOne({ $pull: { bookmarkList: reviewPostId }})
+        if(bookmarkPost){
+            
+            if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
+                await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
+                await user.updateOne({ $push: { bookmarkList: reviewPostId }})
+                const markedAt = moment().add(9, 'h');
+                const addedBookmark = new ReviewBookmark({
+                    reviewPostId,
+                    nickname : bookmarkPost.nickname,
+                    profileUrl : bookmarkPost.profileUrl,
+                    title : bookmarkPost.title,
+                    content : bookmarkPost.content,
+                    url : bookmarkPost.url,
+                    productType : bookmarkPost.productType,
+                    imageUrl : bookmarkPost.imageUrl,
+                    bookmarkUsers : bookmarkPost.bookmarkUsers,
+                    bookmarkStatus : bookmarkPost.bookmarkStatus,
+                    category :bookmarkPost.category,
+                    createdAt : bookmarkPost.createdAt,
+                    adder : nickname,
+                    markedAt : markedAt,
+                })
+                await addedBookmark.save()
+                return res.status(200).send({
+                    result: "true",
+                    message: "북마크가 표시되었습니다."
+                });
+            } else {
+                await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
+                await user.updateOne({ $pull: { bookmarkList: reviewPostId }})
+                await ReviewBookmark.deleteOne({ $and: [{ nickname }, { reviewPostId }], })
+                return res.status(200).send({
+                    result: "true",
+                    message: "북마크가 해제되었습니다."
+                });
+            }
+
+        }else{
             await ReviewBookmark.deleteOne({ $and: [{ nickname }, { reviewPostId }], })
-            res.status(200).send({
+            return res.status(200).send({
                 result: "true",
                 message: "북마크가 해제되었습니다."
             });
         }
+
     } catch (err) {
         res.status(400).send({
             result: "false",
