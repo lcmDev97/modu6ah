@@ -30,22 +30,22 @@ async function profileGet(req, res) {
     }
 };
 
-// 북마크 게시글 조회
+// 북마크한 목록 전체보기
 async function myBookmark(req, res) {
     try {
         const { nickname } = res.locals.user;
-        const recruitBookmarkList = await RecruitBookmark.find({ nickname }).sort({markedAt:-1})
+        const recruitBookmarkList = await RecruitBookmark.find({ adder:nickname }).sort({markedAt:-1})
         for(let i = 0; i <recruitBookmarkList.length ; i++ ){
             recruitBookmarkList[i].bookmarkStatus = true
             recruitBookmarkList[i].bookmarkUsers = null
         }
-        const placeBookmarkList = await PlaceBookmark.find({ nickname }).sort({markedAt:-1})
-        for(let i = 0; i <recruitBookmarkList.length ; i++ ){
+        const placeBookmarkList = await PlaceBookmark.find({ adder:nickname }).sort({markedAt:-1})
+        for(let i = 0; i <placeBookmarkList.length ; i++ ){
             placeBookmarkList[i].bookmarkStatus = true
             placeBookmarkList[i].bookmarkUsers = null
         }
-        const reviewBookmarkList = await ReviewBookmark.find({ nickname }).sort({markedAt:-1})
-        for(let i = 0; i <recruitBookmarkList.length ; i++ ){
+        const reviewBookmarkList = await ReviewBookmark.find({ adder:nickname }).sort({markedAt:-1})
+        for(let i = 0; i <reviewBookmarkList.length ; i++ ){
             reviewBookmarkList[i].bookmarkStatus = true
             reviewBookmarkList[i].bookmarkUsers = null
         }
@@ -61,7 +61,7 @@ async function myBookmark(req, res) {
     } catch (err) {
         res.status(400).send({
             result: "false",
-            message: err
+            message: "북마크 조회에 실패하였습니다."
         });
     }
 };
@@ -104,5 +104,5 @@ async function profileUpdate(req, res) {
 module.exports = {
     profileGet,
     myBookmark,
-    profileUpdate
+    profileUpdate,
   };

@@ -13,7 +13,7 @@ async function placePosts(req, res) {
   try {
       // 불러올 정보 및 받아올 정보
       const { nickname, profileUrl } = res.locals.user;
-      const { title, content, region, star } = req.body;
+      const { title, content, region, star, location } = req.body;
       const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
       let imageUrl;
       if (req.files.length != 0) {
@@ -34,9 +34,11 @@ async function placePosts(req, res) {
           title,
           content,
           region,
+          location,
           imageUrl: imageUrl,
           star,
-          createdAt: createdAt
+          createdAt: createdAt,
+          location,
       });
       console.log(createdPosts)
 
@@ -61,7 +63,7 @@ async function placeAllGet(req, res) {
             const decodedToken = jwt.decode(authToken, SECRET_KEY);
             const userNickname = decodedToken.nickname
 
-            let placePosts = await placePost.find({}, { updatedAt: 0, _id: 0 });
+            let placePosts = await placePost.find({}, { updatedAt: 0, _id: 0 }).sort({placePostId:-1});
             for(let i = 0; i <placePosts.length ; i++ ){
                 if( placePosts[i].bookmarkUsers.includes(userNickname) ){
                     placePosts[i].bookmarkStatus = true
@@ -73,7 +75,7 @@ async function placeAllGet(req, res) {
             })
         }
 
-        const placePosts = await placePost.find({}, { updatedAt: 0, _id: 0, bookmarkUsers:0 });
+        const placePosts = await placePost.find({}, { updatedAt: 0, _id: 0, bookmarkUsers:0 }).sort({placePostId:-1});
         res.status(200).send({placePosts: placePosts});
     } catch (err) {
         res.status(400).send({
@@ -119,7 +121,7 @@ async function placeGet(req, res) {
 async function placeUpdate(req, res) {
     try {
         const { placePostId } = req.params;
-        const { title, content, region, imageUrl, star } = req.body;
+        const { title, content, region, location, imageUrl, star } = req.body;
         const { nickname } = res.locals.user;
         const placePosts = await placePost.findOne({ placePostId: Number(placePostId) });
         if (nickname !== placePosts.nickname) {
@@ -210,6 +212,7 @@ async function placeBookmark(req, res) {
                 message: "북마크가 해제되었습니다."
             });
         }
+
     } catch (err) {
         res.status(400).send({
             result: "false",

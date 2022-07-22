@@ -14,8 +14,6 @@ async function recruitPosts(req, res) {
   try {
       // 불러올 정보 및 받아올 정보
       const { nickname, profileUrl } = res.locals.user;
-    //   console.log(nickname)
-    //   console.log(profileUrl)
       const { title, content, age, date, time, place } = req.body;
       let status = false;
       const date2 = moment().add('9','h').format('YYYY-MM-DD');
@@ -34,7 +32,6 @@ async function recruitPosts(req, res) {
           status,
           createdAt: createdAt
       });
-    //   console.log(createdPosts)
 
       res.status(200).send({
           result: "true",
@@ -59,7 +56,7 @@ async function recruitAllGet(req, res) {
         const decodedToken = jwt.decode(authToken, SECRET_KEY);
         const userNickname = decodedToken.nickname
         
-        let recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0 }).sort({createdAt:-1})
+        let recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0 }).sort({recruitPostId:-1})
         for(let i = 0; i <recruitPosts.length ; i++ ){         //forEach문? 다른거?로 바꾸면 더 효율 좋나?
             if( recruitPosts[i].bookmarkUsers.includes(userNickname) ){
                 recruitPosts[i].bookmarkStatus = true
@@ -73,7 +70,7 @@ async function recruitAllGet(req, res) {
         }
 
         //case2) 비로그인 일떄 (bookmarkUsers 제외하고 보내기)
-        let recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0, bookmarkUsers:0 }).sort({createdAt:-1})
+        let recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0, bookmarkUsers:0 }).sort({recruitPostId:-1})
         return res.status(200).send({
             recruitPosts
         });
@@ -173,54 +170,65 @@ async function recruitDelete(req, res) {
 
 // 모집 게시글 북마크 표시/해제
 async function recruitBookmark(req, res) {
-    // try {
+    try {
         const { recruitPostId } = req.params;
         const { nickname } = res.locals.user;
         const bookmarkPost = await recruitPost.findOne({ recruitPostId: Number(recruitPostId) });
         const user = await User.findOne({ nickname });
-        console.log(bookmarkPost)
-        if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
-            await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
-            await user.updateOne({ $push: { bookmarkList: recruitPostId }})
-            const markedAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
+        console.log("bookmarkPost정보",bookmarkPost)
+            if(bookmarkPost){
 
-            const addedBookmark = new RecruitBookmark({
-                recruitPostId,
-                nickname : bookmarkPost.nickname,
-                profileUrl : bookmarkPost.profileUrl,
-                title : bookmarkPost.title,
-                content : bookmarkPost.content,
-                age : bookmarkPost.age,
-                date : bookmarkPost.date,
-                time : bookmarkPost.time,
-                place : bookmarkPost.place,
-                status : bookmarkPost.status,
-                bookmarkUsers : bookmarkPost.bookmarkUsers,
-                bookmarkStatus : bookmarkPost.bookmarkStatus,
-                category :bookmarkPost.category,
-                adder : nickname,
-                markedAt : markedAt
-            })
-            await addedBookmark.save()
-            res.status(200).send({
-                   result: "true",
-                   message: "북마크가 표시되었습니다."
-            });
-        } else {
-            await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
-            await user.updateOne({ $pull: { bookmarkList: recruitPostId }})
-            await RecruitBookmark.deleteOne({ $and: [{ nickname }, { recruitPostId }], })
-            res.status(200).send({
-                   result: "true",
-                   message: "북마크가 해제되었습니다."
-            });
-        }
-    // } catch (err) {
-    //     res.status(400).send({
-    //         result: "false",
-    //         message: "게시글 북마크 표시/해제 실패"
-    //     });
-    // }
+                    if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
+                    await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
+                    await user.updateOne({ $push: { bookmarkList: recruitPostId }})
+                    const markedAt = moment().add(9, 'h');
+                    const addedBookmark = new RecruitBookmark({
+                        recruitPostId,
+                        nickname : bookmarkPost.nickname,
+                        profileUrl : bookmarkPost.profileUrl,
+                        title : bookmarkPost.title,
+                        content : bookmarkPost.content,
+                        age : bookmarkPost.age,
+                        date : bookmarkPost.date,
+                        time : bookmarkPost.time,
+                        place : bookmarkPost.place,
+                        status : bookmarkPost.status,
+                        bookmarkUsers : bookmarkPost.bookmarkUsers,
+                        bookmarkStatus : bookmarkPost.bookmarkStatus,
+                        category :bookmarkPost.category,
+                        adder : nickname,
+                        createdAt : bookmarkPost.createdAt,
+                        markedAt : markedAt
+                    })
+                    await addedBookmark.save()
+                    return res.status(200).send({
+                        result: "true",
+                        message: "북마크가 표시되었습니다."
+                    });
+                } else {
+                    await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
+                    await user.updateOne({ $pull: { bookmarkList: recruitPostId }})
+                    await RecruitBookmark.deleteOne({ $and: [{ nickname }, { recruitPostId }], })
+                    return res.status(200).send({
+                        result: "true",
+                        message: "북마크가 해제되었습니다."
+                    });
+                } 
+
+            }else{
+                await RecruitBookmark.deleteOne({ $and: [{ nickname }, { recruitPostId }], })
+                    return res.status(200).send({
+                        result: "true",
+                        message: "북마크가 해제되었습니다."
+                    });
+            }
+        
+    } catch (err) {
+        res.status(400).send({
+            result: "false",
+            message: "게시글 북마크 표시/해제 실패"
+        });
+    }
 }
 
 module.exports = {

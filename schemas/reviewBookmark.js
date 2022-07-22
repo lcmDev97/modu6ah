@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 const ReviewBookmarkSchema = new Schema({
-    reviewPostId: { type: Number, required: true }, 
+    reviewPostId: { type: Number }, 
     nickname: { type: String },
     profileUrl: { type: String },
     title: { type: String, required: true },
@@ -13,7 +13,7 @@ const ReviewBookmarkSchema = new Schema({
     bookmarkUsers: { type: Array, default: [] },
     bookmarkStatus: {type : Boolean , default : false },
     category: { type: Number, default: 3 },
-    createdAt: { type: String },
+    createdAt: { type: String, required: true },
     adder : { type : String, required: true },
     markedAt : { type : Date, required: true },
 });

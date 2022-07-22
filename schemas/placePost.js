@@ -9,13 +9,15 @@ const placePostSchema = new Schema(
         profileUrl: { type: String }, // 게시글 작성자 프로필 이미지
         title: { type: String, required: true }, // 게시글 제목
         content: { type: String, required: true }, // 게시글 내용
-        region: { type: String, required: true }, // 게시글 장소추천 지역
+        region: { type: String, required: true }, // 게시글 장소추천 지역(카카오)
+        location: { type: String, required: true }, // 게시글 장소추천 장소
         imageUrl: { type: Array, required: true }, // 게시글 이미지
         star: { type: String, required: true }, // 게시글 별점
         bookmarkUsers: { type: Array, default: [] }, // 게시글 북마크한 사용자들
         bookmarkStatus: {type : Boolean , default : false }, // 북마크한 상태
         category: { type: Number, default: 2 }, // 게시글 카테고리
-        createdAt: { type: String }
+        createdAt: { type: String, required : true },
+        location : { type: String, required: true }, //상세 주소(직접 수기)
     },
     { timestamps: true } // 게시글 생성 및 수정날짜
 );
