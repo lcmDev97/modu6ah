@@ -3,7 +3,7 @@ const SECRET_KEY = process.env.SECRET_KEY;
 const jwt = require("jsonwebtoken");
 const recruitPost = require("../schemas/recruitPost");
 const recruitComment = require("../schemas/recruitComment");
-const recruitReComment = require("../schemas/recruitReComment");
+const ecruitReComment = require("../schemas/recruitReComment");
 const User = require("../schemas/user");
 const RecruitBookmark = require("../schemas/recruitBookmark");
 const moment = require("moment");
@@ -15,7 +15,6 @@ async function recruitPosts(req, res) {
       const { nickname, profileUrl } = res.locals.user;
       const { title, content, age, date, time, place } = req.body;
       let status = false;
-      const date2 = moment().add('9','h').format('YYYY-MM-DD');
       const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
 
       // 게시글 작성
@@ -25,7 +24,7 @@ async function recruitPosts(req, res) {
           title,
           content,
           age,
-          date: date2,
+          date,
           time,
           place,
           status,
@@ -128,7 +127,7 @@ async function recruitUpdate(req, res) {
             });   
         }
         await recruitPost.updateOne({ recruitPostId }, { $set: { title, content, age, date, time, place, status }});
-        await recruitBookmark.updateMany({recruitPostId}, { $set: { title, content, age, date, time, place, status }} )
+        await RecruitBookmark.updateMany({recruitPostId}, { $set: { title, content, age, date, time, place, status }} )
         return res.status(200).send({
                result: "true",
                message: "게시글이 성공적으로 수정되었습니다."

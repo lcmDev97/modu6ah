@@ -15,9 +15,6 @@ async function reviewPosts(req, res) {
       const { nickname, profileUrl } = res.locals.user;
       const { title, content, url, productType } = req.body;
       const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
-    //   let imageUrl1;
-    //   let imageUrl2;
-    //   let imageUrl3;;
       let imageUrl;
       if (req.files.length != 0) {
           imageUrl = [];
@@ -29,16 +26,7 @@ async function reviewPosts(req, res) {
             "https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png"
           ]
       }
-        // if (req.files.length === 0) {
-        //     return res.status(400).send({ message: "이미지는 최소 1개 이상 등록이 필요합니다."})
-        // }
-        // // imageUrl1 = ''
-        // // imageUrl2 = ''
-        // // imageUrl3 = ''
-        // for (let i = 0; i < req.files.length; i++) {
-        //     (`imageUrl${i+1}`) = req.files[i].transforms[0].location
-        // }
-        
+
       // 게시글 작성
       const createdPosts = await reviewPost.create({
           nickname,
@@ -50,11 +38,10 @@ async function reviewPosts(req, res) {
           productType,
           createdAt: createdAt
       });
-      console.log(createdPosts)
 
-      res.status(200).send({
-          result: "true",
-          message: "게시글이 성공적으로 등록되었습니다."
+      return res.status(200).send({
+             result: "true",
+             message: "게시글이 성공적으로 등록되었습니다."
       });
   } catch (err) {
       res.status(400).send({
@@ -162,22 +149,27 @@ async function reviewDelete(req, res) {
         const { reviewPostId } = req.params;
         const { nickname } = res.locals.user;
         const reviewPosts = await reviewPost.findOne({ reviewPostId: Number(reviewPostId) })
-        console.log(reviewPosts)
-        // const imageUrls = reviewPosts.imageUrl;
+        const imageUrls = reviewPosts.imageUrl;
+        const objectArr = imageUrls.map(imageUrl => {
+            const splited = imageUrl.split('uploadReviewImage');
+            const key = 'uploadReviewImage' + splited[splited.length - 1];
+            return { Key: key }
+        });
+
         if (nickname !== reviewPosts.nickname) {
             return res.status(400).send({
                    result: "false",
                    message: "게시글 삭제 권한 없음"
             });
         }
-        // const objectArr = imageUrls.map(url => {
-        //     const splited = url.split('uploadReviewImage');
-        //     const key = 'uploadReviewImage' + splited[splited.length - 1];
-        //     return { Key: key }
-        // })
-        // await reviewImageDelete(objectArr)
+
         await reviewPost.deleteOne({ reviewPostId });
         await reviewComment.deleteMany({ reviewPostId });
+        await reviewImageDelete(objectArr);
+        return res.status(200).send({
+               result: "true",
+               message: "게시글이 성공적으로 삭제되었습니다."
+     });
 
     } catch (err) {
         res.status(400).send({
