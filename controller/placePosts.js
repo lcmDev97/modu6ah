@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const placePost = require("../schemas/placePost");
 const placeComment = require("../schemas/placeComment");
 const User = require("../schemas/user");
-const PlaceBookmark = require("../schemas/placeBookmark");
+const PlaceBookmarks = require("../schemas/placeBookmark");
 const moment = require("moment");
 const mainMiddleware = require("../middlewares/mainMulter");
 
@@ -129,6 +129,7 @@ async function placeUpdate(req, res) {
             });
         }
         await placePost.updateOne({ placePostId }, { $set: { title, content, region, imageUrl, star }});
+        await PlaceBookmarks.updateMany({ placePostId }, { $set: { title, content, region, imageUrl, star }});
         return res.status(200).send({
                result: "true",
                message: "게시글이 성공적으로 수정되었습니다."
@@ -180,7 +181,7 @@ async function placeBookmark(req, res) {
             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
             await user.updateOne({ $push: { bookmarkList: placePostId }})
             const markedAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
-            const addedBookmark = new PlaceBookmark({
+            const addedBookmark = new PlaceBookmarks({
                 placePostId,
                 nickname : bookmarkPost.nickname,
                 profileUrl : bookmarkPost.profileUrl,
@@ -203,7 +204,7 @@ async function placeBookmark(req, res) {
         } else {
             await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
             await user.updateOne({ $pull: { bookmarkList: placePostId }})
-            await PlaceBookmark.deleteOne({ $and: [{ nickname }, { placePostId }], })
+            await PlaceBookmarks.deleteOne({ $and: [{ nickname }, { placePostId }], })
             res.status(200).send({
                 result: "true",
                 message: "북마크가 해제되었습니다."

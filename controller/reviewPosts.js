@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const reviewPost = require("../schemas/reviewPost");
 const reviewComment = require("../schemas/reviewComment");
 const User = require("../schemas/user");
-const ReviewBookmark = require("../schemas/reviewBookmark");
+const reviewBookmarks = require("../schemas/reviewBookmark");
 const moment = require("moment");
 const { reviewImageDelete } = require("../middlewares/mainMulter");
 
@@ -182,7 +182,7 @@ async function reviewBookmark(req, res) {
             await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
             await user.updateOne({ $push: { bookmarkList: reviewPostId }})
             const markedAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
-            const addedBookmark = new ReviewBookmark({
+            const addedBookmark = new reviewBookmarks({
                 reviewPostId,
                 nickname : bookmarkPost.nickname,
                 profileUrl : bookmarkPost.profileUrl,
@@ -206,7 +206,7 @@ async function reviewBookmark(req, res) {
         } else {
             await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
             await user.updateOne({ $pull: { bookmarkList: reviewPostId }})
-            await ReviewBookmark.deleteOne({ $and: [{ nickname }, { reviewPostId }], })
+            await reviewBookmarks.deleteOne({ $and: [{ nickname }, { reviewPostId }], })
             res.status(200).send({
                 result: "true",
                 message: "북마크가 해제되었습니다."
