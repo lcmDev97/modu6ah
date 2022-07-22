@@ -10,11 +10,9 @@ const moment = require("moment");
 
 // 모집 게시글 작성
 async function recruitPosts(req, res) {
-//   try {
+  try {
       // 불러올 정보 및 받아올 정보
       const { nickname, profileUrl } = res.locals.user;
-    //   console.log(nickname)
-    //   console.log(profileUrl)
       const { title, content, age, date, time, place } = req.body;
       let status = false;
       const date2 = moment().add('9','h').format('YYYY-MM-DD');
@@ -33,18 +31,17 @@ async function recruitPosts(req, res) {
           status,
           createdAt: createdAt
       });
-    //   console.log(createdPosts)
 
       res.status(200).send({
           result: "true",
           message: "게시글이 성공적으로 등록되었습니다."
       });
-//   } catch (err) {
-//       res.status(400).send({
-//           result: "false",
-//           message: "게시글 작성 실패"
-//       });
-//   }
+  } catch (err) {
+      res.status(400).send({
+          result: "false",
+          message: "게시글 작성 실패"
+      });
+  }
 };
 
 // 모집 게시글 전체조회
