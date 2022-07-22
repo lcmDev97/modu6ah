@@ -120,7 +120,7 @@ async function reviewGet(req, res) {
 async function reviewUpdate(req, res) {
     try {
         const { reviewPostId } = req.params;
-        const { title, content, imageUrl, url, productType } = req.body;
+        const { title, content, url, productType } = req.body;
         const { nickname } = res.locals.user;
         const reviewPosts = await reviewPost.findOne({ reviewPostId: Number(reviewPostId) });
 
@@ -130,7 +130,8 @@ async function reviewUpdate(req, res) {
                    message: "게시글 수정 권한 없음"
          });  
         }
-        await reviewPost.updateOne({ reviewPostId }, { $set: { title, content, imageUrl, url, productType }});
+        await reviewPost.updateOne({ reviewPostId }, { $set: { title, content, url, productType }});
+        await reviewBookmarks.updateMany({ reviewPostId }, { $set: { title, content, url, productType }});
         return res.status(200).send({
                result: "true",
                message: "게시글이 성공적으로 수정되었습니다."
