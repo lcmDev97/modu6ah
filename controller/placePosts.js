@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const placePost = require("../schemas/placePost");
 const placeComment = require("../schemas/placeComment");
 const User = require("../schemas/user");
-const PlaceBookmark = require("../schemas/placeBookmark");
+const PlaceBookmarks = require("../schemas/placeBookmark");
 const moment = require("moment");
 const mainMiddleware = require("../middlewares/mainMulter");
 
@@ -130,8 +130,8 @@ async function placeUpdate(req, res) {
                 message: "게시글 수정 권한 없음"
             });
         }
-        await placePost.updateOne({ placePostId }, { $set: { title, content, region, location, imageUrl, star }});
-        await PlaceBookmark.updateMany({ placePostId }, { $set: { title, content, region, location, imageUrl, star }})
+        await placePost.updateOne({ placePostId }, { $set: { title, content, region, imageUrl, star }});
+        await PlaceBookmarks.updateMany({ placePostId }, { $set: { title, content, region, imageUrl, star }});
         return res.status(200).send({
                result: "true",
                message: "게시글이 성공적으로 수정되었습니다."
@@ -178,49 +178,39 @@ async function placeBookmark(req, res) {
         const { nickname } = res.locals.user;
         const bookmarkPost = await placePost.findOne({ placePostId: Number(placePostId) });
         const user = await User.findOne({ nickname });
-        if(bookmarkPost){
-
-            if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
-                await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
-                await user.updateOne({ $push: { bookmarkList: placePostId }})
-                const markedAt = moment().add(9, 'h');
-                const addedBookmark = new PlaceBookmark({
-                    placePostId,
-                    nickname : bookmarkPost.nickname,
-                    profileUrl : bookmarkPost.profileUrl,
-                    title : bookmarkPost.title,
-                    content : bookmarkPost.content,
-                    region : bookmarkPost.region,
-                    imageUrl : bookmarkPost.imageUrl,
-                    star : bookmarkPost.star,
-                    bookmarkUsers : bookmarkPost.bookmarkUsers,
-                    bookmarkStatus : bookmarkPost.bookmarkStatus,
-                    category :bookmarkPost.category,
-                    adder : nickname,
-                    createdAt : bookmarkPost.createdAt,
-                    markedAt : markedAt
-                })
-                await addedBookmark.save()
-                return res.status(200).send({
-                    result: "true",
-                    message: "북마크가 표시되었습니다."
-                });
-            } else {
-                await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
-                await user.updateOne({ $pull: { bookmarkList: placePostId }})
-                await PlaceBookmark.deleteOne({ $and: [{ nickname }, { placePostId }], })
-                return res.status(200).send({
-                    result: "true",
-                    message: "북마크가 해제되었습니다."
-                });
-            }
-
-        }else{
-            await PlaceBookmark.deleteOne({ $and: [{ nickname }, { placePostId }], })
-                return res.status(200).send({
-                    result: "true",
-                    message: "북마크가 해제되었습니다."
-                });
+        console.log(bookmarkPost)
+        if (!bookmarkPost.bookmarkUsers.includes(nickname)) {
+            await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
+            await user.updateOne({ $push: { bookmarkList: placePostId }})
+            const markedAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
+            const addedBookmark = new PlaceBookmarks({
+                placePostId,
+                nickname : bookmarkPost.nickname,
+                profileUrl : bookmarkPost.profileUrl,
+                title : bookmarkPost.title,
+                content : bookmarkPost.content,
+                region : bookmarkPost.region,
+                imageUrl : bookmarkPost.imageUrl,
+                star : bookmarkPost.star,
+                bookmarkUsers : bookmarkPost.bookmarkUsers,
+                bookmarkStatus : bookmarkPost.bookmarkStatus,
+                category :bookmarkPost.category,
+                adder : nickname,
+                markedAt : markedAt
+            })
+            await addedBookmark.save()
+            res.status(200).send({
+                result: "true",
+                message: "북마크가 표시되었습니다."
+            });
+        } else {
+            await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
+            await user.updateOne({ $pull: { bookmarkList: placePostId }})
+            await PlaceBookmarks.deleteOne({ $and: [{ nickname }, { placePostId }], })
+            res.status(200).send({
+                result: "true",
+                message: "북마크가 해제되었습니다."
+            });
         }
 
     } catch (err) {

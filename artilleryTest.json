@@ -1,0 +1,64 @@
+{
+    "config": {
+      "target": "http://localhost:3000",
+      "phases": [
+        {
+          "duration": 60,
+          "arrivalRate": 30
+        }
+      ],
+      
+      "default": {
+        "headers" : {
+          "content-type" : "application/json",
+          "accepts" : "application/json"
+        }
+      }
+    },
+    "scenarios": [
+      {
+        "flow": [
+            {
+                "get": {
+                  "url": "/api/main"
+                }
+              },{
+            "post": {
+              "url": "/api/users/signin",
+              "json": {
+                "email": "jehun@naver.com",
+                "password": "asd123"
+              },
+              "capture":{
+                "json" : "accessToken",
+                "as": "accessToken"
+              }
+            }
+          },{
+            "get": {
+              "url": "/api/recruits"
+            }
+          },{
+            "post": {
+              "url": "/api/recruits",
+              "headers" : {
+                "Authorization" : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuaWNrbmFtZSI6Im5vdHBvc3QxMjMiLCJpYXQiOjE2NTg0ODE0OTIsImV4cCI6MTY1ODQ5NTg5Mn0.Yo8qgc98hasYbAX_rWVJTsQSDDIZjoSguuulNkLTEsY"
+              },
+              "json" : {
+                "title" : "감자",
+                "content" : "artillery테스트중",
+                "age" : "연령무관",
+                "time" : "오전11시부터 오후 4시까지",
+                "date" : "2022-07-24",
+                "place" : "진접"
+              }
+            }
+          },{
+            "get": {
+              "url" : "/api/places"
+            }
+          }
+        ]
+      }
+    ]
+  }

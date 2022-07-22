@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const recruitPost = require("../schemas/recruitPost");
 const recruitComment = require("../schemas/recruitComment");
 const recruitReComment = require("../schemas/recruitReComment");
+
 const User = require("../schemas/user");
 const RecruitBookmark = require("../schemas/recruitBookmark");
 const moment = require("moment");
@@ -116,7 +117,7 @@ async function recruitGet(req, res) {
 
 // 모집 게시글 수정
 async function recruitUpdate(req, res) {
-    try {
+    // try {
         const { recruitPostId } = req.params;
         const { title, content, age, date, time, place, status } = req.body;
         const { nickname } = res.locals.user;
@@ -125,20 +126,20 @@ async function recruitUpdate(req, res) {
             return res.status(400).send({
                    result: "false",
                    message: "게시글 수정 권한 없음"
-            });   
+            });
         }
-        await recruitPost.updateOne({ recruitPostId }, { $set: { title, content, age, date, time, place, status }});
-        await recruitBookmark.updateMany({recruitPostId}, { $set: { title, content, age, date, time, place, status }} )
+        await recruitPost.updateOne({ recruitPostId }, { $set: { title, content, age, date, time, place, status }});    
+        await RecruitBookmark.updateMany({recruitPostId}, { $set: { title, content, age, date, time, place, status }} )
         return res.status(200).send({
                result: "true",
                message: "게시글이 성공적으로 수정되었습니다."
         });
-    } catch (err) {
-        res.status(400).send({
-            result: "false",
-            message: "게시글 수정 실패"
-        });
-    }
+    // } catch (err) {
+    //     res.status(400).send({
+    //         result: "false",
+    //         message: "게시글 수정 실패"
+    //     });
+    // }
 };
 
 // 모집 게시글 삭제(모집 댓글도 같이 삭제)
