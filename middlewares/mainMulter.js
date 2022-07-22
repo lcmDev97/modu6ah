@@ -182,6 +182,6 @@ const reviewImageUpload = multer({
 //     }
 
 exports.placeImageUpload = multer(placeImageUpload);
-// exports.reviewImageUpload = multer(reviewImageUpload);
-exports.reviewImageDelete = reviewImageDelete;
-exports.placeImageDelete = placeImageDelete;
+exports.reviewImageUpload = multer(reviewImageUpload);
+// exports.reviewImageDelete = reviewImageDelete;
+// exports.placeImageDelete = placeImageDelete;
