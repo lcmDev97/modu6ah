@@ -195,7 +195,7 @@ async function recruitBookmark(req, res) {
                 } else {
                     await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
                     await user.updateOne({ $pull: { bookmarkList: recruitPostId }})
-                    await recruitBookmarks.deleteOne({ $and: [{ nickname }, { recruitPostId }], })
+                    await recruitBookmarks.deleteOne({ $and: [{ adder : nickname }, { recruitPostId }], })
                     return res.status(200).send({
                         result: "true",
                         message: "북마크가 해제되었습니다."
@@ -203,7 +203,7 @@ async function recruitBookmark(req, res) {
                 } 
 
             }else{
-                await recruitBookmarks.deleteOne({ $and: [{ nickname }, { recruitPostId }], })
+                await recruitBookmarks.deleteOne({ $and: [{ adder : nickname }, { recruitPostId }], })
                     return res.status(200).send({
                         result: "true",
                         message: "북마크가 해제되었습니다."

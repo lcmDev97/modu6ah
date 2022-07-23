@@ -203,7 +203,7 @@ async function reviewBookmark(req, res) {
             } else {
                 await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
                 await user.updateOne({ $pull: { bookmarkList: reviewPostId }})
-                await reviewBookmarks.deleteOne({ $and: [{ nickname }, { reviewPostId }], })
+                await reviewBookmarks.deleteOne({ $and: [{ adder : nickname }, { reviewPostId }], })
                 return res.status(200).send({
                     result: "true",
                     message: "북마크가 해제되었습니다."
@@ -211,7 +211,7 @@ async function reviewBookmark(req, res) {
             }
 
         }else{
-            await reviewBookmarks.deleteOne({ $and: [{ nickname }, { reviewPostId }], })
+            await reviewBookmarks.deleteOne({ $and: [{ adder : nickname }, { reviewPostId }], })
             return res.status(200).send({
                 result: "true",
                 message: "북마크가 해제되었습니다."
