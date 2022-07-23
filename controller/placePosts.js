@@ -207,7 +207,7 @@ async function placeBookmark(req, res) {
             }
 
         }else{
-            await PlaceBookmark.deleteOne({ $and: [{ nickname }, { placePostId }], })
+            await PlaceBookmarks.deleteOne({ $and: [{ nickname }, { placePostId }], })
                 return res.status(200).send({
                     result: "true",
                     message: "북마크가 해제되었습니다."
