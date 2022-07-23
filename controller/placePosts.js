@@ -182,6 +182,7 @@ async function placeBookmark(req, res) {
                     title : bookmarkPost.title,
                     content : bookmarkPost.content,
                     region : bookmarkPost.region,
+                    location: bookmarkPost.location,
                     imageUrl : bookmarkPost.imageUrl,
                     star : bookmarkPost.star,
                     bookmarkUsers : bookmarkPost.bookmarkUsers,
@@ -196,6 +197,7 @@ async function placeBookmark(req, res) {
                     result: "true",
                     message: "북마크가 표시되었습니다."
                 });
+
             } else {
                 await bookmarkPost.updateOne({ $pull: { bookmarkUsers: nickname }});
                 await user.updateOne({ $pull: { bookmarkList: placePostId }})
