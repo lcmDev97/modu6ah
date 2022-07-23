@@ -179,7 +179,7 @@ async function reviewBookmark(req, res) {
                 await bookmarkPost.updateOne({ $push: { bookmarkUsers: nickname }});
                 await user.updateOne({ $push: { bookmarkList: reviewPostId }})
                 const markedAt = moment().add(9, 'h');
-                const addedBookmark = new ReviewBookmark({
+                const addedBookmark = new reviewBookmarks({
                     reviewPostId,
                     nickname : bookmarkPost.nickname,
                     profileUrl : bookmarkPost.profileUrl,
