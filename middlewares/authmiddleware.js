@@ -71,7 +71,7 @@ module.exports = (req, res, next) => {
     }
   } catch (err) {
     res.status(401).send({
-      result : true,
+      result : false,
       message : "로그인후 사용해 주세요",
     });
   }
