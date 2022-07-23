@@ -87,27 +87,13 @@ async function placeAllGet(req, res) {
 // 장소추천 게시글 상세조회
 async function placeGet(req, res) {
     try {
-        const { authorization } = req.headers;
         const { placePostId } = req.params;
         const [placeDetails] = await placePost.find({ placePostId: Number(placePostId) }, { _id: 0 });
         const placeComments = await placeComment.find({ placePostId: Number(placePostId) }, { _id: 0 }).sort({ placeCommentId: -1 });
         if (!placeDetails) {
-            return res.status(400).send({ result: "false", message: "게시글이 없습니다."});
+            return res.status(400).send({ result: "false", message: "게시글이 존재하지 않습니다."});
         }
-        //case1) 로그인 되어있을떄
-        if(authorization){
-            const [authType, authToken] = authorization.split(" ");
-            const decodedToken = jwt.decode(authToken, SECRET_KEY);
-            const userNickname = decodedToken.nickname
-
-            if( placeDetails.bookmarkUsers.includes(userNickname)){
-                placeDetails.bookmarkStatus = true
-            }
-            return res.status(200).send({ placeDetails, placeComments });
-        }
-        //case2) 비로그인 일떄
         return res.status(200).send({ placeDetails, placeComments });
-        
     } catch (err) {
         res.status(400).send({
             result: "false",
