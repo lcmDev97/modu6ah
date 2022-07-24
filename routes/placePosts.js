@@ -14,7 +14,7 @@ router.get("/places", placePostsController.placeAllGet);
 router.get("/places/:placePostId", placePostsController.placeGet);
 
 // 장소추천 게시글 수정
-router.put("/places/:placePostId", authMiddleware, placePostsController.placeUpdate);
+router.put("/places/:placePostId", authMiddleware, placeImageUpload.array('imageUrl', 3), placePostsController.placeUpdate);
 
 // 장소추천 게시글 삭제
 router.delete("/places/:placePostId", authMiddleware, placePostsController.placeDelete);
