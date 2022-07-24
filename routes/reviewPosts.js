@@ -14,7 +14,7 @@ router.get("/reviews", reviewPostsController.reviewAllGet);
 router.get("/reviews/:reviewPostId", reviewPostsController.reviewGet);
 
 // 육아용품 리뷰 게시글 수정
-router.put("/reviews/:reviewPostId", authMiddleware, reviewPostsController.reviewUpdate);
+router.put("/reviews/:reviewPostId", authMiddleware, reviewImageUpload.array('imageUrl', 3), reviewPostsController.reviewUpdate);
 
 // 육아용품 리뷰 게시글 삭제
 router.delete("/reviews/:reviewPostId", authMiddleware, reviewPostsController.reviewDelete);

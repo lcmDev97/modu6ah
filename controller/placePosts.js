@@ -109,18 +109,39 @@ async function placeUpdate(req, res) {
         const { title, content, region, location, star } = req.body;
         const { nickname } = res.locals.user;
         const placePosts = await placePost.findOne({ placePostId: Number(placePostId) });
+        let imageUrl;
+        const imageUrls = placePosts.imageUrl;
+        const objectArr = imageUrls.map(imageUrl => {
+            const splited = imageUrl.split('uploadPlaceImage');
+            const key = 'uploadPlaceImage' + splited[splited.length - 1];
+            return { Key: key }
+        });
+        
         if (nickname !== placePosts.nickname) {
             return res.status(400).send({
                 result: "false",
                 message: "게시글 수정 권한 없음"
             });
         }
-        await placePost.updateOne({ placePostId }, { $set: { title, content, region, location, star }});
-        await PlaceBookmarks.updateMany({ placePostId }, { $set: { title, content, region, location, star }});
-        return res.status(200).send({
-               result: "true",
-               message: "게시글이 성공적으로 수정되었습니다."
-        });
+
+        // req.file이 있을 때
+        if (req.files.length != 0) {
+            imageUrl = [];
+            for (let i = 0; i < req.files.length; i++) {
+                imageUrl.push(req.files[i].transforms[0].location);
+            }
+            await placePost.updateOne({ placePostId }, { $set: { title, content, region, location, star, imageUrl: imageUrl }});
+            await PlaceBookmarks.updateMany({ placePostId }, { $set: { title, content, region, location, star, imageUrl: imageUrl }});
+            await placeImageDelete(objectArr);
+            return res.status(200).send({ result: "true", message: "게시글이 성공적으로 수정되었습니다."})
+        //  req.file이 없을 때
+        } else {
+            let imageUrl = placePosts.imageUrl;
+            await placePost.updateOne({ placePostId }, { $set: { title, content, region, location, star, imageUrl }});
+            await PlaceBookmarks.updateMany({ placePostId }, { $set: { title, content, region, location, star, imageUrl }});
+            return res.status(200).send({ result: "true", message: "게시글이 성공적으로 수정되었습니다."})
+        }
+
     } catch (err) {
         res.status(400).send({
             result: "false",
@@ -134,7 +155,7 @@ async function placeDelete(req, res) {
     try {
         const { placePostId } = req.params;
         const { nickname } = res.locals.user;
-        const placePosts = await placePost.findOne({ placePostId: Number(placePostId) })
+        const placePosts = await placePost.findOne({ placePostId: Number(placePostId) });
         const imageUrls = placePosts.imageUrl;
         const objectArr = imageUrls.map(imageUrl => {
             const splited = imageUrl.split('uploadPlaceImage');

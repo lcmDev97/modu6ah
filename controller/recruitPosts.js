@@ -107,6 +107,7 @@ async function recruitUpdate(req, res) {
         const { recruitPostId } = req.params;
         const { title, content, age, date, time, place, status } = req.body;
         const { nickname } = res.locals.user;
+        const date2 = date.split('T')[0]
         const recruitPosts = await recruitPost.findOne({ recruitPostId: Number(recruitPostId) });
         if (nickname !== recruitPosts.nickname) {
             return res.status(400).send({
@@ -114,8 +115,8 @@ async function recruitUpdate(req, res) {
                    message: "게시글 수정 권한 없음"
             });
         }
-        await recruitPost.updateOne({ recruitPostId }, { $set: { title, content, age, date, time, place, status }});
-        await recruitBookmarks.updateMany({recruitPostId}, { $set: { title, content, age, date, time, place, status }} )
+        await recruitPost.updateOne({ recruitPostId }, { $set: { title, content, age, date: date2, time, place, status }});
+        await recruitBookmarks.updateMany({recruitPostId}, { $set: { title, content, age, date: date2, time, place, status }} )
         return res.status(200).send({
                result: "true",
                message: "게시글이 성공적으로 수정되었습니다."
