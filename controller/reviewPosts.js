@@ -207,8 +207,6 @@ async function reviewBookmark(req, res) {
                     url : bookmarkPost.url,
                     productType : bookmarkPost.productType,
                     imageUrl : bookmarkPost.imageUrl,
-                    bookmarkUsers : bookmarkPost.bookmarkUsers,
-                    bookmarkStatus : bookmarkPost.bookmarkStatus,
                     category :bookmarkPost.category,
                     createdAt : bookmarkPost.createdAt,
                     adder : nickname,

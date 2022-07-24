@@ -35,20 +35,8 @@ async function myBookmark(req, res) {
     try {
         const { nickname } = res.locals.user;
         const recruitBookmarkList = await RecruitBookmark.find({ adder:nickname }).sort({markedAt:-1})
-        for(let i = 0; i <recruitBookmarkList.length ; i++ ){
-            recruitBookmarkList[i].bookmarkStatus = true
-            recruitBookmarkList[i].bookmarkUsers = null
-        }
         const placeBookmarkList = await PlaceBookmark.find({ adder:nickname }).sort({markedAt:-1})
-        for(let i = 0; i <placeBookmarkList.length ; i++ ){
-            placeBookmarkList[i].bookmarkStatus = true
-            placeBookmarkList[i].bookmarkUsers = null
-        }
         const reviewBookmarkList = await ReviewBookmark.find({ adder:nickname }).sort({markedAt:-1})
-        for(let i = 0; i <reviewBookmarkList.length ; i++ ){
-            reviewBookmarkList[i].bookmarkStatus = true
-            reviewBookmarkList[i].bookmarkUsers = null
-        }
 
         return res.send({ 
             result : true,

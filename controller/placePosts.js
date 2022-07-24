@@ -206,8 +206,6 @@ async function placeBookmark(req, res) {
                     location: bookmarkPost.location,
                     imageUrl : bookmarkPost.imageUrl,
                     star : bookmarkPost.star,
-                    bookmarkUsers : bookmarkPost.bookmarkUsers,
-                    bookmarkStatus : bookmarkPost.bookmarkStatus,
                     category :bookmarkPost.category,
                     adder : nickname,
                     createdAt : bookmarkPost.createdAt,

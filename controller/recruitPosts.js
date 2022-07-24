@@ -181,8 +181,6 @@ async function recruitBookmark(req, res) {
                         time : bookmarkPost.time,
                         place : bookmarkPost.place,
                         status : bookmarkPost.status,
-                        bookmarkUsers : bookmarkPost.bookmarkUsers,
-                        bookmarkStatus : bookmarkPost.bookmarkStatus,
                         category :bookmarkPost.category,
                         adder : nickname,
                         createdAt : bookmarkPost.createdAt,
