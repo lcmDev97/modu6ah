@@ -6,9 +6,7 @@ const cors = require("cors");
 const connect = require("./database/database.js");
 const morgan = require("morgan");
 const helmet = require("helmet");
-const passport = require("passport");
 const session = require("express-session");
-const passportConfig = require("./passport");
 const cookieParser = require("cookie-parser");
 // const swaggerUi = require("swagger-ui-express");
 // const swaggerFile = require("./swagger-output");
@@ -56,8 +54,6 @@ app.use(
         },
     })
 );
-app.use(passport.initialize());
-app.use(passport.session());
 
 // 구현 완료 후 라우터 정리
 app.use(
