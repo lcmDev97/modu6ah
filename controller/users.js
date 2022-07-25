@@ -9,57 +9,59 @@ const REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY;
 const mailer = require('nodemailer')
 
 async function sendMail(req, res, next) {
+  try{
+    if(!req.body.email){
+        return res.status(400).json({
+          result : false,
+          message : "인증코드를 수신할 이메일을 입력해 주세요"
+        })
+      }
+      const transporter = mailer.createTransport({
+        service: 'naver',
+        host: 'smtp.naver.com',  // SMTP 서버명
+        port: 465,  // SMTP 포트
+        auth: {
+          user: process.env.NODEMAILER_USER,  // 네이버 아이디
+          pass: process.env.NODEMAILER_PASS,  // 네이버 비밀번호
+        },
+      });
 
-  if(!req.body.email){
+      const generateRandom = function (min, max) {
+        let ranNum = Math.floor(Math.random()*(max-min+1)) + min;
+        return ranNum;
+      }
+
+      let authCode = generateRandom(111111,999999)
+      const mailOptions = {
+        from: "dlckdals04@naver.com",  // 네이버 아이디
+        to: req.body.email,  // 수신자 아이디
+        subject: '모두의 육아 회원가입 인증 코드입니다.',
+        text: "오른쪽 숫자 6자리를 입력해주세요 : "+authCode
+      };
+
+      transporter.sendMail(mailOptions, function (err, info) {
+        if (err) {
+          console.log(err);
+          return res.status(400).json({
+            result : false,
+            message : err
+          })
+        } else {
+          transporter.close()
+          return res.json({
+            result : true,
+            message : "입력된 이메일로 인증 코드가 전송되었습니다.",
+            authCode : authCode
+          })
+        }
+    });
+  }catch(err){
     return res.status(400).json({
       result : false,
-      message : "인증코드를 수신할 이메일을 입력해 주세요"
+      message : "인증 코드 전송에 실패하였습니다."
     })
   }
-  
-  
-  const transporter = mailer.createTransport({
-    service: 'naver',
-    host: 'smtp.naver.com',  // SMTP 서버명
-    port: 465,  // SMTP 포트
-    auth: {
-      user: process.env.NODEMAILER_USER,  // 네이버 아이디
-      pass: process.env.NODEMAILER_PASS,  // 네이버 비밀번호
-    },
-  });
-  
-  const generateRandom = function (min, max) {
-    let ranNum = Math.floor(Math.random()*(max-min+1)) + min;
-    return ranNum;
-  }
-  let authCode = generateRandom(111111,999999)
-
-  const mailOptions = {
-    from: "dlckdals04@naver.com",  // 네이버 아이디
-    to: req.body.email,  // 수신자 아이디
-    subject: '모두의 육아 회원가입 인증 코드입니다.',
-    text: "오른쪽 숫자 6자리를 입력해주세요 : "+authCode 
-  };
-  console.log("회원가입 인증 코드",authCode)
-  // 두번째 인자로 콜백 함수를 넣어주면 await x
-  transporter.sendMail(mailOptions, function (err, info) {
-    if (err) {
-      console.log(err);
-      return res.status(400).json({
-        result : false,
-        message : err
-      })
-    } else {
-      console.log('Successfully Send Email.', info.response);
-      transporter.close()
-      return res.json({
-        result : true,
-        message : "입력된 이메일로 인증 코드가 전송되었습니다.",
-        authCode : authCode
-      })
-    }
-  });
-
+ 
 
 }
 
