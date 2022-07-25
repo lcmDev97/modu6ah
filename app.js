@@ -27,10 +27,8 @@ const mypagesRouter = require("./routes/mypages");
 const chatRoomsRouter = require("./routes/chatRooms");
 const chatMessagesRouter = require("./routes/chatMessages");
 const usersRouter = require("./routes/users");
-const mainRouter = require("./routes/mains")
-const searchRouter = require("./routes/searchs")
-
-passportConfig();
+const mainRouter = require("./routes/mains");
+const searchRouter = require("./routes/searchs");
 
 const corsOptions = {
     origin: ["http://localhost:3000", "http://mountaingo.s3-website.ap-northeast-2.amazonaws.com"], // 허가 요청 주소
