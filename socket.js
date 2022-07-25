@@ -1,4 +1,7 @@
 // 초기 세팅
+require("dotenv").config();
+const app = require("./app");
+const server = require('http').createServer(app);
 const socketIO = require('socket.io');
 
 // DB
@@ -7,14 +10,12 @@ const chatMessage = require("./schemas/chatMessage");
 const User = require("./schemas/user");
 
 // 소켓
-module.exports = (server) => {
-    const io = socketIO(server, {
-        path: '/socket.io',
+const io = socketIO(server, {
         cors: {
             origin: ["http://localhost:3000", "http://mountaingo.s3-website.ap-northeast-2.amazonaws.com"],
             credentials: true,
         }
-    });
+});
 
     // 연결 시작
     io.on("connection", (socket) => {
@@ -53,10 +54,5 @@ module.exports = (server) => {
             console.log("User Disconnected", socket.id);
         });
     });
-};
 
-        // 메시지 알림(메시지 전송시 senderNick,)
-        // socket.on("notify", (data) => {
-        //     socket.broadcast.to(data.roomId).emit(data)
-        //     console.log(`${data.senderNick}님이 메시지를 보냈습니다.`);
-        // })
+module.exports = { server };
