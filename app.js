@@ -11,11 +11,6 @@ const cookieParser = require("cookie-parser");
 // const swaggerUi = require("swagger-ui-express");
 // const swaggerFile = require("./swagger-output");
 
-// 소켓 관련 모듈
-const http = require('http');
-const socket = require('./socket');
-connect();
-
 //라우터
 const recruitPostsRouter = require("./routes/recruitPosts");
 const recruitCommentsRouter = require("./routes/recruitComments");
@@ -87,7 +82,4 @@ app.use((error, req, res, next) => {
     res.status(500).send("서버에 에러가 발생하였습니다.");
 });
 
-const server = http.createServer(app);
-socket(server);
-
-module.exports = server;
+module.exports = app;

@@ -73,7 +73,7 @@ async function chatRoomsAllGet(req, res) {
             {nickname: nickname},
             {postNickname: nickname}
             ]
-        })
+        }).sort({ createdAt: -1 })
         
         // .populate('chatMessage');
         // console.log(chatRoomList);
