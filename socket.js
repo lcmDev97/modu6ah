@@ -11,8 +11,8 @@ module.exports = (server) => {
     const io = socketIO(server, {
         path: '/socket.io',
         cors: {
-            origin: '*',
-            methods: ["GET", "POST"],
+            origin: ["http://localhost:3000", "http://mountaingo.s3-website.ap-northeast-2.amazonaws.com"],
+            credentials: true,
         }
     });
 
