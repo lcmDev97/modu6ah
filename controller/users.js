@@ -3,7 +3,6 @@ const User = require("../schemas/user");
 const jwt = require("jsonwebtoken");
 const Joi = require("joi");
 const Bcrypt = require("bcrypt");
-const passport = require("passport");
 const SALT_NUM = process.env.SALT_NUM;
 const SECRET_KEY = process.env.SECRET_KEY;
 const REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY;
