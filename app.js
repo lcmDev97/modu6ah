@@ -2,7 +2,6 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const PORT = process.env.PORT;
 const cors = require("cors");
 const connect = require("./database/database.js");
 const morgan = require("morgan");
@@ -92,8 +91,4 @@ app.use((error, req, res, next) => {
 const server = http.createServer(app);
 socket(server);
 
-server.listen(PORT, () => {
-    console.log(`${PORT}번 포트로 서버가 열렸습니다.`);
-});
-
-// module.exports = app;
+module.exports = server;

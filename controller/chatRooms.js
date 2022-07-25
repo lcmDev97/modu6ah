@@ -73,7 +73,6 @@ async function chatRoomsAllGet(req, res) {
             {nickname: nickname},
             {postNickname: nickname}
             ]
-            ,outUsers: { $ne: nickname } // outUsers에 nickname이 아닌 경우 chatRoom 조회X
         })
         
         // .populate('chatMessage');

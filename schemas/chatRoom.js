@@ -9,7 +9,6 @@ const chatRoomSchema = new Schema(
         nickname: { type: String },
         postNickname: { type: String },
         postTitle: { type: String },
-        outUsers: { type: Array, default: [] },
         profileUrl: { type: String }, // nickname의 profileUrl
         createdAt: { type: String }
     },
