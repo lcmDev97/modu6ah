@@ -10,6 +10,7 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 // const swaggerUi = require("swagger-ui-express");
 // const swaggerFile = require("./swagger-output");
+connect();
 
 //라우터
 const recruitPostsRouter = require("./routes/recruitPosts");
