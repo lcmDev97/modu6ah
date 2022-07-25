@@ -16,6 +16,7 @@ router.post('/kakao/member', userController.kakao_member);
 
 router.post('/kakao/parsing', userController.kakao_parsing);
 
+router.post('/signup/authMail', userController.sendMail)
 
 
 
