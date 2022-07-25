@@ -30,9 +30,16 @@ const usersRouter = require("./routes/users");
 const mainRouter = require("./routes/mains")
 const searchRouter = require("./routes/searchs")
 
+passportConfig();
+
+const corsOptions = {
+    origin: ["http://localhost:3000", "http://mountaingo.s3-website.ap-northeast-2.amazonaws.com"], // 허가 요청 주소
+    credentials: true
+}
+
 //미들웨어
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(morgan("tiny"));
 app.use(cookieParser());
