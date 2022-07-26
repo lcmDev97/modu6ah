@@ -7,6 +7,7 @@ const User = require("../schemas/user");
 const reviewBookmarks = require("../schemas/reviewBookmark");
 const moment = require("moment");
 const { reviewImageUpload, reviewImageDelete } = require('../middlewares/mainMulter');
+const logger = require("../logger");
 
 // 육아용품 리뷰 게시글 작성
 async function reviewPosts(req, res) {

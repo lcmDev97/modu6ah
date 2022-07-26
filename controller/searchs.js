@@ -2,6 +2,7 @@ require("dotenv").config();
 const recruitPost = require("../schemas/recruitPost");
 const placePost = require("../schemas/placePost");
 const reviewPost = require("../schemas/reviewPost");
+const logger = require("../logger");
 
 // 전체 카테고리에서 검색
 async function searchAll(req, res) {

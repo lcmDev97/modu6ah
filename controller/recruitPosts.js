@@ -8,6 +8,7 @@ const recruitReComment = require("../schemas/recruitReComment");
 const User = require("../schemas/user");
 const recruitBookmarks = require("../schemas/recruitBookmark");
 const moment = require("moment");
+const logger = require("../logger");
 
 // 모집 게시글 작성
 async function recruitPosts(req, res) {

@@ -1,8 +1,10 @@
+require("dotenv").config();
 const reviewPost = require("../schemas/reviewPost"); 
 const reviewComment = require("../schemas/reviewComment");
 const reviewReComment = require("../schemas/reviewReComment");
 const moment = require("moment");
 const User = require("../schemas/user");
+const logger = require("../logger");
 
 // 육아용품 리뷰 댓글 등록
 async function reviewComments(req, res) {

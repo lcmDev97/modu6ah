@@ -1,8 +1,10 @@
+require("dotenv").config();
 const recruitPost = require("../schemas/recruitPost"); 
 const recruitComment = require("../schemas/recruitComment");
 const recruitReComment = require("../schemas/recruitReComment");
 const moment = require("moment");
 const User = require("../schemas/user");
+const logger = require("../logger");
 
 // 모집 댓글 등록
 async function recruitComments(req, res) {
