@@ -8,8 +8,8 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
-// const swaggerUi = require("swagger-ui-express");
-// const swaggerFile = require("./swagger-output");
+const swaggerUi = require("swagger-ui-express");
+const swaggerFile = require("./swagger-output");
 connect();
 
 //라우터
@@ -66,7 +66,7 @@ app.use(
     [searchRouter]
 );
 app.use("/api/users", express.urlencoded({ extended: false }), [usersRouter]);
-// app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile)); // 스웨거 파일
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile)); // 스웨거 파일
 
 app.get("/", (req, res) => {
     res.send("redirect 테스트하기위한 루트 페이지입니다.");

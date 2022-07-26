@@ -9,7 +9,7 @@ const REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY;
 const mailer = require('nodemailer')
 
 async function sendMail(req, res, next) {
-  try{
+  // try{
     if(!req.body.email){
         return res.status(400).json({
           result : false,
@@ -55,12 +55,12 @@ async function sendMail(req, res, next) {
           })
         }
     });
-  }catch(err){
-    return res.status(400).json({
-      result : false,
-      message : "인증 코드 전송에 실패하였습니다."
-    })
-  }
+  // }catch(err){
+  //   return res.status(400).json({
+  //     result : false,
+  //     message : "인증 코드 전송에 실패하였습니다."
+  //   })
+  // }
  
 
 }
