@@ -26,7 +26,6 @@ async function recruitComments(req, res) {
             comment : comment,
             createdAt : createdAt
         });
-        console.log(recruitComments)
   
         res.status(200).send({
             result: "true",
@@ -41,6 +40,7 @@ async function recruitComments(req, res) {
         }
     } 
     catch (err) {
+        logger.error("댓글 작성 실패")
         res.status(400).send({
             result: "false",
             message: "댓글 작성 실패"
@@ -85,9 +85,10 @@ async function recruitCommentsDelete(req, res) {
         return res.json({ success: true })
     } 
     catch (err) {
+        logger.error("모집 댓글 삭제 실패")
         res.status(400).send({
             result: "false",
-            message: "알 수 없는 에러가 발생하였습니다"
+            message: "모집 댓글 삭제 실패"
         });
 }};
 
