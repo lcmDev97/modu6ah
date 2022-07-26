@@ -239,8 +239,8 @@ async function signin(req, res, next) {
         const refreshToken = jwt.sign({}, REFRESH_SECRET_KEY, {
             expiresIn: "14d",
         });
-        console.log("accessToken이 생성되었습니다.", accessToken);
-        console.log("refreshToken이 생성되었습니다.", refreshToken);
+        // console.log("accessToken이 생성되었습니다.", accessToken);
+        logger.info(`${nickname} logged in.`)
         await User.updateOne(
             { nickname: user.nickname },
             { refreshToken: refreshToken }

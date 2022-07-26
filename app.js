@@ -75,6 +75,7 @@ app.get("/", (req, res) => {
 
 // 없는 url로 요청한 경우
 app.use((req, res, next) => {
+    logger.error("존재하지 않는 url주소 입니다.")
     res.status(404).send("존재하지 않는 url주소 입니다.");
 });
 
