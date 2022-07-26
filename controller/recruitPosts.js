@@ -18,7 +18,12 @@ async function recruitPosts(req, res) {
       let status = false;
       const date2 = date.split('T')[0]
       const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
-
+        if( !title || !content || !age || !date || !time || !place ){
+            return res.json({
+                result : false,
+                message : "빈값이 존재합니다."
+            })
+        }
       // 게시글 작성
       const createdPosts = await recruitPost.create({
           nickname,
