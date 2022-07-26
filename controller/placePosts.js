@@ -19,7 +19,10 @@ async function placePosts(req, res) {
       let imageUrl;
       
       if( !title || !content || !region || !star || !location ){
-          return res.json({ result : false, message : "빈값이 존재합니다." }) 
+          return res.json({
+              result : false, 
+              message : "빈값이 존재합니다." 
+            }) 
       }
       
       if (req.files.length != 0) {
