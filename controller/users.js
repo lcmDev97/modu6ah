@@ -72,7 +72,7 @@ async function sendMail(req, res, next) {
 const signUpSchema = Joi.object({
     email : Joi.string().required(),
     nickname: Joi.string().required(),
-    password: Joi.string().pattern(new RegExp("^[0-9A-Za-z]{4,16}$")).required().label("비밀번호는 한글, 영문 대/소문자 4~16자 이여야 합니다."),
+    password: Joi.string().pattern(new RegExp("^[0-9A-Za-z\\d`~!@#$%^&*()-_=+]{4,16}$")).required().label("비밀번호는 한글, 영문 대/소문자 4~16자 이여야 합니다."),
     passwordCheck: Joi.string(),
 });
 // 이메일 조이 스키마
