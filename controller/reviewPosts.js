@@ -45,6 +45,7 @@ async function reviewPosts(req, res) {
              message: "게시글이 성공적으로 등록되었습니다."
       });
   } catch (err) {
+      logger.error("게시글 작성 실패")
       res.status(400).send({
           result: "false",
           message: "게시글 작성 실패"
@@ -78,6 +79,7 @@ async function reviewAllGet(req, res) {
         const reviewPosts = await reviewPost.find({}, { updatedAt: 0, _id: 0,bookmarkUsers:0 }).sort({reviewPostId:-1});
         return res.status(200).send({reviewPosts});
     } catch (err) {
+        logger.error("게시글 전체조회 실패")
         res.status(400).send({
             result: "false",
             message: "게시글 전체조회 실패"
@@ -96,6 +98,7 @@ async function reviewGet(req, res) {
         }
         return res.status(200).send({ reviewDetails, reviewComments });
     } catch (err) {
+        logger.error("게시글 상세조회 실패")
         res.status(400).send({
             result: "false",
             message: "게시글 상세조회 실패"
@@ -143,6 +146,7 @@ async function reviewUpdate(req, res) {
         }
 
     } catch (err) {
+        logger.error("게시글 수정 실패")
         res.status(400).send({
             result: "false",
             message: "게시글 수정 실패"
@@ -179,9 +183,10 @@ async function reviewDelete(req, res) {
      });
 
     } catch (err) {
+        logger.error("육아 게시글 삭제 실패")
         res.status(400).send({
             result: "false",
-            message: "게시글 삭제 실패"
+            message: "육아 게시글 삭제 실패"
         });
     }
 };
@@ -237,9 +242,10 @@ async function reviewBookmark(req, res) {
         }
 
     } catch (err) {
+        logger.error("육아 게시글 북마크 표시/해제 실패")
         res.status(400).send({
             result: "false",
-            message: "게시글 북마크 표시/해제 실패"
+            message: "육아 게시글 북마크 표시/해제 실패"
         });
     }
 }

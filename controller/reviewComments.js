@@ -44,6 +44,7 @@ async function reviewComments(req, res) {
 
     } 
     catch (err) {
+        logger.error("댓글 작성 실패")
         res.status(400).send({
             result: "false",
             message: "댓글 작성 실패"
@@ -88,9 +89,10 @@ async function reviewCommentsDelete(req, res) {
          
     } 
     catch (err) {
+        logger.error("댓글 삭제 실패")
         res.status(400).send({
             result: "false",
-            message: "알 수 없는 에러가 발생하였습니다"
+            message: "댓글 삭제 실패"
         });
 }};
 
