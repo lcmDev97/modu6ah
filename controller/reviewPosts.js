@@ -16,6 +16,10 @@ async function reviewPosts(req, res) {
       const { nickname, profileUrl } = res.locals.user;
       const { title, content, url, productType } = req.body;
       const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
+      
+      if( !title || !content || !url || !productType ){ 
+        return res.json({ result : false, message : "빈값이 존재합니다." }) 
+      }
       let imageUrl;
       if (req.files.length != 0) {
           imageUrl = [];
