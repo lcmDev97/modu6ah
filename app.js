@@ -8,7 +8,6 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
-const logger = require("./logger");
 // const swaggerUi = require("swagger-ui-express");
 // const swaggerFile = require("./swagger-output");
 connect();
