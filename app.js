@@ -8,6 +8,7 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+const logger = require("./logger");
 // const swaggerUi = require("swagger-ui-express");
 // const swaggerFile = require("./swagger-output");
 connect();
@@ -74,12 +75,13 @@ app.get("/", (req, res) => {
 
 // 없는 url로 요청한 경우
 app.use((req, res, next) => {
+    logger.error("존재하지 않는 url주소 입니다.")
     res.status(404).send("존재하지 않는 url주소 입니다.");
 });
 
 // 서버 에러 핸들링
 app.use((error, req, res, next) => {
-    console.error(error);
+    logger.error(error);
     res.status(500).send("서버에 에러가 발생하였습니다.");
 });
 

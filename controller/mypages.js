@@ -1,3 +1,4 @@
+require("dotenv").config();
 const recruitPost = require("../schemas/recruitPost");
 const placePost = require("../schemas/placePost");
 const reviewPost = require("../schemas/reviewPost");
@@ -9,6 +10,7 @@ const RecruitBookmark = require("../schemas/recruitBookmark");
 const PlaceBookmark = require("../schemas/placeBookmark");
 const ReviewBookmark = require("../schemas/reviewBookmark");
 const { profileUpload, profileDelete } = require('../middlewares/profileMulter');
+const logger = require("../logger");
 
 // 프로필 조회 - 로그인한 사람/안한 사람
 async function profileGet(req, res) {
@@ -23,6 +25,7 @@ async function profileGet(req, res) {
         }
         return res.status(200).send({ mypageGet });
     } catch (err) {
+        logger.error("프로필 조회 실패")
         res.status(400).send({
             result: "false",
             message: "프로필 조회 실패"
@@ -47,6 +50,7 @@ async function myBookmark(req, res) {
         });
 
     } catch (err) {
+        logger.error("북마크 조회 실패")
         res.status(400).send({
             result: "false",
             message: "북마크 조회에 실패하였습니다."
@@ -81,6 +85,7 @@ async function profileUpdate(req, res) {
         }
         
     } catch (err) {
+        logger.error("프로필 수정 실패")
         res.status(400).send({
             result: "false",
             message: "프로필 수정 실패"
