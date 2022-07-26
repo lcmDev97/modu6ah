@@ -63,7 +63,7 @@ module.exports = (req, res, next) => {
     } else {
       const { nickname } = jwt.verify(authToken, SECRET_KEY);
       User.findOne({ nickname }).then((user) => {
-        console.log("여기 지남")
+        // console.log("여기 지남")
         console.log("user정보",user)
         res.locals.user = user;
         next();

@@ -1,12 +1,14 @@
+require("dotenv").config();
 const placePost = require("../schemas/placePost"); 
 const placeComment = require("../schemas/placeComment");
 const placeReComment = require("../schemas/placeReComment");
 const moment = require("moment");
 const User = require("../schemas/user");
+const logger = require("../logger");
 
 // 장소추천 댓글 등록
 async function placeComments(req, res) {
-    // try {
+    try {
         const { nickname, profileUrl } = res.locals.user;
         const { placePostId } = req.params;
         const { comment } = req.body;
@@ -23,8 +25,6 @@ async function placeComments(req, res) {
                 message: "게시글 번호가 없습니다 "
             });
         }
-         
-        // console.log("나와라요"+findPost.placePostId)
 
         // 게시글 작성
         const placeComments = await placeComment.create({
@@ -42,13 +42,14 @@ async function placeComments(req, res) {
         });
 
     } 
-    // catch (err) {
-    //     res.status(400).send({
-    //         result: "false",
-    //         message: "댓글 작성 실패"
-    //     });
-    // }
-// };
+    catch (err) {
+        logger.error("댓글 작성 실패")
+        res.status(400).send({
+            result: "false",
+            message: "댓글 작성 실패"
+        });
+    }
+};
  
 
 // 장소추천 댓글 삭제 

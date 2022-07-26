@@ -4,10 +4,10 @@ const jwt = require("jsonwebtoken");
 const recruitPost = require("../schemas/recruitPost");
 const recruitComment = require("../schemas/recruitComment");
 const recruitReComment = require("../schemas/recruitReComment");
-
 const User = require("../schemas/user");
 const recruitBookmarks = require("../schemas/recruitBookmark");
 const moment = require("moment");
+const logger = require("../logger");
 
 // 모집 게시글 작성
 async function recruitPosts(req, res) {
@@ -38,6 +38,7 @@ async function recruitPosts(req, res) {
           message: "게시글이 성공적으로 등록되었습니다."
       });
   } catch (err) {
+    logger.error("게시글 작성 실패")
       res.status(400).send({
           result: "false",
           message: "게시글 작성 실패"
@@ -76,6 +77,7 @@ async function recruitAllGet(req, res) {
         });
         
     } catch (err) {
+        logger.error("게시글 전체조회 실패")
         res.status(400).send({
             result: "false",
             message: "게시글 전체조회 실패"
@@ -94,6 +96,7 @@ async function recruitGet(req, res) {
         }
         return res.status(200).send({ recruitDetails, recruitComments });
     } catch (err) {
+        logger.error("게시글 상세조회 실패")
         res.status(400).send({
             result: "false",
             message: "게시글 상세조회 실패"
@@ -122,6 +125,7 @@ async function recruitUpdate(req, res) {
                message: "게시글이 성공적으로 수정되었습니다."
         });
     } catch (err) {
+        logger.error("게시글 수정 실패")
         res.status(400).send({
             result: "false",
             message: "게시글 수정 실패"
@@ -148,6 +152,7 @@ async function recruitDelete(req, res) {
                message: "게시글이 성공적으로 삭제되었습니다."
         });
     } catch (err) {
+        logger.error("게시글 삭제 실패")
         res.status(400).send({
             result: "false",
             message: "게시글 삭제 실패"
@@ -210,9 +215,10 @@ async function recruitBookmark(req, res) {
             }
         
     } catch (err) {
+        logger.error("모집 게시글 북마크 표시/해제 실패")
         res.status(400).send({
             result: "false",
-            message: "게시글 북마크 표시/해제 실패"
+            message: "모집 게시글 북마크 표시/해제 실패"
         });
     }
 }

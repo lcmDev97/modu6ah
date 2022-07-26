@@ -7,6 +7,7 @@ const User = require("../schemas/user");
 const PlaceBookmarks = require("../schemas/placeBookmark");
 const moment = require("moment");
 const { placeImageUpload, placeImageDelete } = require("../middlewares/mainMulter");
+const logger = require("../logger");
 
 // 장소추천 게시글 작성
 async function placePosts(req, res) {
@@ -46,6 +47,7 @@ async function placePosts(req, res) {
              message: "게시글이 성공적으로 등록되었습니다."
       });
   } catch (err) {
+      logger.error("게시글 작성 실패")
       res.status(400).send({
           result: "false",
           message: "게시글 작성 실패"
@@ -77,6 +79,7 @@ async function placeAllGet(req, res) {
         const placePosts = await placePost.find({}, { updatedAt: 0, _id: 0, bookmarkUsers:0 }).sort({placePostId:-1});
         res.status(200).send({placePosts: placePosts});
     } catch (err) {
+        logger.error("게시글 전체조회 실패")
         res.status(400).send({
             result: "false",
             message: "게시글 전체조회 실패"
@@ -95,6 +98,7 @@ async function placeGet(req, res) {
         }
         return res.status(200).send({ placeDetails, placeComments });
     } catch (err) {
+        logger.error("게시글 상세조회 실패")
         res.status(400).send({
             result: "false",
             message: "게시글 상세조회 실패"
@@ -143,6 +147,7 @@ async function placeUpdate(req, res) {
         }
 
     } catch (err) {
+        logger.error("게시글 수정 실패")
         res.status(400).send({
             result: "false",
             message: "게시글 수정 실패"
@@ -176,6 +181,7 @@ async function placeDelete(req, res) {
                 message: "게시글이 성공적으로 삭제되었습니다."
         }); 
     } catch (err) {
+        logger.error("게시글 삭제 실패")
         res.status(400).send({
             result: "false",
             message: "게시글 삭제 실패"
@@ -236,6 +242,7 @@ async function placeBookmark(req, res) {
         }
 
     } catch (err) {
+        logger.error("게시글 북마크 표시/해제 실패")
         res.status(400).send({
             result: "false",
             message: "게시글 북마크 표시/해제 실패"

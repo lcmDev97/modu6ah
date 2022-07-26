@@ -7,6 +7,8 @@ const SALT_NUM = process.env.SALT_NUM;
 const SECRET_KEY = process.env.SECRET_KEY;
 const REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY;
 const mailer = require('nodemailer')
+const logger = require("../logger");
+
 
 async function sendMail(req, res, next) {
   // try{
@@ -70,7 +72,7 @@ async function sendMail(req, res, next) {
 const signUpSchema = Joi.object({
     email : Joi.string().required(),
     nickname: Joi.string().required(),
-    password: Joi.string().pattern(new RegExp("^[0-9A-Za-z]{4,16}$")).required().label("비밀번호는 한글, 영문 대/소문자 4~16자 이여야 합니다."),
+    password: Joi.string().pattern(new RegExp("^[0-9A-Za-z\\d`~!@#$%^&*()-_=+]{4,16}$")).required().label("비밀번호는 한글, 영문 대/소문자, 특수문자 조합으로 사용 가능하며, 4~16자 이여야 합니다."),
     passwordCheck: Joi.string(),
 });
 // 이메일 조이 스키마
@@ -237,8 +239,8 @@ async function signin(req, res, next) {
         const refreshToken = jwt.sign({}, REFRESH_SECRET_KEY, {
             expiresIn: "14d",
         });
-        console.log("accessToken이 생성되었습니다.", accessToken);
-        console.log("refreshToken이 생성되었습니다.", refreshToken);
+        // console.log("accessToken이 생성되었습니다.", accessToken);
+        logger.info(`${nickname} logged in.`)
         await User.updateOne(
             { nickname: user.nickname },
             { refreshToken: refreshToken }

@@ -1,8 +1,10 @@
+require("dotenv").config();
 const reviewPost = require("../schemas/reviewPost"); 
 const reviewComment = require("../schemas/reviewComment");
 const reviewReComment = require("../schemas/reviewReComment");
 const moment = require("moment");
 const User = require("../schemas/user");
+const logger = require("../logger");
 
 // 육아용품 리뷰 댓글 등록
 async function reviewComments(req, res) {
@@ -42,6 +44,7 @@ async function reviewComments(req, res) {
 
     } 
     catch (err) {
+        logger.error("댓글 작성 실패")
         res.status(400).send({
             result: "false",
             message: "댓글 작성 실패"
@@ -86,9 +89,10 @@ async function reviewCommentsDelete(req, res) {
          
     } 
     catch (err) {
+        logger.error("댓글 삭제 실패")
         res.status(400).send({
             result: "false",
-            message: "알 수 없는 에러가 발생하였습니다"
+            message: "댓글 삭제 실패"
         });
 }};
 
