@@ -10,7 +10,7 @@ const RecruitBookmark = require("../schemas/recruitBookmark");
 const PlaceBookmark = require("../schemas/placeBookmark");
 const ReviewBookmark = require("../schemas/reviewBookmark");
 const { profileUpload, profileDelete } = require('../middlewares/profileMulter');
-const logger = require("./logger");
+const logger = require("../logger");
 
 // 프로필 조회 - 로그인한 사람/안한 사람
 async function profileGet(req, res) {

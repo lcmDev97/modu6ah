@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const recruitPost = require("../schemas/recruitPost");
 const placePost = require("../schemas/placePost");
 const reviewPost = require("../schemas/reviewPost");
-const logger = require("./logger");
+const logger = require("../logger");
 
 // 메인 페이지 조회
 async function mainPostGet(req, res) {
