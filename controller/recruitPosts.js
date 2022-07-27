@@ -19,7 +19,7 @@ async function recruitPosts(req, res) {
       const date2 = date.split('T')[0]
       const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
         if( !title || !content || !age || !date || !time || !place ){
-            return res.json({
+            return res.status(400).json({
                 result : false,
                 message : "빈값이 존재합니다."
             })
