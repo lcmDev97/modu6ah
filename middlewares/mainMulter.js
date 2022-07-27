@@ -66,7 +66,8 @@ const placeImageUpload = multer({
     }),
     limits: limits,
     fileFilter: fileFilter,
-});
+}
+);
 
 // 장소추천 이미지 삭제
 const placeImageDelete = async objectArr => {
