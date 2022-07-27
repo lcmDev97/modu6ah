@@ -11,58 +11,57 @@ const logger = require("../logger");
 
 // 장소추천 게시글 작성
 async function placePosts(req, res) {
-  try {
-      // 불러올 정보 및 받아올 정보
-      const { nickname, profileUrl } = res.locals.user;
-      const { title, content, region, star, location } = req.body;
-      const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
-      let imageUrl;
-      
-      if( !title || !content || !region || !star || !location ){
-          return res.json({
-              result : false, 
-              message : "빈값이 존재합니다." 
-            }) 
-      }
-      
-      if (req.files.length != 0) {
-          imageUrl = [];
-          for (let i = 0; i < req.files.length; i++) {
-              imageUrl.push(req.files[i].transforms[0].location);
-          }
-      } else {
-          imageUrl = [
-            "https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png"
-          ]
-      }
-
-      // 게시글 작성
-      const createdPosts = await placePost.create({
-          nickname,
-          profileUrl,
-          title,
-          content,
-          region,
-          location,
-          imageUrl: imageUrl,
-          star,
-          createdAt: createdAt,
-          location,
-      });
-
-      return res.status(200).send({
-             result: "true",
-             message: "게시글이 성공적으로 등록되었습니다.",
-             imageUrl
-      });
-  } catch (err) {
-      logger.error("게시글 작성 실패")
-      res.status(400).send({
-          result: "false",
-          message: "게시글 작성 실패"
-      });
-  }
-};
+    try {
+        // 불러올 정보 및 받아올 정보
+        const { nickname, profileUrl } = res.locals.user;
+        const { title, content, region, star, location } = req.body;
+        const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
+        let imageUrl;
+        
+        if( !title || !content || !region || !star || !location ){
+            return res.status(400).json({
+                result : false, 
+                message : "빈값이 존재합니다." 
+              }) 
+        }
+        
+        if (req.files.length != 0) {
+            imageUrl = [];
+            for (let i = 0; i < req.files.length; i++) {
+                imageUrl.push(req.files[i].transforms[0].location);
+            }
+        } else {
+            imageUrl = [
+              "https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png"
+            ]
+        }
+  
+        // 게시글 작성
+        const createdPosts = await placePost.create({
+            nickname,
+            profileUrl,
+            title,
+            content,
+            region,
+            location,
+            imageUrl: imageUrl,
+            star,
+            createdAt: createdAt
+        });
+  
+        return res.status(200).send({
+               result: "true",
+               message: "게시글이 성공적으로 등록되었습니다.",
+               imageUrl
+        });
+    } catch (err) {
+        logger.error("게시글 작성 실패")
+        res.status(400).send({
+            result: "false",
+            message: "게시글 작성 실패"
+        });
+    }
+  };
 
 // 장소추천 게시글 전체조회
 async function placeAllGet(req, res) {
