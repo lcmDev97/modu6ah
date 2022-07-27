@@ -51,6 +51,13 @@
             "get": {
               "url" : "/api/mypage/profile/test1"
             }
+          },{
+            "get": {
+                "url" : "/api/mypage/bookmark",
+                "headers" : {
+                    "Authorization" : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuaWNrbmFtZSI6InRlc3QxIiwiaWF0IjoxNjU4OTQ0MDYyLCJleHAiOjE2NjA2NzIwNjJ9.3ueswtZl7U_ZNLLXJ5uV6PVT1x3c_3DjKRtzsJIkXJg"
+                  }
+            }
           }
         ]
       }
