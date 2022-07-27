@@ -1,0 +1,58 @@
+{
+    "config": {
+      "plugins":{
+        "metrics-by-endpoint" : {}
+      },
+      "target": "http://changmin.shop",
+      "phases": [
+        {
+          "duration": 30,
+          "arrivalRate": 15
+        }
+      ],
+      "payload":{
+        "path" : "title.csv",
+        "fields": [
+          "title"
+        ]
+      },
+      "default": {
+        "headers" : {
+          "content-type" : "application/json",
+          "accepts" : "application/json"
+        }
+      }
+    },
+    
+    "scenarios": [
+      {
+        "flow": [
+            {
+                "get": {
+                  "url": "/api/main"
+                }
+              },{
+            "post": {
+              "url": "/api/users/signin",
+              "json": {
+                "email": "test1@naver.com",
+                "password": "asd123"
+              },
+              "capture":{
+                "json" : "accessToken",
+                "as": "accessToken"
+              }
+            }
+          },{
+            "get": {
+              "url": "/api/recruits"
+            }
+          },{
+            "get": {
+              "url" : "/api/mypage/profile/test1"
+            }
+          }
+        ]
+      }
+    ]
+  }
