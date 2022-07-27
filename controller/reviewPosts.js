@@ -19,7 +19,7 @@ async function reviewPosts(req, res) {
       let imageUrl = req.files;
       
       if( !title || !content || !url || !productType ){ 
-        return res.json({ result : false, message : "빈값이 존재합니다." }) 
+        return res.status(400).json({ result : false, message : "빈값이 존재합니다." }) 
       }
       
       if (req.files.length != 0) {
