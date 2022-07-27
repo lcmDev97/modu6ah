@@ -52,7 +52,8 @@ async function placePosts(req, res) {
 
       return res.status(200).send({
              result: "true",
-             message: "게시글이 성공적으로 등록되었습니다."
+             message: "게시글이 성공적으로 등록되었습니다.",
+             imageUrl
       });
   } catch (err) {
       logger.error("게시글 작성 실패")
