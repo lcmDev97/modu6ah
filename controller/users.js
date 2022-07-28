@@ -11,7 +11,7 @@ const logger = require("../logger");
 
 
 async function sendMail(req, res, next) {
-  // try{
+  try{
     if(!req.body.email){
         return res.status(400).json({
           result : false,
@@ -57,12 +57,12 @@ async function sendMail(req, res, next) {
           })
         }
     });
-  // }catch(err){
-  //   return res.status(400).json({
-  //     result : false,
-  //     message : "인증 코드 전송에 실패하였습니다."
-  //   })
-  // }
+  }catch(err){
+    return res.status(400).json({
+      result : false,
+      message : "인증 코드 전송에 실패하였습니다."
+    })
+  }
  
 
 }
@@ -236,15 +236,9 @@ async function signin(req, res, next) {
         const accessToken = jwt.sign({ nickname: user.nickname }, SECRET_KEY, {
             expiresIn: "6h",
         });
-        const refreshToken = jwt.sign({}, REFRESH_SECRET_KEY, {
-            expiresIn: "14d",
-        });
-        // console.log("accessToken이 생성되었습니다.", accessToken);
+
         logger.info(`${nickname} logged in.`)
-        await User.updateOne(
-            { nickname: user.nickname },
-            { refreshToken: refreshToken }
-        );
+        
         return res.json({
             result: true,
             accessToken,
@@ -274,12 +268,7 @@ async function signin(req, res, next) {
         if (!error && response.statusCode == 200) {
           res.writeHead(200, { 'Content-Type': 'text/json;charset=utf-8' });
           res.end(body);
-
-          // console.log("받아오는 error",error);
-          // console.log("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
-          // console.log("받아오는 response",response);
-          // console.log("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
-          // console.log("받아오는 body값",body);
+          
         } else {
           console.log('error');
           if (response != null) {
@@ -326,7 +315,6 @@ async function signin(req, res, next) {
       }
         // 다른 경우라면,
         // 기존에서 리프레시 토큰만 대체하기
-        // await exUser.update({ refresh_token }, { where: { userEmail } });
         const profileUrl = exUser.profileUrl
         const nickname = exUser.nickname
         const accessToken = jwt.sign({ nickname }, process.env.SECRET_KEY, {
