@@ -217,7 +217,7 @@ async function signup(req, res, next) {
 async function signin(req, res, next) {
     try {
         const { email, password } = req.body;
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ $and: [{ email }, { provider: "local" }], });
         if (!user) {
             return res.status(400).json({
                 result: false,
