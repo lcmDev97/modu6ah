@@ -16,7 +16,6 @@ async function recruitPosts(req, res) {
       const { nickname, profileUrl } = res.locals.user;
       const { title, content, age, date, time, place } = req.body;
       let status = false;
-      const date2 = date.split('T')[0]
       const createdAt = moment().add('9','h').format('YYYY-MM-DD HH:mm');
         if( !title || !content || !age || !date || !time || !place ){
             return res.status(400).json({
@@ -31,7 +30,7 @@ async function recruitPosts(req, res) {
           title,
           content,
           age,
-          date: date2,
+          date,
           time,
           place,
           status,
