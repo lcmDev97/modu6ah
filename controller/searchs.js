@@ -15,16 +15,21 @@ async function searchAll(req, res) {
 
         const { authorization } = req.headers;
         if(authorization){
+            // const nickname = "test1"
             const { nickname } = res.locals.user;
+            console.log("nickname정보",nickname)
+            console.log('req.locals.user정보',res.locals.user)
             let resultsInRecruit = await recruitPost.find({ $or: options }).sort({recruitPostId:-1})
             let resultsInPlace = await placePost.find({ $or: options }).sort({placePostId:-1})
             let resultsInReview = await reviewPost.find({ $or: options }).sort({reviewPostId:-1})
+            console.log("포문전 모집1개만",resultsInRecruit[0])
             for(let i = 0; i <resultsInRecruit.length ; i++ ){
                 if( resultsInRecruit[i].bookmarkUsers.includes(nickname) ){
                     resultsInRecruit[i].bookmarkStatus = true
                 }
                 resultsInRecruit[i].bookmarkUsers = null
             }
+            console.log("포문후 모집1개만",resultsInRecruit[0])
             for(let i = 0; i <resultsInPlace.length ; i++ ){
                 if( resultsInPlace[i].bookmarkUsers.includes(nickname) ){
                     resultsInPlace[i].bookmarkStatus = true
