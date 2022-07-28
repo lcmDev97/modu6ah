@@ -1,4 +1,6 @@
 require("dotenv").config();
+const SECRET_KEY = process.env.SECRET_KEY;
+const jwt = require("jsonwebtoken");
 const recruitPost = require("../schemas/recruitPost");
 const placePost = require("../schemas/placePost");
 const reviewPost = require("../schemas/reviewPost");
@@ -16,9 +18,9 @@ async function searchAll(req, res) {
         const { authorization } = req.headers;
         if(authorization){
             // const nickname = "test1"
-            const { nickname } = res.locals.user;
-            console.log("nickname정보",nickname)
-            console.log('req.locals.user정보',res.locals.user)
+            const [authType, authToken] = authorization.split(" ");
+            const decodedToken = jwt.decode(authToken, SECRET_KEY);
+            const nickname = decodedToken.nickname
             let resultsInRecruit = await recruitPost.find({ $or: options }).sort({recruitPostId:-1})
             let resultsInPlace = await placePost.find({ $or: options }).sort({placePostId:-1})
             let resultsInReview = await reviewPost.find({ $or: options }).sort({reviewPostId:-1})
@@ -66,6 +68,7 @@ async function searchAll(req, res) {
         })
     }
 };
+
 
 // 모집게시글 카테고리에서 검색
 async function searchRecruit(req, res) {
