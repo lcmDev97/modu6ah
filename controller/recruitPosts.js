@@ -62,7 +62,7 @@ async function recruitAllGet(req, res) {
         const userNickname = decodedToken.nickname
         
         let recruitPosts = await recruitPost.find({}, { updatedAt: 0, _id: 0 }).sort({recruitPostId:-1})
-        for(let i = 0; i <recruitPosts.length ; i++ ){         //forEach문? 다른거?로 바꾸면 더 효율 좋나?
+        for(let i = 0; i <recruitPosts.length ; i++ ){
             if( recruitPosts[i].bookmarkUsers.includes(userNickname) ){
                 recruitPosts[i].bookmarkStatus = true
             }
