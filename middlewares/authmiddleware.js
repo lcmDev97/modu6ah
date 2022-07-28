@@ -2,7 +2,6 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const User = require("../schemas/user");
 const SECRET_KEY = process.env.SECRET_KEY;
-const REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY;
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
@@ -37,18 +36,3 @@ module.exports = (req, res, next) => {
     });
   }
 };
-//  유저정보에 토큰도 같이
-function verifyToken(token) {
-  try {
-    return jwt.verify(token, SECRET_KEY);
-  } catch (error) {
-    return error.message;
-  }
-}
-function verifyrefeshToken(refreshtoken) {
-  try {
-    return jwt.verify(refreshtoken, REFRESH_SECRET_KEY);
-  } catch (error) {
-    return error.message;
-  }
-}

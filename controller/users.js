@@ -196,7 +196,6 @@ async function signup(req, res, next) {
             password: hashPassword,
             myComment: "",
             profileUrl: "https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png",
-            refreshToken: "",
             snsId: "",
             provider: "local",
         });
@@ -298,7 +297,6 @@ async function signin(req, res, next) {
           password : process.env.KAKAO_BASIC_PASSWORD,
           myComment : "",
           profileUrl: "https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png",
-          refreshToken : "",
           snsId : snsId,
           provider : "kakao",
         });
