@@ -48,7 +48,7 @@ module.exports = (req, res, next) => {
           const myNewToken = jwt.sign(
             { nickname: user.nickname },
             SECRET_KEY,
-            { expiresIn: "4h" }
+            { expiresIn: "5m" }
           );
           let newToken = {
             nickname,
