@@ -10,6 +10,7 @@ const chatRoomSchema = new Schema(
         postNickname: { type: String },
         postTitle: { type: String },
         profileUrl: { type: String }, // nickname의 profileUrl
+        profileUrlTwo: { type: String }, // postNickname의 profileUrl
         createdAt: { type: String }
     },
     // { timestamps: true }
