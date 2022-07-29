@@ -28,7 +28,7 @@ const mainRouter = require("./routes/mains");
 const searchRouter = require("./routes/searchs");
 
 const corsOptions = {
-    origin: ["http://localhost:3000", "http://mountaingo.s3-website.ap-northeast-2.amazonaws.com"], // 허가 요청 주소
+    origin: ["http://localhost:3000", "https://www.modu6ah.com"], // 허가 요청 주소
     credentials: true
 }
 
