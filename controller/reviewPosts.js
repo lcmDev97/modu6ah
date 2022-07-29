@@ -29,7 +29,7 @@ async function reviewPosts(req, res) {
           }
       } else {
           imageUrl = [
-            "https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png"
+            "https://changminbucket.s3.ap-northeast-2.amazonaws.com/modu6ahBasicProfile.png"
           ]
       }
 
