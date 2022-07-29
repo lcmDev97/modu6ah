@@ -80,7 +80,7 @@ async function profileUpdate(req, res) {
             await placeComment.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location }});
             await reviewComment.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location}});
             await chatRoom.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location }});
-            await chatMessage.updateMany({ nickname }, { $set: { profileUrl: newProfileUrl.transforms[0].location }});
+            await chatMessage.updateMany({ senderNick }, { $set: { profileUrl: newProfileUrl.transforms[0].location }});
             return res.status(200).send({ result: "true", message: "프로필 수정이 완료되었습니다.", profileUrl: newProfileUrl.transforms[0].location, myComment });
         // req.file이 없을 때
         } else {
