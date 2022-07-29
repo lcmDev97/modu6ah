@@ -45,6 +45,7 @@ async function chatRooms(req, res) {
                 nickname,
                 profileUrl,
                 postNickname: existPostId.nickname,
+                profileUrlTwo: existPostId.profileUrl,
                 postTitle: existPostId.title,
                 createdAt: createdAt,
         })
