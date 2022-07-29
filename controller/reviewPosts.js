@@ -119,13 +119,6 @@ async function reviewUpdate(req, res) {
         const { title, content, url, productType } = req.body;
         const { nickname } = res.locals.user;
         const reviewPosts = await reviewPost.findOne({ reviewPostId: Number(reviewPostId) });
-        let imageUrl;
-        const imageUrls = reviewPosts.imageUrl;
-        const objectArr = imageUrls.map(imageUrl => {
-            const splited = imageUrl.split('uploadReviewImage');
-            const key = 'uploadReviewImage' + splited[splited.length - 1];
-            return { Key: key }
-        });
 
         if (nickname !== reviewPosts.nickname) {
             return res.status(400).send({
@@ -133,23 +126,10 @@ async function reviewUpdate(req, res) {
                    message: "게시글 수정 권한 없음"
          });  
         }
-        // req.file이 있을 때
-        if (req.files.length != 0) {
-            imageUrl = [];
-            for (let i = 0; i < req.files.length; i++) {
-              imageUrl.push(req.files[i].transforms[0].location);
-            }
-            await reviewPost.updateOne({ reviewPostId }, { $set: { title, content, url, productType, imageUrl: imageUrl }});
-            await reviewBookmarks.updateMany({ reviewPostId }, { $set: { title, content, url, productType, imageUrl: imageUrl }});
-            await reviewImageDelete(objectArr);
-            return res.status(200).send({ result: "true", message: "게시글이 성공적으로 수정되었습니다."});
-        // req.file이 없을 때
-        } else {
-            let imageUrl = reviewPosts.imageUrl;
-            await reviewPost.updateOne({ reviewPostId }, { $set: { title, content, url, productType, imageUrl }});
-            await reviewBookmarks.updateMany({ reviewPostId }, { $set: { title, content, url, productType, imageUrl }});
-            return res.status(200).send({ result: "true", message: "게시글이 성공적으로 수정되었습니다."})
-        }
+
+        await reviewPost.updateOne({ reviewPostId }, { $set: { title, content, url, productType }});
+        await reviewBookmarks.updateMany({ reviewPostId }, { $set: { title, content, url, productType }});
+        return res.status(200).send({ result: "true", message: "게시글이 성공적으로 수정되었습니다."});
 
     } catch (err) {
         logger.error("게시글 수정 실패")
