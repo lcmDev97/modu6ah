@@ -70,7 +70,7 @@ const profileUpload = multer({
 
 // 프로필 이미지 삭제
 const profileDelete = (profileUrl) => {
-    if (profileUrl === 'https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png')
+    if (profileUrl === 'https://changminbucket.s3.ap-northeast-2.amazonaws.com/modu6ahBasicProfile.png')
         return;
     const filename = profileUrl.split('/')[4];
 

@@ -6,7 +6,7 @@ const UserSchema = new Schema({
     nickname: { type: String, required: true },
     password: { type: String, required: true },
     myComment: { type: String },
-    profileUrl: { type: String, default: 'https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png' },
+    profileUrl: { type: String, default: 'https://changminbucket.s3.ap-northeast-2.amazonaws.com/modu6ahBasicProfile.png' },
     snsId: { type: String },
     provider: { type: String, required: true },
 });

@@ -195,7 +195,7 @@ async function signup(req, res, next) {
             nickname,
             password: hashPassword,
             myComment: "",
-            profileUrl: "https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png",
+            profileUrl: "https://changminbucket.s3.ap-northeast-2.amazonaws.com/modu6ahBasicProfile.png",
             snsId: "",
             provider: "local",
         });
@@ -296,7 +296,7 @@ async function signin(req, res, next) {
           nickname : userNickname + Math.floor(Math.random() * 10000000),
           password : process.env.KAKAO_BASIC_PASSWORD,
           myComment : "",
-          profileUrl: "https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png",
+          profileUrl: "https://changminbucket.s3.ap-northeast-2.amazonaws.com/modu6ahBasicProfile.png",
           snsId : snsId,
           provider : "kakao",
         });
@@ -308,7 +308,7 @@ async function signin(req, res, next) {
         return res.json({
           accessToken,
           nickname,
-          profileUrl : "https://changminbucket.s3.ap-northeast-2.amazonaws.com/basicProfile.png",
+          profileUrl : "https://changminbucket.s3.ap-northeast-2.amazonaws.com/modu6ahBasicProfile.png",
         })
       }
         // 다른 경우라면,
