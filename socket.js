@@ -12,7 +12,7 @@ const User = require("./schemas/user");
 // 소켓
 const io = socketIO(server, {
         cors: {
-            origin: ["http://localhost:3000", "https://www.modu6ah.com"],
+            origin: ["http://localhost:3000", "https://modu6ah.com"],
             credentials: true,
         }
 });
