@@ -19,7 +19,7 @@ const limits = {
     fieldNameSize: 200,
     fieldSize: 5 * 1024 * 1024,
     filedSize: 15 * 1024 * 1024,
-    files: 5
+    files: 1
 }
 
 const fileFilter = (req, file, cb) => {
