@@ -14,6 +14,7 @@ const io = socketIO(server, {
         cors: {
             origin: ["http://localhost:3000", "https://www.modu6ah.com", "https://modu6ah.com"],
             credentials: true,
+            transports: ['websocket'],
         }
 });
 
