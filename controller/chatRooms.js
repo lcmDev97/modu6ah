@@ -83,7 +83,7 @@ async function chatRoomsAllGet(req, res) {
         for (let i = 0; i < chatRoomId.length; i++) {
             let lastChat = '';
 
-            lastChat = await chatMessage.findOne({ roomId: chatRoomId[i] }).sort({ createdAt: -1 })
+            lastChat = await chatMessage.findOne({ roomId: chatRoomId[i] }).sort({ updatedAt: -1 })
             // console.log(lastChat)
             lastChats.push(lastChat);
         }
