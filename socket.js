@@ -13,6 +13,7 @@ const User = require("./schemas/user");
 const io = socketIO(server, {
         cors: {
             origin: ["http://localhost:3000", "https://www.modu6ah.com", "https://modu6ah.com"],
+            methods: ["GET", "POST"],
             credentials: true,
         }
 });
