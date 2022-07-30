@@ -29,7 +29,7 @@ async function mainPostGet(req, res) {
             if( recruitPosts.length !==6 ){
                 remainNum = 6 - recruitPosts.length
             }
-            let truePosts = await recruitPost.find({ status: true }).limit(remainNum).sort({ recruitPostId: -1 })
+            const truePosts = await recruitPost.find({ status: true }).limit(remainNum).sort({ recruitPostId: -1 })
             for(let i = 0; i <truePosts.length ; i++ ){ 
                 if( truePosts[i].bookmarkUsers.includes(userNickname) ){
                     truePosts[i].bookmarkStatus = true

@@ -94,7 +94,7 @@ async function recruitGet(req, res) {
     try {
         const { recruitPostId } = req.params;
         const [recruitDetails] = await recruitPost.find({ recruitPostId: Number(recruitPostId) }, { _id: 0 });
-        const recruitComments = await recruitComment.find({ recruitPostId: Number(recruitPostId) }, { _id: 0 })
+        const recruitComments = await recruitComment.find({ recruitPostId: Number(recruitPostId) }, { _id: 0 }).sort({ recruitCommentId: -1 });
         if (!recruitDetails) {
             return res.status(400).send({ result: "false", message: "게시글이 존재하지 않습니다."});
         }
