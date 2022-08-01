@@ -70,7 +70,7 @@ app.use("/api/users", express.urlencoded({ extended: false }), [usersRouter]);
 // app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile)); // 스웨거 파일
 
 app.get("/", (req, res) => {
-    res.send("redirect 테스트하기위한 루트 페이지입니다.");
+    res.send("redirect 테스트하기위한 루트 페이지입니다.(테스트)");
 });
 
 // 없는 url로 요청한 경우
