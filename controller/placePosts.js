@@ -20,7 +20,7 @@ async function placePosts(req, res) {
         
         if( !title || !content || !region || !star || !location ){
             return res.status(400).json({
-                result : false, 
+                result : false,
                 message : "빈값이 존재합니다." 
               }) 
         }

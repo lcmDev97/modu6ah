@@ -71,7 +71,8 @@ async function chatRoomsAllGet(req, res) {
             $or: [
             {nickname: nickname},
             {postNickname: nickname}
-            ]
+            ],
+            outUsers: { $ne: nickname }
         }).sort({ createdAt: -1 })
         
         // 채팅의 마지막 내용 불러오기(lastChat)
@@ -99,30 +100,47 @@ async function chatRoomsAllGet(req, res) {
 };
 
 // 유저의 특정 채팅방 삭제
-async function chatRoomsDelete(req, res) {
+async function chatRoomsPut(req, res) {
     try {
-        const { nickname } = res.locals.user; // 로그인한 사용자 닉네임
-        const { roomId } = req.params; // 해당 roomId
-        const chatRoomList = await chatRoom.findOne({ roomId: Number(roomId) })
-        // console.log(chatRoomList)
-        if (nickname === chatRoomList.nickname || nickname === chatRoomList.postNickname) {
-            await chatRoomList.deleteOne({ roomId })
-            await chatMessage.deleteMany({ roomId })
-            return res.status(200).send({ result: "true", message: "채팅방이 삭제되었습니다." });
-        } else {
-            return res.status(400).send({ result: "false", message: "채팅방 삭제 권한이 없습니다."})
-        }
-
-    } catch (err) {
-        return res.status(400).send({
-            result: "false",
-            message: "채팅방 삭제 실패"
-        })
-    }
-};
+       const { roomId } = req.params;
+       const { nickname } = res.locals.user;
+       const deleteUser = await chatRoom.findOne({ roomId: Number(roomId) });
+       
+       if (!deleteUser.outUsers.includes(nickname)) {
+           await deleteUser.updateOne({ $push: { outUsers: nickname }});
+           const deleteUsers = await chatRoom.findOne({ roomId });
+           // 채팅방 지우기
+           await chatRoom.deleteOne({ 
+                roomId: Number(roomId),
+                nickname : deleteUsers.outUsers,
+                postNickname : deleteUsers.outUsers, 
+            });     
+            // 채팅내용 지우기 
+           await chatMessage.deleteMany({ 
+                roomId: Number(roomId),
+                senderNick : deleteUsers.outUsers,
+                receiverNick : deleteUsers.outUsers,
+            });  
+           return res.status(200).send({
+               result: "true",
+               message: "채팅방이 삭제되었습니다."
+           });
+       }  else {  
+          return res.status(200).send({
+               result: "true",
+               message: "채팅방이 이미 삭제되었습니다."
+           });
+       }
+   } catch (err) {
+       res.status(400).send({
+           result: "false",
+           message: "채팅방 삭제 실패"
+       });
+   }
+}
 
 module.exports = {
     chatRooms,
     chatRoomsAllGet,
-    chatRoomsDelete, 
+    chatRoomsPut, 
 };

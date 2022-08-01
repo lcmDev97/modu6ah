@@ -10,6 +10,7 @@ const chatMessageSchema = new Schema(
         receiverNick: { type: String },
         message: { type: String },
         time: { type: String },
+        postTitle: { type: String },
         // checkChat: { type: Boolean } // 채팅 읽지 않은 개수 표시해주기 위함
     },
     { timestamps: true }
