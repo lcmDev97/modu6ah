@@ -11,7 +11,8 @@ const chatRoomSchema = new Schema(
         postTitle: { type: String },
         profileUrl: { type: String }, // nickname의 profileUrl
         // profileUrlTwo: { type: String }, // postNickname의 profileUrl
-        createdAt: { type: String }
+        createdAt: { type: String },
+        outUsers: { type: Array, default: [] },
     },
     // { timestamps: true }
 );

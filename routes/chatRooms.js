@@ -10,6 +10,6 @@ router.post("/chats/rooms/:recruitPostId", authMiddleware, chatRoomsController.c
 router.get("/chats/rooms", authMiddleware, chatRoomsController.chatRoomsAllGet);
 
 // 유저의 특정 채팅방 삭제
-router.delete("/chats/rooms/:roomId", authMiddleware, chatRoomsController.chatRoomsDelete);
+router.put("/chats/rooms/:roomId", authMiddleware, chatRoomsController.chatRoomsPut);
 
 module.exports = router;
