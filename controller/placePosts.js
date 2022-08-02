@@ -98,6 +98,24 @@ async function placeAllGet(req, res) {
 // 장소추천 게시글 상세조회
 async function placeGet(req, res) {
     try {
+        const { authorization } = req.headers;
+        if(authorization){
+            const [authType, authToken] = authorization.split(" ");
+            const decodedToken = jwt.decode(authToken, SECRET_KEY);
+            const { nickname } = decodedToken
+
+            const { placePostId } = req.params;
+            const [placeDetails] = await placePost.find({ placePostId: Number(placePostId) }, { _id: 0 });
+            const placeComments = await placeComment.find({ placePostId: Number(placePostId) }, { _id: 0 }).sort({ placeCommentId: -1 });
+            if (!placeDetails) {
+                return res.status(400).send({ result: "false", message: "게시글이 존재하지 않습니다."});
+            }
+            if(placeDetails.bookmarkUsers.includes(nickname)){
+                placeDetails.bookmarkStatus = true
+            }
+            return res.status(200).send({ placeDetails, placeComments });
+            }
+
         const { placePostId } = req.params;
         const [placeDetails] = await placePost.find({ placePostId: Number(placePostId) }, { _id: 0 });
         const placeComments = await placeComment.find({ placePostId: Number(placePostId) }, { _id: 0 }).sort({ placeCommentId: -1 });
@@ -105,6 +123,7 @@ async function placeGet(req, res) {
             return res.status(400).send({ result: "false", message: "게시글이 존재하지 않습니다."});
         }
         return res.status(200).send({ placeDetails, placeComments });
+        
     } catch (err) {
         logger.error("게시글 상세조회 실패")
         res.status(400).send({

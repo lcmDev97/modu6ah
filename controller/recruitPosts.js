@@ -92,13 +92,32 @@ async function recruitAllGet(req, res) {
 // 모집 게시글 상세조회
 async function recruitGet(req, res) {
     try {
-        const { recruitPostId } = req.params;
-        const [recruitDetails] = await recruitPost.find({ recruitPostId: Number(recruitPostId) }, { _id: 0 });
-        const recruitComments = await recruitComment.find({ recruitPostId: Number(recruitPostId) }, { _id: 0 }).sort({ recruitCommentId: -1 });
-        if (!recruitDetails) {
-            return res.status(400).send({ result: "false", message: "게시글이 존재하지 않습니다."});
-        }
-        return res.status(200).send({ recruitDetails, recruitComments });
+        const { authorization } = req.headers;
+        if(authorization){
+            const [authType, authToken] = authorization.split(" ");
+            const decodedToken = jwt.decode(authToken, SECRET_KEY);
+            const { nickname } = decodedToken
+            
+            const { recruitPostId } = req.params;
+            const [recruitDetails] = await recruitPost.find({ recruitPostId: Number(recruitPostId) }, { _id: 0 });
+            const recruitComments = await recruitComment.find({ recruitPostId: Number(recruitPostId) }, { _id: 0 }).sort({ recruitCommentId: -1 });
+            if (!recruitDetails) {
+                return res.status(400).send({ result: "false", message: "게시글이 존재하지 않습니다."});
+            }
+            if(recruitDetails.bookmarkUsers.includes(nickname)){
+                recruitDetails.bookmarkStatus = true
+            }
+            return res.status(200).send({ recruitDetails, recruitComments });
+            }
+
+            const { recruitPostId } = req.params;
+            const [recruitDetails] = await recruitPost.find({ recruitPostId: Number(recruitPostId) }, { _id: 0 });
+            const recruitComments = await recruitComment.find({ recruitPostId: Number(recruitPostId) }, { _id: 0 }).sort({ recruitCommentId: -1 });
+            if (!recruitDetails) {
+                return res.status(400).send({ result: "false", message: "게시글이 존재하지 않습니다."});
+            }
+            return res.status(200).send({ recruitDetails, recruitComments });
+
     } catch (err) {
         logger.error("게시글 상세조회 실패")
         res.status(400).send({
