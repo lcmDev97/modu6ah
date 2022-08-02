@@ -8,6 +8,7 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+const schedule = require("./routes/schedule");
 // const swaggerUi = require("swagger-ui-express");
 // const swaggerFile = require("./swagger-output");
 const logger = require("./logger");
@@ -84,5 +85,7 @@ app.use((error, req, res, next) => {
     logger.error(error);
     res.status(500).send("서버에 에러가 발생하였습니다.");
 });
+
+schedule.schedule_job();
 
 module.exports = app;
