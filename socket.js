@@ -30,15 +30,15 @@ io.on("connection", (socket) => {
     socket.on("join_room", (data) => {
         socket.join(data.roomId); // 해당 roomId 입장
         socket.emit("test", data);
-        console.log(
-            `User with ID: ${socket.id} joined room: ${data.roomId}, ${data.senderNick}`
-        );
+        // console.log(
+        //     `User with ID: ${socket.id} joined room: ${data.roomId}, ${data.senderNick}`
+        // );
     });
 
     // send_message 이벤트 수신(roomId, senderNick, receiverNick, message, profileUrl, profileUrl1, time 받음)
     socket.on("send_message", async (data) => {
         const message = new chatMessage(data); // 받은 메시지 DB 저장
-        console.log(message);
+        // console.log(message);
         message.save().then(() => {
             // 해당 roomId로 receive_message 이벤트 송신(해당 roomId에 접속한 클라이언트에게 메시지 전송)
             io.in(data.roomId).emit("receive_message", {
