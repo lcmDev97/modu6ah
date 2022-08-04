@@ -12,7 +12,6 @@ const logger = require("../logger");
 // 모집 게시글 작성
 async function recruitPosts(req, res) {
     try {
-        // 불러올 정보 및 받아올 정보
         const { nickname, profileUrl } = res.locals.user;
         const { title, content, age, date, time, place } = req.body;
         let status = false;
@@ -55,7 +54,7 @@ async function recruitAllGet(req, res) {
     try {
         const { authorization } = req.headers;
 
-        //case1) 로그인 되어있을떄(포함되어있을경우 bookmarkStatus값만 true로 바꾸고, bookmarkUsers는 배열아닌 null로 바꿔 프론트에 전달 )
+        // case1) 로그인 되어있을떄(포함되어있을경우 bookmarkStatus값만 true로 바꾸고, bookmarkUsers는 배열아닌 null로 바꿔 프론트에 전달 )
         if (authorization) {
             const [authType, authToken] = authorization.split(" ");
             const decodedToken = jwt.decode(authToken, SECRET_KEY);
@@ -76,7 +75,7 @@ async function recruitAllGet(req, res) {
             });
         }
 
-        //case2) 비로그인 일떄 (bookmarkUsers 제외하고 보내기)
+        // case2) 비로그인 일떄 (bookmarkUsers 제외하고 보내기)
         let recruitPosts = await recruitPost
             .find({}, { updatedAt: 0, _id: 0, bookmarkUsers: 0 })
             .sort({ recruitPostId: -1 });

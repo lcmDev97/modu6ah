@@ -11,7 +11,7 @@ async function mainPostGet(req, res) {
     try {
         const { authorization } = req.headers;
 
-        //case1) 로그인 되어있을떄(포함되어있을경우 bookmarkStatus값만 true로 바꾸고, bookmarkUsers는 배열아닌 null로 바꿔 프론트에 전달 )
+        //case1) 로그인 되어있을때(포함되어있을경우 bookmarkStatus값만 true로 바꾸고, bookmarkUsers는 배열아닌 null로 바꿔 프론트에 전달 )
         if (authorization) {
             const [authType, authToken] = authorization.split(" ");
             const decodedToken = jwt.decode(authToken, SECRET_KEY);
@@ -93,7 +93,7 @@ async function mainPostGet(req, res) {
             recruitPosts.push(truePosts[i]);
         }
 
-        //장소추천게시글
+        // 장소추천게시글
         const placePosts = await placePost
             .find({}, { updatedAt: 0, _id: 0, bookmarkUsers: 0 })
             .sort({ star: -1, placePostId: -1 })
