@@ -5,7 +5,8 @@ const recruitPost = require("../schemas/recruitPost");
 module.exports = {
     schedule_job: () => {
         let rule = new schedule.RecurrenceRule();
-        rule.hour = 24;
+        rule.hour = 23;
+        rule.minute = 59;
         schedule.scheduleJob(rule, async () => {
             //매일 24시에 실행될 로직
             let today = new Date();

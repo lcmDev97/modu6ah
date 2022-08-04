@@ -15,7 +15,6 @@ const logger = require("../logger");
 // 장소추천 게시글 작성
 async function placePosts(req, res) {
     try {
-        // 불러올 정보 및 받아올 정보
         const { nickname, profileUrl } = res.locals.user;
         const { title, content, region, star, location } = req.body;
         const createdAt = moment().add("9", "h").format("YYYY-MM-DD HH:mm");

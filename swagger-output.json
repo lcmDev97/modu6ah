@@ -1,0 +1,1271 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "API",
+      "description": "실전프로젝트",
+      "version": "1.0.0"
+    },
+    "host": "localhost:3000",
+    "basePath": "/",
+    "schemes": [
+      "http"
+    ],
+    "paths": {
+      "/api/users/signup": {
+        "post": {
+          "tags": ["회원가입&로그인"],
+          "summary": "회원가입",
+          "description": "회원가입",
+          "parameters": [{
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "test@email.com"
+                },
+                "nickname": {
+                  "example": "tester"
+                },
+                "password": {
+                  "example": "1234"
+                },
+                "passwordCheck": {
+                  "example": "1234"
+                }
+              }
+            }
+          }
+        ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/api/users/signin": {
+        "post": {
+          "tags": ["회원가입&로그인"],
+          "summary": "로그인",
+          "description": "로그인",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "example": "test@email.com"
+                  },
+                  "password": {
+                    "example": "1234"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/api/users/kakao": {
+        "get": {
+          "tags": ["회원가입&로그인"],
+          "summary": "카카오 로그인",
+          "description": "카카오 로그인",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/api/main": {
+        "get": {
+          "tags": ["메인페이지"],
+          "summary": "메인페이지 조회",
+          "description": "메인페이지 조회",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/api/search": {
+        "get": {
+          "tags": ["검색"],
+          "summary": "전체 검색",
+          "description": "전체 검색",
+          "parameters": [
+            {
+              "name": "keyword",
+              "in": "query",
+              "schema": {
+                "type": "string",
+                "description": "키워드"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/api/search/recruits": {
+        "get": {
+          "tags": ["검색"],
+          "summary": "모집 게시글에서만 검색",
+          "description": "모집 게시글에서만 검색",
+          "parameters": [
+            {
+              "name": "keyword",
+              "in": "query",
+              "schema": {
+                "type": "string",
+                "description": "키워드"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/api/search/places": {
+        "get": {
+          "tags": ["검색"],
+          "summary": "장소추천 게시글에서만 검색",
+          "description": "장소추천 게시글에서만 검색",
+          "parameters": [
+            {
+              "name": "keyword",
+              "in": "query",
+              "schema": {
+                "type": "string",
+                "description": "키워드"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/api/search/reviews": {
+        "get": {
+          "tags": ["검색"],
+          "summary": "육아용품 리뷰 게시글에서만 검색",
+          "description": "육아용품 리뷰 게시글에서만 검색",
+          "parameters": [
+            {
+              "name": "keyword",
+              "in": "query",
+              "schema": {
+                "type": "string",
+                "description": "키워드"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/api/recruits": {
+        "post": {
+          "tags": ["모집 게시글"],
+          "summary": "모집 게시글 작성",
+          "description": "모집 게시글 작성",
+          "parameters": [
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "example": "도자기 체험 같이 하실분"
+                  },
+                  "content": {
+                    "example": "아이들과 도자기 체험해요"
+                  },
+                  "age": {
+                    "example": "5세-7세"
+                  },
+                  "date": {
+                    "example": "2022-07-01"
+                  },
+                  "time": {
+                    "example": "12시"
+                  },
+                  "place": {
+                    "example": "경기도 이천시"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        },
+        "get": {
+          "tags": ["모집 게시글"],
+          "summary": "모집 게시글 전체조회",
+          "description": "모집 게시글 전체조회",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/api/recruits/{recruitPostId}": {
+        "get": {
+          "tags": ["모집 게시글"],
+          "summary": "모집 게시글 상세조회",
+          "description": "모집 게시글 상세조회",
+          "parameters": [
+            {
+              "name": "recruitPostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        },
+        "put": {
+          "tags": ["모집 게시글"],
+          "summary": "모집 게시글 수정",
+          "description": "모집 게시글 수정",
+          "parameters": [
+            {
+              "name": "recruitPostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "example": "도자기 체험 같이 하실분(수정)"
+                  },
+                  "content": {
+                    "example": "아이들과 도자기 체험해요(수정)"
+                  },
+                  "age": {
+                    "example": "4세-7세"
+                  },
+                  "date": {
+                    "example": "2022-07-02"
+                  },
+                  "time": {
+                    "example": "13시"
+                  },
+                  "place": {
+                    "example": "경기도 이천시"
+                  },
+                  "status": {
+                    "example": true
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        },
+        "delete": {
+          "tags": ["모집 게시글"],
+          "summary": "모집 게시글 삭제",
+          "description": "모집 게시글 삭제",
+          "parameters": [
+            {
+              "name": "recruitPostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/recruits/bookmark/{recruitPostId}": {
+        "put": {
+          "tags": ["모집 게시글"],
+          "summary": "모집 게시글 북마크 체크/체크해제",
+          "description": "모집 게시글 북마크 체크/체크해제",
+          "parameters": [
+            {
+              "name": "recruitPostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/recruits/{recruitPostId}/comments": {
+        "post": {
+          "tags": ["모집 게시글"],
+          "summary": "모집 게시글 댓글 작성",
+          "description": "모집 게시글 댓글 작성",
+          "parameters": [
+            {
+              "name": "recruitPostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "comment": {
+                    "example": "도자기 체험 가고싶어요"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/recruits/{recruitPostId}/comments/{recruitCommentId}": {
+        "delete": {
+          "tags": ["모집 게시글"],
+          "summary": "모집 게시글 댓글 삭제",
+          "description": "모집 게시글 댓글 삭제",
+          "parameters": [
+            {
+              "name": "recruitPostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "recruitCommentId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/places": {
+        "post": {
+          "tags": ["장소추천 게시글"],
+          "summary": "장소추천 게시글 작성",
+          "description": "장소추천 게시글 작성",
+          "parameters": [
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "example": "춘천 레고랜드"
+                  },
+                  "content": {
+                    "example": "춘천 레고랜드에서 아이들과 함께 놀아요"
+                  },
+                  "region": {
+                    "example": "춘천(카카오지도)"
+                  },
+                  "location": {
+                    "example": "레고렌드"
+                  },
+                  "imageUrl": {
+                    "example": ["aaa.jpg", "bbb.jpg"]
+                  },
+                  "star": {
+                    "example": "4"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        },
+        "get": {
+          "tags": ["장소추천 게시글"],
+          "summary": "장소추천 게시글 전체조회",
+          "description": "장소추천 게시글 전체조회",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/api/places/{placePostId}": {
+        "get": {
+          "tags": ["장소추천 게시글"],
+          "summary": "장소추천 게시글 상세조회",
+          "description": "장소추천 게시글 상세조회",
+          "parameters": [
+            {
+              "name": "placePostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        },
+        "put": {
+          "tags": ["장소추천 게시글"],
+          "summary": "장소추천 게시글 수정",
+          "description": "장소추천 게시글 수정",
+          "parameters": [
+            {
+              "name": "placePostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "example": "춘천 레고랜드(수정)"
+                  },
+                  "content": {
+                    "example": "춘천 레고랜드에서 아이들과 함께 놀아요(수정)"
+                  },
+                  "region": {
+                    "example": "춘천(카카오지도)"
+                  },
+                  "location": {
+                    "example": "레고렌드"
+                  },
+                  "imageUrl": {
+                    "example": ["aaa.jpg", "bbb.jpg"]
+                  },
+                  "star": {
+                    "example": "5"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        },
+        "delete": {
+          "tags": ["장소추천 게시글"],
+          "summary": "장소추천 게시글 삭제",
+          "description": "장소추천 게시글 삭제",
+          "parameters": [
+            {
+              "name": "placePostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/places/bookmark/{placePostId}": {
+        "put": {
+          "tags": ["장소추천 게시글"],
+          "summary": "장소추천 게시글 북마크 체크/체크해제",
+          "description": "장소추천 게시글 북마크 체크/체크해제",
+          "parameters": [
+            {
+              "name": "placePostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/places/{placePostId}/comments": {
+        "post": {
+          "tags": ["장소추천 게시글"],
+          "summary": "장소추천 게시글 댓글 작성",
+          "description": "장소추천 게시글 댓글 작성",
+          "parameters": [
+            {
+              "name": "placePostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "comment": {
+                    "example": "레고랜드 좋네요"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/places/{placePostId}/comments/{placeCommentId}": {
+        "delete": {
+          "tags": ["장소추천 게시글"],
+          "summary": "장소추천 게시글 댓글 삭제",
+          "description": "장소추천 게시글 댓글 삭제",
+          "parameters": [
+            {
+              "name": "placePostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "placeCommentId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/reviews": {
+        "post": {
+          "tags": ["육아용품 리뷰 게시글"],
+          "summary": "육아용품 리뷰 게시글 작성",
+          "description": "육아용품 리뷰 게시글 작성",
+          "parameters": [
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "example": "키즈폰"
+                  },
+                  "content": {
+                    "example": "키즈폰 좋아요"
+                  },
+                  "imageUrl": {
+                    "example": ["aaa.jpg", "bbb.jpg"]
+                  },
+                  "url": {
+                    "example": "www.test.com"
+                  },
+                  "productType": {
+                    "example": "전자제품"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        },
+        "get": {
+          "tags": ["육아용품 리뷰 게시글"],
+          "summary": "육아용품 리뷰 게시글 전체조회",
+          "description": "육아용품 리뷰 게시글 전체조회",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/api/reviews/{reviewPostId}": {
+        "get": {
+          "tags": ["육아용품 리뷰 게시글"],
+          "summary": "육아용품 리뷰 게시글 상세조회",
+          "description": "육아용품 리뷰 게시글 상세조회",
+          "parameters": [
+            {
+              "name": "reviewPostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        },
+        "put": {
+          "tags": ["육아용품 리뷰 게시글"],
+          "summary": "육아용품 리뷰 게시글 수정",
+          "description": "육아용품 리뷰 게시글 수정",
+          "parameters": [
+            {
+              "name": "reviewPostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "example": "키즈폰(수정)"
+                  },
+                  "content": {
+                    "example": "키즈폰 좋아요(수정)"
+                  },
+                  "imageUrl": {
+                    "example": ["aaa.jpg", "bbb.jpg"]
+                  },
+                  "url": {
+                    "example": "www.test.com"
+                  },
+                  "productType": {
+                    "example": "전자제품"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        },
+        "delete": {
+          "tags": ["육아용품 리뷰 게시글"],
+          "summary": "육아용품 리뷰 게시글 삭제",
+          "description": "육아용품 리뷰 게시글 삭제",
+          "parameters": [
+            {
+              "name": "reviewPostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/reviews/bookmark/{reviewPostId}": {
+        "put": {
+          "tags": ["육아용품 리뷰 게시글"],
+          "summary": "육아용품 리뷰 게시글 북마크 체크/체크해제",
+          "description": "육아용품 리뷰 게시글 북마크 체크/체크해제",
+          "parameters": [
+            {
+              "name": "reviewPostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/reviews/{reviewPostId}/comments": {
+        "post": {
+          "tags": ["육아용품 리뷰 게시글"],
+          "summary": "육아용품 리뷰 게시글 댓글 작성",
+          "description": "육아용품 리뷰 게시글 댓글 작성",
+          "parameters": [
+            {
+              "name": "reviewPostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "comment": {
+                    "example": "키즈폰 사고싶어요"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/reviews/{reviewPostId}/comments/{reviewCommentId}": {
+        "delete": {
+          "tags": ["육아용품 리뷰 게시글"],
+          "summary": "육아용품 리뷰 게시글 댓글 삭제",
+          "description": "육아용품 리뷰 게시글 댓글 삭제",
+          "parameters": [
+            {
+              "name": "reviewPostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "reviewCommentId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/mypage/profile/{nickname}": {
+        "get": {
+          "tags": ["마이페이지"],
+          "summary": "마이페이지-프로필 조회",
+          "description": "마이페이지-프로필 조회",
+          "parameters": [
+            {
+              "name": "nickname",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/api/mypage/bookmark": {
+        "get": {
+          "tags": ["마이페이지"],
+          "summary": "마이페이지-북마크한 게시글 조회",
+          "description": "마이페이지-북마크한 게시글 조회",
+          "parameters": [
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/api/mypage/update": {
+        "put": {
+          "tags": ["마이페이지"],
+          "summary": "마이페이지-프로필 수정",
+          "description": "마이페이지-프로필 수정",
+          "parameters": [
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "profileUrl": {
+                    "example": "aaa.jpg"
+                  },
+                  "myComment": {
+                    "example": "제 이름은 test입니다."
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/chats/rooms/{recruitPostId}": {
+        "post": {
+          "tags": ["1:1 문의하기 채팅"],
+          "summary": "채팅방 생성",
+          "description": "채팅방 생성",
+          "parameters": [
+            {
+              "name": "recruitPostId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/chats/rooms": {
+        "get": {
+          "tags": ["1:1 문의하기 채팅"],
+          "summary": "유저의 채팅방 목록 전체조회",
+          "description": "유저의 채팅방 목록 전체조회",
+          "parameters": [
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/chats/messages/{roomId}": {
+        "get": {
+          "tags": ["1:1 문의하기 채팅"],
+          "summary": "유저의 채팅방 채팅내용 전체조회",
+          "description": "유저의 채팅방 채팅내용 전체조회",
+          "parameters": [
+            {
+              "name": "roomId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/chats/rooms/{roomId}": {
+        "delete": {
+          "tags": ["1:1 문의하기 채팅"],
+          "summary": "유저의 특정 채팅방 삭제",
+          "description": "유저의 특정 채팅방 삭제",
+          "parameters": [
+            {
+              "name": "roomId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "type": "Bearer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      }
+    }
+  } 

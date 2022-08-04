@@ -26,7 +26,7 @@ const io = socketIO(server, {
 io.on("connection", (socket) => {
     console.log(`User Connected: ${socket.id}`);
 
-    // join_room 이벤트 수신(roomId, receiverNick, senderNick 받음)
+    // join_room 이벤트 수신
     socket.on("join_room", (data) => {
         socket.join(data.roomId); // 해당 roomId 입장
         socket.emit("test", data);
@@ -35,12 +35,12 @@ io.on("connection", (socket) => {
         );
     });
 
-    // send_message 이벤트 수신(roomId, senderNick, receiverNick, message, profileUrl, profileUrl1, time 받음)
+    // send_message 이벤트 수신
     socket.on("send_message", async (data) => {
         const message = new chatMessage(data); // 받은 메시지 DB 저장
         console.log(message);
         message.save().then(() => {
-            // 해당 roomId로 receive_message 이벤트 송신(해당 roomId에 접속한 클라이언트에게 메시지 전송)
+            // 해당 roomId로 receive_message 이벤트 송신
             io.in(data.roomId).emit("receive_message", {
                 ...data,
                 id: message._id,
@@ -53,9 +53,9 @@ io.on("connection", (socket) => {
         });
     });
 
-    // back 이벤트 수신(채팅방 뒤로가기 클릭시 roomId 받음)
+    // back 이벤트 수신(채팅방 뒤로가기)
     socket.on("back", (data) => {
-        socket.leave(data); // 해당 roomId에서 임시로 나감(완전 나가는 것x)
+        socket.leave(data);
         console.log(`User with ID: ${socket.id} left room: ${data}`);
     });
 
