@@ -4,35 +4,35 @@ const User = require("../schemas/user");
 const SECRET_KEY = process.env.SECRET_KEY;
 
 module.exports = (req, res, next) => {
-  const { authorization } = req.headers;
+    const { authorization } = req.headers;
 
-  if (authorization == null) {
-    res.status(401).send({
-      errorMessage: "로그인이 필요합니다.",
-    });
-    return;
-  }
-  const [authType, authToken] = authorization.split(" ");
+    if (authorization == null) {
+        res.status(401).send({
+            errorMessage: "로그인이 필요합니다.",
+        });
+        return;
+    }
+    const [authType, authToken] = authorization.split(" ");
 
-  if (!authToken || authType !== "Bearer") {
-    res.status(401).send({
-      errorMessage: "로그인이 필요한 기능입니다.",
-    });
-    return;
-  }
-  console.log("authorization정보",authorization)
+    if (!authToken || authType !== "Bearer") {
+        res.status(401).send({
+            errorMessage: "로그인이 필요한 기능입니다.",
+        });
+        return;
+    }
+    console.log("authorization정보", authorization);
 
-  try {
-      const { nickname } = jwt.verify(authToken, SECRET_KEY);
-      User.findOne({ nickname }).then((user) => {
-        console.log("user정보",user)
-        res.locals.user = user;
-        next();
-      });
-  } catch (err) {
-    res.status(401).send({
-      result : false,
-      message : "로그인후 사용해 주세요",
-    });
-  }
+    try {
+        const { nickname } = jwt.verify(authToken, SECRET_KEY);
+        User.findOne({ nickname }).then((user) => {
+            console.log("user정보", user);
+            res.locals.user = user;
+            next();
+        });
+    } catch (err) {
+        res.status(401).send({
+            result: false,
+            message: "로그인후 사용해 주세요",
+        });
+    }
 };
