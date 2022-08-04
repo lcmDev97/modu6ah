@@ -4,6 +4,7 @@ const User = require("../schemas/user");
 const SECRET_KEY = process.env.SECRET_KEY;
 
 module.exports = (req, res, next) => {
+    try {
     const { authorization } = req.headers;
 
     if (authorization == null) {
@@ -20,12 +21,10 @@ module.exports = (req, res, next) => {
         });
         return;
     }
-    console.log("authorization정보", authorization);
 
-    try {
         const { nickname } = jwt.verify(authToken, SECRET_KEY);
         User.findOne({ nickname }).then((user) => {
-            console.log("user정보", user);
+            // console.log("user정보", user);
             res.locals.user = user;
             next();
         });
