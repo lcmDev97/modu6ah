@@ -8,7 +8,6 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
-const schedule = require("./routes/schedule");
 // const swaggerUi = require("swagger-ui-express");
 // const swaggerFile = require("./swagger-output");
 const logger = require("./logger");
@@ -27,6 +26,7 @@ const chatMessagesRouter = require("./routes/chatMessages");
 const usersRouter = require("./routes/users");
 const mainRouter = require("./routes/mains");
 const searchRouter = require("./routes/searchs");
+const schedule = require("./routes/schedule");
 
 const corsOptions = {
     origin: ["http://localhost:3000", "https://www.modu6ah.com", "https://modu6ah.com"], // 허가 요청 주소
