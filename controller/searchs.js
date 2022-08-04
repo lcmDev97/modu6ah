@@ -5,6 +5,7 @@ const reviewPost = require("../schemas/reviewPost");
 const logger = require("../logger");
 const SECRET_KEY = process.env.SECRET_KEY;
 const jwt = require("jsonwebtoken");
+
 // 전체 카테고리에서 검색
 async function searchAll(req, res) {
     try {

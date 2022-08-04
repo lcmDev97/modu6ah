@@ -7,25 +7,21 @@ const moment = require("moment");
 // 채팅방 생성
 async function chatRooms(req, res) {
     try {
-        // 불러올 정보 및 받아올 정보
-        const { nickname, profileUrl } = res.locals.user; // 로그인한 사용자 닉네임/프로필 이미지 url
-        const { recruitPostId } = req.params; // 게시글 번호
+        const { nickname, profileUrl } = res.locals.user;
+        const { recruitPostId } = req.params;
         const createdAt = moment().add("9", "h").format("YYYY-MM-DD HH:mm");
         const existPost = await recruitPost.findOne({
             recruitPostId: Number(recruitPostId),
             nickname: nickname,
-        }); // 게시글-닉네임 존재 여부 확인위함
+        });
         const existPostId = await recruitPost.findOne({
             recruitPostId: Number(recruitPostId),
-        }); // 게시글 번호 존재여부 확인 위함
+        });
         const existRoom = await chatRoom.findOne({
             recruitPostId: Number(recruitPostId),
             nickname: nickname,
-        }); // 방 존재 여부 확인위함
-        // console.log(recruitPostId);
-        // console.log(existPost);
-        // console.log(existPostId);
-        // console.log(existRoom);
+        });
+        
         // 이미 채팅방 만들어져있는 경우
         if (existRoom) {
             return res.status(400).send({
@@ -54,7 +50,6 @@ async function chatRooms(req, res) {
             nickname,
             profileUrl,
             postNickname: existPostId.nickname,
-            // profileUrlTwo: existPostId.profileUrl,
             postTitle: existPostId.title,
             createdAt: createdAt,
         });
@@ -75,7 +70,7 @@ async function chatRooms(req, res) {
 // 유저의 채팅방 전체조회
 async function chatRoomsAllGet(req, res) {
     try {
-        const { nickname } = res.locals.user; // 로그인한 사용자 닉네임
+        const { nickname } = res.locals.user;
         const chatRoomList = await chatRoom
             .find({
                 $or: [{ nickname: nickname }, { postNickname: nickname }],
@@ -95,7 +90,7 @@ async function chatRoomsAllGet(req, res) {
             lastChat = await chatMessage
                 .findOne({ roomId: chatRoomId[i] })
                 .sort({ createdAt: -1 });
-            // console.log(lastChat)
+                
             lastChats.push(lastChat);
         }
 

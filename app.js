@@ -8,12 +8,12 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
-// const swaggerUi = require("swagger-ui-express");
-// const swaggerFile = require("./swagger-output");
+const swaggerUi = require("swagger-ui-express");
+const swaggerFile = require("./swagger-output");
 const logger = require("./logger");
 connect();
 
-//라우터
+// 라우터
 const recruitPostsRouter = require("./routes/recruitPosts");
 const recruitCommentsRouter = require("./routes/recruitComments");
 const placePostsRouter = require("./routes/placePosts");
@@ -33,11 +33,11 @@ const corsOptions = {
         "http://localhost:3000",
         "https://www.modu6ah.com",
         "https://modu6ah.com",
-    ], // 허가 요청 주소
+    ],
     credentials: true,
 };
 
-//미들웨어
+// 미들웨어
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use(helmet());
@@ -54,25 +54,15 @@ app.use(
         },
     })
 );
-
-// 구현 완료 후 라우터 정리
-app.use(
-    "/api",
-    express.urlencoded({ extended: false }),
-    [recruitPostsRouter],
-    [recruitCommentsRouter],
-    [placePostsRouter],
-    [placeCommentsRouter],
-    [reviewPostsRouter],
-    [reviewCommentsRouter],
-    [chatRoomsRouter],
-    [chatMessagesRouter],
-    [mypagesRouter],
-    [mainRouter],
-    [searchRouter]
-);
 app.use("/api/users", express.urlencoded({ extended: false }), [usersRouter]);
-// app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile)); // 스웨거 파일
+app.use("/api/recruits", express.urlencoded({ extended: false }), [recruitPostsRouter, recruitCommentsRouter]);
+app.use("/api/places", express.urlencoded({ extended: false }), [placePostsRouter, placeCommentsRouter]);
+app.use("/api/reviews", express.urlencoded({ extended: false }), [reviewPostsRouter, reviewCommentsRouter]);
+app.use("/api/chats", express.urlencoded({ extended: false }), [chatRoomsRouter, chatMessagesRouter]);
+app.use("/api/mypage", express.urlencoded({ extended: false }), [mypagesRouter]);
+app.use("/api/main", express.urlencoded({ extended: false }), [mainRouter]);
+app.use("/api/search", express.urlencoded({ extended: false }), [searchRouter]);
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile)); // 스웨거 파일
 
 app.get("/", (req, res) => {
     res.send("redirect 테스트하기위한 루트 페이지입니다.(테스트)");
