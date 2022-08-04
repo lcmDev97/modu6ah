@@ -76,7 +76,6 @@ async function profileUpdate(req, res) {
         const { nickname } = res.locals.user;
         const { myComment } = req.body;
         const findUser = await User.findOne({ nickname });
-        let profileUrl;
         let newProfileUrl = req.file;
 
         // req.file이 있을 때

@@ -5,7 +5,6 @@ const Joi = require("joi");
 const Bcrypt = require("bcrypt");
 const SALT_NUM = process.env.SALT_NUM;
 const SECRET_KEY = process.env.SECRET_KEY;
-const REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY;
 const mailer = require('nodemailer')
 const logger = require("../logger");
 
@@ -43,7 +42,6 @@ async function sendMail(req, res, next) {
 
       transporter.sendMail(mailOptions, function (err, info) {
         if (err) {
-          console.log(err);
           return res.status(400).json({
             result : false,
             message : err
@@ -63,7 +61,6 @@ async function sendMail(req, res, next) {
       message : "인증 코드 전송에 실패하였습니다."
     })
   }
- 
 
 }
 
@@ -199,7 +196,6 @@ async function signup(req, res, next) {
             snsId: "",
             provider: "local",
         });
-        // console.log("db에 저장될 user정보입니다.",user)
         await user.save();
         return res.status(201).send({
             message: "회원가입에 성공하였습니다.",
@@ -254,7 +250,6 @@ async function signin(req, res, next) {
   // router.post - '/kakao/member'
   function kakao_member(req, res) {
     try {
-      console.log(req.body)
       const api_url = 'https://kapi.kakao.com/v2/user/me';
       const request = require('request');
       const access_token = req.body.access_token;
@@ -269,16 +264,15 @@ async function signin(req, res, next) {
           res.end(body);
           
         } else {
-          console.log('error');
           if (response != null) {
             res.status(response.statusCode).end();
-            console.log('error = ' + response.statusCode);
+            // console.log('error = ' + response.statusCode);
           }
         }
       });
     } catch (err) {
       res.status(400).send('에러가 발생했습니다.');
-      console.log('error =' + err);
+      // console.log('error =' + err);
     }
   }
   // post -'/kakao/parsing'
@@ -303,7 +297,7 @@ async function signin(req, res, next) {
         newUser.save();
         const nickname = newUser.nickname
         const accessToken = jwt.sign({ nickname }, process.env.SECRET_KEY, {
-          expiresIn: '4h',
+          expiresIn: '6h',
         });
         return res.json({
           accessToken,
@@ -311,12 +305,11 @@ async function signin(req, res, next) {
           profileUrl : "https://changminbucket.s3.ap-northeast-2.amazonaws.com/modu6ahBasicProfile.png",
         })
       }
-        // 다른 경우라면,
-        // 기존에서 리프레시 토큰만 대체하기
+
         const profileUrl = exUser.profileUrl
         const nickname = exUser.nickname
         const accessToken = jwt.sign({ nickname }, process.env.SECRET_KEY, {
-           expiresIn: '4h',
+           expiresIn: '6h',
          });
         return res.json({
           accessToken,
@@ -326,7 +319,7 @@ async function signin(req, res, next) {
       
     } catch (error) {
       res.status(400).send('에러가 발생했습니다.');
-      console.log('error =' + error);
+      logger.error('error =' + error);
     }
   }
 
