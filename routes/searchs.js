@@ -8,10 +8,9 @@ router.get("/search", searchsController.searchAll);
 
 //모집게시글에서만 검색
 router.get("/search/recruits", searchsController.searchRecruit);
-// //장소추천게시글에서만 검색
+//장소추천게시글에서만 검색
 router.get("/search/places", searchsController.searchPlace);
-// //육아템리뷰게시글에서만 검색
+//육아템리뷰게시글에서만 검색
 router.get("/search/reviews", searchsController.searchReview);
-
 
 module.exports = router;

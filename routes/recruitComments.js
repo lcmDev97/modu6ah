@@ -12,8 +12,7 @@ router.post("/recruits/:recruitPostId/comments",authMiddleware,
 recruitCommentsController.recruitComments);
 
 // 모집 댓글 삭제
-router.delete("/recruits/:recruitPostId/comments/:recruitCommentId",authMiddleware, 
-recruitCommentsController.recruitCommentsDelete);
+router.delete("/recruits/:recruitPostId/comments/:recruitCommentId",authMiddleware, recruitCommentsController.recruitCommentsDelete);
 
 /**
  * 대댓글 관련 코드 
@@ -21,15 +20,12 @@ recruitCommentsController.recruitCommentsDelete);
  */
 
 // 모집 대댓글 등록  
-router.post("/recruits/recomments/:recruitCommentId",authMiddleware, 
-recruitCommentsController.recruitReCommentsCreate);
+router.post("/recruits/recomments/:recruitCommentId",authMiddleware, recruitCommentsController.recruitReCommentsCreate);
 
 // 모집 대댓글 최신순 조회 
-router.get("/recruits/recomments/:recruitCommentId",
-recruitCommentsController.recruitReCommentsGet);
+router.get("/recruits/recomments/:recruitCommentId", recruitCommentsController.recruitReCommentsGet);
 
 // 모집 대댓글 삭제
-router.delete("/recruits/:recruitCommentId/recomments/:recruitReCommentId",authMiddleware, 
-recruitCommentsController.recruitReCommentsDelete);
+router.delete("/recruits/:recruitCommentId/recomments/:recruitReCommentId",authMiddleware, recruitCommentsController.recruitReCommentsDelete);
 
 module.exports = router;

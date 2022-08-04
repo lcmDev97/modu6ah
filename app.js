@@ -29,9 +29,13 @@ const mainRouter = require("./routes/mains");
 const searchRouter = require("./routes/searchs");
 
 const corsOptions = {
-    origin: ["http://localhost:3000", "https://www.modu6ah.com", "https://modu6ah.com"], // 허가 요청 주소
-    credentials: true
-}
+    origin: [
+        "http://localhost:3000",
+        "https://www.modu6ah.com",
+        "https://modu6ah.com",
+    ], // 허가 요청 주소
+    credentials: true,
+};
 
 //미들웨어
 app.use(express.json());
@@ -76,7 +80,7 @@ app.get("/", (req, res) => {
 
 // 없는 url로 요청한 경우
 app.use((req, res, next) => {
-    logger.error("존재하지 않는 url주소 입니다.")
+    logger.error("존재하지 않는 url주소 입니다.");
     res.status(404).send("존재하지 않는 url주소 입니다.");
 });
 
