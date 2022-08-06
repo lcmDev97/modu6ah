@@ -72,7 +72,7 @@
     <tr>
     <td align="center">
     <b>안재훈</b></a><br /> 
-    <a href="https://github.com/ahnjaehun">Github</a>
+    <a href="https://github.com/anjaehun">Github</a>
     <br><img src="https://img.shields.io/badge/Node.js-339933?style=flat&logo=Node.js&logoColor=white"/><br>
     </td>
     <td align="center">
